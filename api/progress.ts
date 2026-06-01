@@ -1,10 +1,10 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { prisma } from '../lib/db';
+import { sql } from '@vercel/postgres';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method === 'GET') {
-    const row = await prisma.progress.findUnique({ where: { key: 'main' } });
-    return res.json({ data: row ? JSON.parse(row.data) : null });
+    const { rows } = await sql`SELECT data FROM progress WHERE key = 'main'`;
+    return res.json({ data: rows[0] ? JSON.parse(rows[0].data) : null });
   }
 
   if (req.method === 'PUT') {
@@ -12,11 +12,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (!data || typeof data !== 'object') {
       return res.status(400).json({ error: 'Missing data' });
     }
-    await prisma.progress.upsert({
-      where:  { key: 'main' },
-      update: { data: JSON.stringify(data) },
-      create: { key: 'main', data: JSON.stringify(data) },
-    });
+    const serialized = JSON.stringify(data);
+    await sql`
+      INSERT INTO progress (key, data, updated_at)
+      VALUES ('main', ${serialized}, NOW())
+      ON CONFLICT (key) DO UPDATE SET data = ${serialized}, updated_at = NOW()
+    `;
     return res.json({ ok: true });
   }
 
