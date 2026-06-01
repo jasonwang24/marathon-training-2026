@@ -8,7 +8,6 @@ async function sql(query: string, params: (string | null)[] = []) {
   const resp = await fetch(endpoint, {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${u.password}`,
       'Content-Type': 'application/json',
       'Neon-Connection-String': connStr,
     },
