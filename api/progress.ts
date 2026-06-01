@@ -5,12 +5,10 @@ async function sql(query: string, params: (string | null)[] = []) {
   const connStr = process.env.POSTGRES_URL!;
   const u = new URL(connStr);
   const endpoint = `https://${u.hostname}/sql`;
-  const auth = Buffer.from(`${u.username}:${u.password}`).toString('base64');
-
   const resp = await fetch(endpoint, {
     method: 'POST',
     headers: {
-      'Authorization': `Basic ${auth}`,
+      'Authorization': `Bearer ${u.password}`,
       'Content-Type': 'application/json',
       'Neon-Connection-String': connStr,
     },
