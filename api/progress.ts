@@ -13,7 +13,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ error: 'Missing data' });
     }
     await prisma.progress.upsert({
-      where:  { id: 1 },
+      where:  { key: 'main' },
       update: { data: JSON.stringify(data) },
       create: { key: 'main', data: JSON.stringify(data) },
     });
