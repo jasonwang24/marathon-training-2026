@@ -1,0 +1,2245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Marathon 2026">
+<meta name="theme-color" content="#07070f">
+<title>Chicago Marathon 2026 — Training Dashboard</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={corePlugins:{preflight:false}}</script>
+<style>
+:root{
+  --bg:#07070f;--surface:#0f0f1b;--card-bg:#131322;--card-bg2:#181830;
+  --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.13);
+  --text:#eeeef8;--text2:#8888b0;--text3:#454568;
+  --accent:#e8387a;--accent-a:rgba(232,56,122,.18);--accent-b:rgba(232,56,122,.35);
+  --green:#20d470;--blue:#5a90f5;--orange:#f97316;--red:#ef4444;
+  --purple:#a855f7;--teal:#14b8a6;--yellow:#eab308;--slate:#94a3b8;
+  --gold:#f59e0b;--amber:#f59e0b;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;min-height:100vh;overflow-x:hidden;line-height:1.5}
+
+/* ── HEADER ─────────────────────────────────────────────── */
+.hdr{
+  position:sticky;top:0;z-index:200;
+  background:rgba(7,7,15,.9);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:12px;padding:0 18px;height:54px;
+  transition:border-bottom-color .3s;
+}
+body.itb-on .hdr{border-bottom-color:rgba(245,158,11,.45)}
+body.itb-on::before{
+  content:'';position:fixed;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent 0%,#f59e0b 30%,#ef4444 50%,#f59e0b 70%,transparent 100%);
+  z-index:300;pointer-events:none;
+}
+.h-brand{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+.h-icon{width:32px;height:32px;border-radius:8px;flex-shrink:0;background:linear-gradient(135deg,#e8387a,#ff7043);display:flex;align-items:center;justify-content:center;font-size:16px}
+.h-txt .ht{font-size:14px;font-weight:800;letter-spacing:-.3px;line-height:1.1}
+.h-txt .hs{font-size:10px;color:var(--text2);line-height:1.2}
+.h-countdown{background:var(--accent-a);border:1px solid var(--accent-b);border-radius:7px;padding:4px 10px;font-size:11px;color:var(--accent);font-weight:700;white-space:nowrap;flex-shrink:0}
+.unit-tog{display:flex;background:var(--surface);border:1px solid var(--border);border-radius:7px;overflow:hidden;flex-shrink:0}
+.utbtn{background:none;border:none;color:var(--text2);padding:4px 11px;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s}
+.utbtn.on{background:var(--accent);color:#fff}
+
+/* ITB TOGGLE */
+.itb-wrap{display:flex;align-items:center;gap:7px;cursor:pointer;flex-shrink:0;padding:4px 8px;border-radius:8px;border:1px solid var(--border);transition:all .2s;background:var(--surface)}
+.itb-wrap:hover{border-color:rgba(245,158,11,.3)}
+.itb-wrap.on{border-color:rgba(245,158,11,.45);background:rgba(245,158,11,.08)}
+.itb-sw{width:34px;height:19px;background:rgba(255,255,255,.1);border-radius:10px;position:relative;transition:background .2s;flex-shrink:0}
+.itb-wrap.on .itb-sw{background:#f59e0b}
+.itb-knob{width:15px;height:15px;background:#fff;border-radius:50%;position:absolute;top:2px;left:2px;transition:transform .22s;box-shadow:0 1px 4px rgba(0,0,0,.35)}
+.itb-wrap.on .itb-knob{transform:translateX(15px)}
+.itb-lbl{font-size:10px;font-weight:800;color:var(--text2);white-space:nowrap;transition:color .2s;letter-spacing:.2px}
+.itb-wrap.on .itb-lbl{color:#f59e0b}
+
+/* ── LAYOUT ──────────────────────────────────────────────── */
+.layout{max-width:1160px;margin:0 auto;padding:20px;display:grid;grid-template-columns:1fr 294px;gap:18px;align-items:start}
+@media(max-width:860px){.layout{grid-template-columns:1fr;padding:12px}.sidebar{display:contents}}
+
+/* ── HERO ────────────────────────────────────────────────── */
+.hero{background:linear-gradient(135deg,#131328 0%,#1a1230 100%);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:14px;position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;top:-80px;right:-80px;width:260px;height:260px;background:radial-gradient(circle,rgba(232,56,122,.1),transparent 70%);pointer-events:none}
+.hero-lbl{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--text2);margin-bottom:12px}
+.hero-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
+.hstat .v{font-size:24px;font-weight:900;letter-spacing:-1px;line-height:1}
+.hstat .l{font-size:9px;color:var(--text2);margin-top:3px;text-transform:uppercase;letter-spacing:.5px}
+.pbar-wrap{background:rgba(255,255,255,.06);border-radius:99px;height:6px;overflow:hidden}
+.pbar{height:100%;background:linear-gradient(90deg,#e8387a,#ff7043);border-radius:99px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+.pbar-info{display:flex;justify-content:space-between;margin-top:6px;font-size:10px;color:var(--text2)}
+
+/* ── CALENDAR HEADER ─────────────────────────────────────── */
+.cal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.cal-title{font-size:15px;font-weight:800}
+.exall-btn{background:var(--surface);border:1px solid var(--border);color:var(--text2);border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer;transition:all .15s}
+.exall-btn:hover{color:var(--text);border-color:var(--border2)}
+.phase-sep{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1.8px;color:var(--text3);display:flex;align-items:center;gap:8px;padding:14px 0 6px}
+.phase-sep::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ── WEEK CARD ───────────────────────────────────────────── */
+.wk{background:var(--card-bg);border:1px solid var(--border);border-radius:11px;margin-bottom:5px;overflow:hidden;transition:border-color .2s,box-shadow .2s}
+.wk.is-cur{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent-b),0 4px 24px rgba(232,56,122,.1)}
+.wk.is-done{border-color:rgba(32,212,112,.22)}
+.wk.has-tip{border-color:rgba(232,56,122,.22)}
+.wk-hdr{display:flex;align-items:center;gap:9px;padding:11px 13px;cursor:pointer;transition:background .12s;user-select:none}
+.wk-hdr:hover{background:rgba(255,255,255,.022)}
+.wnum{width:28px;height:28px;border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;background:var(--surface);color:var(--text2);transition:all .2s}
+.wk.is-cur .wnum{background:var(--accent);color:#fff}
+.wk.is-done .wnum{background:rgba(32,212,112,.18);color:var(--green)}
+.wk-meta{flex:1;min-width:0}
+.wk-title{font-size:12px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wk-dates{font-size:10px;color:var(--text2);margin-top:1px}
+.wk-right{display:flex;align-items:center;gap:7px;flex-shrink:0}
+.wdots{display:flex;gap:2px}
+.wdot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.12);transition:background .2s}
+.wdot.d{background:var(--green)}.wdot.c{background:var(--accent)}
+.wk-tot{text-align:right}
+.wk-tot .mi{font-size:14px;font-weight:900;line-height:1}
+.wk-tot .u{font-size:9px;color:var(--text2)}
+.chev{color:var(--text2);font-size:10px;transition:transform .22s;line-height:1}
+.wk.open .chev{transform:rotate(180deg)}
+.cur-badge{background:linear-gradient(135deg,#e8387a,#ff7043);color:#fff;border-radius:4px;padding:1px 5px;font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.8px}
+.tip-badge{background:var(--accent-a);color:var(--accent);border-radius:4px;padding:1px 5px;font-size:8px;font-weight:700}
+.wk-pct{font-size:9px;font-weight:700;background:rgba(32,212,112,.15);color:var(--green);border-radius:4px;padding:1px 5px}
+
+/* ── WEEK BODY ───────────────────────────────────────────── */
+.wk-body{display:none;border-top:1px solid var(--border)}
+.wk.open .wk-body{display:block}
+
+/* CHICAGO TIP */
+.ctip{background:linear-gradient(90deg,rgba(232,56,122,.09),rgba(255,112,67,.05));border-bottom:1px solid var(--border);padding:10px 13px;display:flex;gap:10px;align-items:flex-start}
+.ctip-icon{font-size:15px;flex-shrink:0;line-height:1.5;margin-top:1px}
+.ctip-title{font-size:9px;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
+.ctip-txt{font-size:11px;color:var(--text2);line-height:1.55;white-space:pre-line}
+
+/* SCHEDULE TABLE */
+.srow{display:grid;grid-template-columns:88px 100px 70px 120px 1fr 50px;align-items:center;padding:7px 13px;border-bottom:1px solid rgba(255,255,255,.03);transition:background .1s;gap:0}
+.srow:hover{background:rgba(255,255,255,.017)}
+.srow.s-done{opacity:.48}
+.srow.s-missed{background:rgba(245,158,11,.03) !important}
+.srow.s-missed .sday,.srow.s-missed .sdist,.srow.s-missed .space{color:var(--text3) !important}
+.srow.s-missed .badge{opacity:.38}
+.srow.s-race{background:linear-gradient(90deg,rgba(245,158,11,.06),transparent)}
+/* Two-button action group */
+.wk-btns{display:flex;align-items:center;gap:3px;justify-content:flex-end}
+.cbox{width:21px;height:21px;border-radius:5px;border:1.5px solid rgba(255,255,255,.15);background:none;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .14s;color:transparent;font-size:11px}
+.cbox:hover{border-color:var(--green);color:rgba(32,212,112,.6)}
+.cbox.on{background:rgba(32,212,112,.17);border-color:var(--green);color:var(--green)}
+.mbox{width:21px;height:21px;border-radius:5px;border:1.5px solid rgba(255,255,255,.08);background:none;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .14s;color:var(--text3);font-size:10px;font-weight:900}
+.mbox:hover{border-color:rgba(245,158,11,.45);color:#f59e0b}
+.mbox.on{background:rgba(245,158,11,.13);border-color:rgba(245,158,11,.5);color:#f59e0b}
+.missed-tag{font-size:8px;font-weight:800;background:rgba(245,158,11,.14);color:rgba(245,158,11,.75);border:1px solid rgba(245,158,11,.25);border-radius:4px;padding:1px 5px;text-transform:uppercase;letter-spacing:.5px;margin-left:4px}
+.sday{font-size:11px;font-weight:700;color:var(--text2)}.sday.is-today{color:var(--accent)}
+.badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:5px;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.3px;white-space:nowrap}
+.b-rest{background:rgba(75,85,99,.22);color:#9ca3af}
+.b-easy{background:rgba(32,212,112,.15);color:#20d470}
+.b-tempo{background:rgba(249,115,22,.2);color:#f97316}
+.b-intervals{background:rgba(239,68,68,.18);color:#ef4444}
+.b-long{background:rgba(90,144,245,.18);color:#5a90f5}
+.b-recovery{background:rgba(168,85,247,.18);color:#a855f7}
+.b-mp{background:rgba(20,184,166,.18);color:#14b8a6}
+.b-strides{background:rgba(234,179,8,.18);color:#eab308}
+.b-shakeout{background:rgba(148,163,184,.15);color:#94a3b8}
+.b-race{background:linear-gradient(135deg,rgba(245,158,11,.25),rgba(239,68,68,.2));color:#fbbf24;border:1px solid rgba(245,158,11,.3)}
+.sdist{font-size:13px;font-weight:900}.sdist .su{font-size:9px;color:var(--text2);font-weight:400}.sdist.s-zero{color:var(--text3)}
+.space{font-size:10px;color:var(--text2);font-family:'SF Mono','Fira Code','Cascadia Code',monospace}
+.snotes{font-size:10px;color:var(--text3);line-height:1.4;padding-right:6px}
+
+/* ── ITB CONTEXTUAL BADGE ────────────────────────────────── */
+.itb-badge{
+  display:inline-flex;align-items:center;gap:4px;
+  background:rgba(245,158,11,.14);color:#f59e0b;
+  border:1px solid rgba(245,158,11,.3);
+  border-radius:5px;padding:2px 6px;font-size:8px;font-weight:800;
+  text-transform:uppercase;letter-spacing:.3px;white-space:nowrap;
+  margin-left:5px;cursor:help;position:relative;
+}
+.itb-badge .itb-tooltip{
+  display:none;position:absolute;bottom:calc(100% + 6px);left:0;z-index:50;
+  background:#1a1a2e;border:1px solid rgba(245,158,11,.4);
+  border-radius:8px;padding:10px 12px;width:240px;max-width:calc(100vw - 32px);
+  font-size:10px;font-weight:400;color:var(--text2);white-space:normal;
+  line-height:1.55;text-transform:none;letter-spacing:0;word-wrap:break-word;
+  box-shadow:0 8px 24px rgba(0,0,0,.5);
+}
+.itb-badge:hover .itb-tooltip{display:block}
+
+/* ── ITB LOG ROW (pain + cadence) ────────────────────────── */
+.itb-log-row{
+  display:flex;align-items:center;flex-wrap:wrap;gap:10px;
+  padding:5px 13px 6px 105px;
+  background:rgba(245,158,11,.035);
+  border-bottom:1px solid rgba(245,158,11,.08);
+}
+.itb-log-row:last-child{border-bottom:none}
+.itb-cadence-label{display:flex;align-items:center;gap:5px;cursor:pointer;font-size:10px;color:rgba(245,158,11,.7);font-weight:600;transition:color .15s}
+.itb-cadence-label:hover{color:#f59e0b}
+.itb-cadence-label input{width:12px;height:12px;accent-color:#f59e0b;cursor:pointer}
+.itb-pain-wrap{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text2)}
+.itb-pain-select{
+  background:var(--surface);border:1px solid var(--border2);
+  color:var(--text);border-radius:5px;font-size:10px;
+  padding:2px 5px;cursor:pointer;outline:none;transition:border-color .15s;
+}
+.itb-pain-select:hover{border-color:rgba(245,158,11,.4)}
+.itb-alert-tag{font-size:9px;font-weight:800;color:#ef4444;display:flex;align-items:center;gap:3px}
+
+/* ── SIDEBAR ─────────────────────────────────────────────── */
+.sidebar{position:sticky;top:62px;display:flex;flex-direction:column;gap:12px}
+.scard{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.sc-hdr{padding:13px 13px 8px;border-bottom:1px solid var(--border)}
+.sc-hdr h2{font-size:12px;font-weight:800}
+.sc-hdr p{font-size:10px;color:var(--text2);margin-top:1px}
+
+/* PACE GUIDE */
+.pace-list{padding:7px}
+.pi{display:flex;align-items:center;justify-content:space-between;padding:8px 9px;border-radius:7px;margin-bottom:3px}
+.pi:last-child{margin-bottom:0}
+.pi-l{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:700}
+.pi-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.pi-r{text-align:right}
+.pi-val{font-size:12px;font-weight:900;font-family:'SF Mono','Fira Code',monospace;line-height:1}
+.pi-u{font-size:9px;color:var(--text2);margin-top:1px}
+.pi-mp{background:rgba(20,184,166,.1)}.pi-easy{background:rgba(32,212,112,.1)}
+.pi-tempo{background:rgba(249,115,22,.1)}.pi-int{background:rgba(239,68,68,.1)}.pi-rec{background:rgba(168,85,247,.1)}
+
+/* CHICAGO TIPS SIDEBAR */
+.stips{padding:7px}
+.stip{padding:9px 10px;border-radius:7px;margin-bottom:3px;border:1px solid transparent;transition:all .12s;cursor:pointer}
+.stip:hover{background:rgba(232,56,122,.07);border-color:rgba(232,56,122,.18)}
+.stip-wk{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--accent);margin-bottom:2px}
+.stip-txt{font-size:10px;color:var(--text2);line-height:1.5}
+
+/* ── PT TRACKER CARD ─────────────────────────────────────── */
+.pt-card{background:var(--card-bg);border:1px solid rgba(245,158,11,.3);border-radius:12px;overflow:hidden;transition:all .25s}
+.pt-card-hdr{padding:12px 13px 10px;border-bottom:1px solid rgba(245,158,11,.15);background:rgba(245,158,11,.05)}
+.pt-card-hdr h2{font-size:12px;font-weight:800;color:#f59e0b;display:flex;align-items:center;gap:6px}
+.pt-card-hdr p{font-size:10px;color:rgba(245,158,11,.6);margin-top:1px}
+.pt-pbar-wrap{background:rgba(255,255,255,.06);border-radius:99px;height:4px;overflow:hidden;margin-top:8px}
+.pt-pbar{height:100%;background:linear-gradient(90deg,#f59e0b,#22c55e);border-radius:99px;transition:width .4s ease}
+.pt-body{padding:7px}
+.pt-row{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:8px;cursor:pointer;transition:background .12s;margin-bottom:2px}
+.pt-row:last-child{margin-bottom:0}
+.pt-row:hover{background:rgba(245,158,11,.06)}
+.pt-row.done{background:rgba(32,212,112,.07)}
+.pt-check{
+  width:20px;height:20px;border-radius:5px;flex-shrink:0;
+  border:1.5px solid rgba(245,158,11,.4);background:none;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;color:transparent;transition:all .15s;
+}
+.pt-row.done .pt-check{background:rgba(32,212,112,.2);border-color:var(--green);color:var(--green)}
+.pt-icon{font-size:13px;flex-shrink:0}
+.pt-info{flex:1;min-width:0}
+.pt-label{font-size:11px;font-weight:600;line-height:1.2}
+.pt-row.done .pt-label{text-decoration:line-through;color:var(--text2)}
+.pt-sets{font-size:9px;color:var(--text2);margin-top:1px}
+.pt-reset-btn{width:100%;background:none;border:1px solid rgba(245,158,11,.2);color:rgba(245,158,11,.6);border-radius:7px;font-size:10px;font-weight:700;cursor:pointer;padding:6px;margin-top:6px;transition:all .15s;text-align:center}
+.pt-reset-btn:hover{background:rgba(245,158,11,.08);color:#f59e0b;border-color:rgba(245,158,11,.4)}
+
+/* ── FOAM ROLL CARD ──────────────────────────────────────── */
+.foam-card{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color .2s}
+body.itb-on .foam-card{border-color:rgba(245,158,11,.25)}
+.foam-toggle-btn{width:100%;background:none;border:none;display:flex;align-items:center;justify-content:space-between;padding:12px 13px 10px;cursor:pointer;transition:background .12s}
+.foam-toggle-btn:hover{background:rgba(255,255,255,.02)}
+.foam-toggle-btn .fhd{display:flex;align-items:center;gap:7px}
+.foam-toggle-btn h2{font-size:12px;font-weight:800;color:var(--text);text-align:left}
+.foam-toggle-btn p{font-size:10px;color:var(--text2);margin-top:1px;text-align:left}
+.foam-chev{color:var(--text2);font-size:10px;transition:transform .22s;flex-shrink:0}
+.foam-card.open .foam-chev{transform:rotate(180deg)}
+.foam-body{display:none;border-top:1px solid var(--border);padding:13px}
+.foam-card.open .foam-body{display:block}
+.foam-do{background:rgba(32,212,112,.07);border:1px solid rgba(32,212,112,.2);border-radius:8px;padding:10px 12px;margin-bottom:8px}
+.foam-dont{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2);border-radius:8px;padding:10px 12px;margin-bottom:8px}
+.foam-section-title{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.foam-do .foam-section-title{color:var(--green)}
+.foam-dont .foam-section-title{color:var(--red)}
+.foam-item{display:flex;align-items:flex-start;gap:7px;font-size:10px;color:var(--text2);line-height:1.5;margin-bottom:5px}
+.foam-item:last-child{margin-bottom:0}
+.foam-item-icon{flex-shrink:0;margin-top:1px}
+.foam-tip{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:7px;padding:8px 10px;font-size:10px;color:rgba(245,158,11,.85);line-height:1.5}
+
+/* ── PAIN MODAL ──────────────────────────────────────────── */
+.pain-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(10px);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s}
+.pain-overlay.visible{opacity:1;pointer-events:all}
+@keyframes border-pulse{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.5),0 20px 60px rgba(0,0,0,.6)}50%{box-shadow:0 0 0 10px rgba(239,68,68,0),0 20px 60px rgba(0,0,0,.6)}}
+.pain-modal{
+  background:#0d0d1e;border:1.5px solid rgba(239,68,68,.55);
+  border-radius:18px;max-width:440px;width:100%;
+  padding:28px;animation:border-pulse 2.5s ease infinite;
+  position:relative;overflow:hidden;
+}
+.pain-modal::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#ef4444,#f97316,#ef4444)}
+.pain-modal-icon{font-size:36px;text-align:center;margin-bottom:12px}
+.pain-modal-title{font-size:18px;font-weight:900;color:#ef4444;text-align:center;letter-spacing:-.3px;margin-bottom:4px}
+.pain-modal-score{font-size:12px;color:var(--text2);text-align:center;margin-bottom:18px}
+.pain-modal-sep{height:1px;background:rgba(239,68,68,.2);margin-bottom:16px}
+.pain-step{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px}
+.pain-step:last-child{margin-bottom:0}
+.pain-step-num{width:20px;height:20px;border-radius:50%;background:rgba(239,68,68,.2);color:#ef4444;font-size:10px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.pain-step-txt{font-size:11px;color:var(--text2);line-height:1.55}
+.pain-close-btn{
+  width:100%;margin-top:20px;background:rgba(239,68,68,.15);
+  border:1.5px solid rgba(239,68,68,.4);color:#ef4444;
+  border-radius:10px;font-size:12px;font-weight:800;cursor:pointer;
+  padding:11px;transition:all .15s;letter-spacing:.3px;
+}
+.pain-close-btn:hover{background:rgba(239,68,68,.25);border-color:rgba(239,68,68,.7)}
+
+/* RESPONSIVE */
+@media(max-width:600px){.srow{grid-template-columns:75px 90px 58px 1fr 50px}.space{display:none}.snotes{display:none}.hero-grid{grid-template-columns:repeat(2,1fr)}.itb-log-row{padding-left:13px}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.wk{animation:fadeUp .2s ease both}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:3px}
+
+/* ── PIVOT MODAL ─────────────────────────────────────────── */
+.pivot-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(10px);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s}
+.pivot-overlay.visible{opacity:1;pointer-events:all}
+.pivot-modal{background:#0f0f1e;border:1px solid rgba(245,158,11,.4);border-radius:16px;max-width:400px;width:100%;padding:26px;position:relative;overflow:hidden}
+.pivot-modal::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#f59e0b,#f97316,#f59e0b)}
+.pivot-icon{font-size:30px;margin-bottom:10px}
+.pivot-title{font-size:16px;font-weight:900;color:#f59e0b;letter-spacing:-.3px;margin-bottom:14px}
+.pivot-advice{font-size:12px;color:var(--text2);line-height:1.7;padding:12px 14px;background:rgba(245,158,11,.07);border-radius:9px;border-left:3px solid rgba(245,158,11,.5);margin-bottom:18px}
+.pivot-close-btn{width:100%;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);color:#f59e0b;border-radius:9px;font-size:11px;font-weight:800;cursor:pointer;padding:10px;transition:all .15s}
+.pivot-close-btn:hover{background:rgba(245,158,11,.22);border-color:rgba(245,158,11,.6)}
+
+/* ── BUFFER WIDGET ───────────────────────────────────────── */
+.buffer-card{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.buffer-hdr{padding:12px 13px 8px;border-bottom:1px solid var(--border)}
+.buffer-hdr h2{font-size:12px;font-weight:800;color:var(--text)}
+.buffer-hdr p{font-size:10px;color:var(--text2);margin-top:1px}
+.buffer-body{padding:11px 13px}
+.buffer-pips{display:flex;gap:4px;margin-bottom:8px}
+.b-pip{flex:1;height:5px;border-radius:3px;background:rgba(255,255,255,.06);transition:background .3s}
+.b-pip.avail{background:#5a90f5}
+.b-pip.spent{background:rgba(249,115,22,.5)}
+.buffer-stat{font-size:22px;font-weight:900;letter-spacing:-1px;line-height:1;color:#5a90f5}
+.buffer-stat.empty{color:var(--orange)}
+.buffer-desc{font-size:10px;color:var(--text2);line-height:1.55;margin-top:4px}
+.buffer-warn{margin-top:7px;font-size:10px;color:#f97316;background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.2);border-radius:6px;padding:7px 9px;line-height:1.5}
+
+/* ── REPEAT WEEK ROW ─────────────────────────────────────── */
+.rpt-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 13px;background:rgba(90,144,245,.04);border-top:1px solid rgba(90,144,245,.1)}
+.rpt-info{font-size:10px;color:var(--text2);line-height:1.4}
+.rpt-info strong{color:var(--text);font-weight:700}
+.rpt-btn{display:flex;align-items:center;gap:5px;flex-shrink:0;background:rgba(90,144,245,.1);border:1px solid rgba(90,144,245,.22);color:#5a90f5;border-radius:7px;font-size:10px;font-weight:700;cursor:pointer;padding:5px 10px;transition:all .15s;white-space:nowrap}
+.rpt-btn:hover{background:rgba(90,144,245,.2);border-color:rgba(90,144,245,.45)}
+.rpt-btn.active{background:rgba(90,144,245,.2);border-color:#5a90f5}
+.rpt-btn.disabled{opacity:.35;cursor:not-allowed}
+
+/* ── STRENGTH SECTION ────────────────────────────────────── */
+.sc-section{background:var(--card-bg);border:1px solid var(--border);border-radius:14px;margin-bottom:14px;overflow:hidden}
+.sc-section-hdr{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 16px;cursor:pointer;transition:background .12s;user-select:none;
+}
+.sc-section-hdr:hover{background:rgba(255,255,255,.018)}
+.sc-section-hdr-left{display:flex;align-items:center;gap:10px}
+.sc-section-icon{
+  width:30px;height:30px;border-radius:7px;flex-shrink:0;
+  background:linear-gradient(135deg,#5a90f5,#a855f7);
+  display:flex;align-items:center;justify-content:center;font-size:14px;
+}
+.sc-section-title{font-size:13px;font-weight:800;letter-spacing:-.2px}
+.sc-section-sub{font-size:10px;color:var(--text2);margin-top:1px}
+.sc-section-right{display:flex;align-items:center;gap:9px}
+.sc-section-chev{color:var(--text2);font-size:10px;transition:transform .22s}
+.sc-section.open .sc-section-chev{transform:rotate(180deg)}
+.sc-pct-pill{background:rgba(90,144,245,.18);color:#5a90f5;border-radius:4px;padding:1px 6px;font-size:9px;font-weight:800}
+
+.sc-body{display:none;border-top:1px solid var(--border)}
+.sc-section.open .sc-body{display:block}
+
+/* Day tab bar */
+.sc-tabs{display:flex;border-bottom:1px solid var(--border);background:var(--surface)}
+.sc-tab{
+  flex:1;background:none;border:none;color:var(--text2);
+  padding:10px 0;font-size:11px;font-weight:700;cursor:pointer;
+  border-bottom:2px solid transparent;transition:all .15s;
+  display:flex;align-items:center;justify-content:center;gap:5px;
+}
+.sc-tab.active{color:#5a90f5;border-bottom-color:#5a90f5;background:rgba(90,144,245,.05)}
+.sc-tab:hover:not(.active){color:var(--text);background:rgba(255,255,255,.02)}
+.sc-tab-dot{width:5px;height:5px;border-radius:50%;background:rgba(90,144,245,.4);transition:background .15s}
+.sc-tab.active .sc-tab-dot{background:#5a90f5}
+.sc-tab.complete-tab .sc-tab-dot{background:var(--green)}
+.sc-tab.complete-tab{color:var(--green);border-bottom-color:var(--green);background:rgba(32,212,112,.04)}
+
+/* Day panel */
+.sc-day-panel{padding:10px}
+.sc-day-title{
+  font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;
+  color:var(--text2);padding:4px 6px 8px;
+  display:flex;align-items:center;gap:8px;
+}
+.sc-day-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.sc-day-done-count{
+  font-size:9px;font-weight:700;color:#5a90f5;
+  background:rgba(90,144,245,.15);border-radius:4px;padding:1px 5px;
+  text-transform:none;letter-spacing:0;
+}
+
+/* Exercise row */
+.sc-ex-row{
+  display:flex;align-items:flex-start;gap:9px;
+  padding:10px 8px;border-radius:9px;
+  cursor:pointer;transition:background .12s;margin-bottom:3px;
+  border:1px solid transparent;
+}
+.sc-ex-row:last-child{margin-bottom:0}
+.sc-ex-row:hover{background:rgba(90,144,245,.06);border-color:rgba(90,144,245,.1)}
+.sc-ex-row.sc-done{opacity:.55}
+.sc-ex-row.sc-done .sc-ex-name{text-decoration:line-through;color:var(--text2)}
+.sc-check{
+  width:22px;height:22px;border-radius:5px;flex-shrink:0;margin-top:1px;
+  border:1.5px solid rgba(90,144,245,.35);background:none;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;color:transparent;transition:all .15s;
+}
+.sc-ex-row.sc-done .sc-check{background:rgba(32,212,112,.18);border-color:var(--green);color:var(--green)}
+.sc-ex-info{flex:1;min-width:0}
+.sc-ex-name{font-size:11px;font-weight:700;line-height:1.3;margin-bottom:4px}
+.sc-ex-meta{display:flex;flex-wrap:wrap;align-items:center;gap:4px;margin-bottom:5px}
+.sc-sets{font-size:9px;color:var(--text2);font-weight:600;background:rgba(255,255,255,.06);border-radius:4px;padding:1px 6px}
+
+/* Equipment badges */
+.eq-badge{font-size:8px;font-weight:800;border-radius:4px;padding:1px 5px;letter-spacing:.3px;text-transform:uppercase;border:1px solid transparent}
+.eq-db    {background:rgba(90,144,245,.15);color:#7aabff;border-color:rgba(90,144,245,.25)}
+.eq-cable {background:rgba(20,184,166,.15); color:#2dd4bf;border-color:rgba(20,184,166,.25)}
+.eq-bench {background:rgba(168,85,247,.15); color:#c084fc;border-color:rgba(168,85,247,.25)}
+
+/* ITB crucial badge */
+.itb-crucial{
+  font-size:8px;font-weight:900;
+  background:linear-gradient(90deg,rgba(245,158,11,.25),rgba(239,68,68,.18));
+  color:#fbbf24;border:1px solid rgba(245,158,11,.4);
+  border-radius:4px;padding:1px 6px;
+  text-transform:uppercase;letter-spacing:.4px;
+  animation:itb-glow 2.5s ease infinite;
+}
+@keyframes itb-glow{0%,100%{box-shadow:none}50%{box-shadow:0 0 6px rgba(245,158,11,.35)}}
+
+/* Form cue */
+.sc-cue{
+  display:flex;align-items:flex-start;gap:5px;
+  font-size:10px;color:var(--text3);line-height:1.5;
+  padding:5px 7px;background:rgba(255,255,255,.025);
+  border-radius:5px;border-left:2px solid rgba(90,144,245,.3);
+}
+.sc-cue-icon{flex-shrink:0;font-size:9px;margin-top:2px}
+
+/* Strength reminder in calendar */
+.sc-reminder{
+  display:flex;align-items:center;gap:6px;
+  padding:4px 13px 5px 105px;
+  background:rgba(90,144,245,.04);
+  border-bottom:1px solid rgba(90,144,245,.08);
+  font-size:9px;color:rgba(90,144,245,.8);font-weight:700;
+}
+.sc-reminder:last-child{border-bottom:none}
+.sc-reminder .sc-rem-tag{
+  background:rgba(90,144,245,.14);color:#5a90f5;
+  border-radius:4px;padding:1px 5px;font-size:8px;font-weight:800;
+  text-transform:uppercase;letter-spacing:.3px;
+}
+.sc-reset-btn{
+  width:100%;background:none;
+  border:1px solid rgba(90,144,245,.2);color:rgba(90,144,245,.55);
+  border-radius:7px;font-size:10px;font-weight:700;
+  cursor:pointer;padding:6px;margin-top:7px;
+  transition:all .15s;text-align:center;
+}
+.sc-reset-btn:hover{background:rgba(90,144,245,.08);color:#5a90f5;border-color:rgba(90,144,245,.4)}
+
+/* Exercise guide panel */
+.sc-expand-btn{
+  display:inline-flex;align-items:center;gap:3px;margin-top:5px;
+  background:none;border:none;color:var(--text3);font-size:9px;
+  font-weight:700;cursor:pointer;padding:0;transition:color .15s;
+  letter-spacing:.2px;
+}
+.sc-expand-btn:hover{color:#5a90f5}
+.sc-expand-btn.open{color:#5a90f5}
+.sc-guide{
+  padding:11px 12px 12px 44px;
+  background:rgba(0,0,0,.2);
+  border-top:1px solid rgba(255,255,255,.04);
+  border-bottom:1px solid rgba(255,255,255,.04);
+}
+.sc-guide-why{
+  font-size:10px;line-height:1.6;color:rgba(90,144,245,.85);
+  font-style:italic;margin-bottom:10px;
+  padding:7px 9px;background:rgba(90,144,245,.07);
+  border-radius:6px;border-left:2px solid rgba(90,144,245,.35);
+}
+.sc-guide-cols{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+@media(max-width:600px){.sc-guide-cols{grid-template-columns:1fr}}
+.sc-guide-block{}
+.sc-guide-lbl{
+  font-size:8px;font-weight:800;text-transform:uppercase;
+  letter-spacing:1.2px;color:var(--text3);margin-bottom:5px;
+}
+.sc-guide-item{
+  font-size:10px;color:var(--text2);line-height:1.55;
+  padding-left:12px;position:relative;margin-bottom:4px;
+}
+.sc-guide-item:last-child{margin-bottom:0}
+.sc-guide-item::before{content:'·';position:absolute;left:3px;color:var(--text3);font-weight:900}
+.sc-guide-item.bad{color:rgba(249,115,22,.8)}
+.sc-guide-item.bad::before{content:'⚠';left:0;font-size:8px;top:1px}
+.sc-guide-load{
+  font-size:10px;color:rgba(32,212,112,.85);line-height:1.55;
+  background:rgba(32,212,112,.06);border:1px solid rgba(32,212,112,.18);
+  border-radius:7px;padding:7px 10px;
+}
+.sc-guide-load::before{content:'📈  ';}
+@media(max-width:600px){.sc-reminder{padding-left:13px}}
+
+/* ── INSTALL BANNER ──────────────────────────────────────── */
+.install-banner{
+  background:linear-gradient(90deg,rgba(90,144,245,.12),rgba(168,85,247,.08));
+  border-bottom:1px solid rgba(90,144,245,.2);
+  display:flex;align-items:center;gap:10px;
+  padding:9px 16px;font-size:11px;
+}
+.install-banner.hidden{display:none}
+.install-banner-txt{flex:1;color:var(--text2);line-height:1.4}
+.install-banner-txt strong{color:var(--text)}
+.install-btn{
+  background:rgba(90,144,245,.18);border:1px solid rgba(90,144,245,.35);
+  color:#5a90f5;border-radius:7px;font-size:10px;font-weight:800;
+  cursor:pointer;padding:5px 10px;white-space:nowrap;transition:all .15s;flex-shrink:0;
+}
+.install-btn:hover{background:rgba(90,144,245,.3)}
+.install-dismiss{background:none;border:none;color:var(--text3);cursor:pointer;font-size:16px;padding:0 2px;flex-shrink:0;line-height:1}
+
+/* ── EXPORT / IMPORT BUTTONS ─────────────────────────────── */
+.data-btns{display:flex;gap:4px;flex-shrink:0}
+.data-btn{
+  width:30px;height:30px;border-radius:7px;
+  background:var(--surface);border:1px solid var(--border);
+  color:var(--text2);font-size:14px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .15s;
+}
+.data-btn:hover{color:var(--text);border-color:var(--border2)}
+.data-btn:active{transform:scale(.93)}
+
+/* ── CLOUD SYNC INDICATOR ────────────────────────────────── */
+.sync-pill{display:flex;align-items:center;gap:5px;font-size:10px;font-weight:600;flex-shrink:0;padding:4px 9px;border-radius:6px;border:1px solid var(--border);background:var(--surface);white-space:nowrap;transition:all .2s}
+.sync-pill.synced{color:var(--green);border-color:rgba(32,212,112,.28)}
+.sync-pill.saving{color:var(--text2)}
+.sync-pill.offline{color:var(--orange);border-color:rgba(249,115,22,.3)}
+.sync-pill a{color:var(--text2);text-decoration:none;transition:color .15s}
+.sync-pill a:hover{color:var(--text)}
+@keyframes spin-cw{to{transform:rotate(360deg)}}
+.sync-spin{display:inline-block;animation:spin-cw .8s linear infinite}
+@media(max-width:480px){#sync-status{display:none}}
+
+/* ── MOBILE IMPROVEMENTS ─────────────────────────────────── */
+/* Larger touch targets on touch devices */
+@media(pointer:coarse){
+  .cbox,.mbox{width:34px;height:34px;font-size:13px;border-radius:7px}
+  .wk-btns{gap:5px}
+  .wk-hdr{padding:13px 13px}
+  .sc-ex-row{padding:12px 10px}
+  .sc-check{width:26px;height:26px}
+  .pt-row{padding:11px 10px}
+  .pt-check{width:24px;height:24px}
+  .utbtn{padding:6px 14px;font-size:12px}
+  .itb-wrap{padding:5px 10px}
+  .srow{padding:9px 13px}
+  /* Bigger tap area for expand button */
+  .sc-expand-btn{padding:4px 0;font-size:10px}
+}
+/* Compact header subtitle on small screens */
+@media(max-width:480px){
+  .h-txt .hs{display:none}
+  .h-countdown{font-size:10px;padding:3px 8px}
+  .itb-lbl{display:none}
+  .itb-wrap{padding:5px 8px}
+}
+/* Mobile-specific layout: put buffer + pace summary strip above calendar */
+.mobile-strip{
+  display:none;
+  background:var(--card-bg);border:1px solid var(--border);
+  border-radius:11px;margin-bottom:12px;padding:12px 14px;
+  gap:0;
+}
+@media(max-width:860px){
+  .mobile-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+}
+.ms-cell{text-align:center}
+.ms-val{font-size:18px;font-weight:900;letter-spacing:-.5px;line-height:1}
+.ms-lbl{font-size:9px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+.ms-div{width:1px;background:var(--border);margin:0 auto}
+/* Safe area padding for notched phones */
+@supports(padding:max(0px)){
+  .hdr{padding-left:max(18px,env(safe-area-inset-left));padding-right:max(18px,env(safe-area-inset-right))}
+  .layout{padding-left:max(20px,env(safe-area-inset-left));padding-right:max(20px,env(safe-area-inset-right))}
+  @media(max-width:860px){.layout{padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right))}}
+}
+</style>
+</head>
+
+<body>
+
+<!-- ══════════════════════════════════════════════════════
+     PAIN ALERT MODAL
+══════════════════════════════════════════════════════ -->
+<div class="pain-overlay" id="pain-overlay" role="dialog" aria-modal="true">
+  <div class="pain-modal">
+    <div class="pain-modal-icon">🚨</div>
+    <div class="pain-modal-title">ITB Pain Alert — Stop Running</div>
+    <div class="pain-modal-score" id="pain-modal-score-text">You recorded a pain score above the 3/10 threshold.</div>
+    <div class="pain-modal-sep"></div>
+    <div class="pain-step"><div class="pain-step-num">1</div><div class="pain-step-txt"><strong style="color:var(--text)">Stop running immediately.</strong> Walk slowly to cool down. Do not attempt to run through sharp connective tissue pain — this is how partial tears happen.</div></div>
+    <div class="pain-step"><div class="pain-step-num">2</div><div class="pain-step-txt"><strong style="color:var(--text)">Ice the lateral knee.</strong> 15–20 minutes on the outside of the knee. Elevate if swollen.</div></div>
+    <div class="pain-step"><div class="pain-step-num">3</div><div class="pain-step-txt"><strong style="color:var(--text)">Foam roll the TFL and Glutes.</strong> NOT the IT band strap itself and NOT directly over the lateral knee bone. Release the source of tension upstream.</div></div>
+    <div class="pain-step"><div class="pain-step-num">4</div><div class="pain-step-txt"><strong style="color:var(--text)">Rest 24–48 hours minimum</strong> before attempting any running. Complete your Bulletproof Hip PT routine instead.</div></div>
+    <div class="pain-step"><div class="pain-step-num">5</div><div class="pain-step-txt"><strong style="color:var(--text)">If pain persists 3+ days,</strong> contact your physio. Do not self-treat through repeated aggravation.</div></div>
+    <button class="pain-close-btn" onclick="hidePainModal()">I understand — I will stop now</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SMART PIVOT MODAL
+══════════════════════════════════════════════════════ -->
+<div class="pivot-overlay" id="pivot-overlay" role="dialog" aria-modal="true">
+  <div class="pivot-modal">
+    <div class="pivot-icon" id="pivot-icon">📋</div>
+    <div class="pivot-title" id="pivot-title">Workout Logged as Missed</div>
+    <div class="pivot-advice" id="pivot-advice"></div>
+    <button class="pivot-close-btn" onclick="hidePivotModal()">Got it — moving on</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     INSTALL BANNER (shown on mobile when installable)
+══════════════════════════════════════════════════════ -->
+<div class="install-banner hidden" id="install-banner">
+  <div class="install-banner-txt"><strong>Add to Home Screen</strong> — use this app like a native app, works offline</div>
+  <button class="install-btn" id="install-btn" onclick="triggerInstall()">Install</button>
+  <button class="install-dismiss" onclick="dismissInstall()" aria-label="Dismiss">×</button>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     HEADER
+══════════════════════════════════════════════════════ -->
+<header class="hdr">
+  <div class="h-brand">
+    <div class="h-icon">🏃</div>
+    <div class="h-txt">
+      <div class="ht">Chicago Marathon 2026</div>
+      <div class="hs">19-Week Training Dashboard &nbsp;·&nbsp; Target: 3:30:00</div>
+    </div>
+  </div>
+  <div class="h-countdown" id="countdown">— days to race</div>
+  <!-- Cloud Sync Status -->
+  <div id="sync-status"></div>
+  <!-- ITB Recovery Mode Toggle -->
+  <div class="itb-wrap" id="itb-wrap" onclick="setITBMode(!itbMode)" title="Toggle ITB Recovery Mode">
+    <div class="itb-sw" id="itb-sw"><div class="itb-knob"></div></div>
+    <span class="itb-lbl">🦴 ITB Mode</span>
+  </div>
+  <!-- Export / Import -->
+  <div class="data-btns">
+    <button class="data-btn" onclick="exportData()" title="Export progress to file">📤</button>
+    <button class="data-btn" onclick="importData()" title="Import progress from file">📥</button>
+  </div>
+  <!-- Unit Toggle -->
+  <div class="unit-tog">
+    <button class="utbtn on" id="btn-mi" onclick="setUnit(false)">mi</button>
+    <button class="utbtn" id="btn-km" onclick="setUnit(true)">km</button>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════════════════
+     MAIN LAYOUT
+══════════════════════════════════════════════════════ -->
+<div class="layout">
+  <div class="main-col">
+
+    <!-- PROGRESS HERO -->
+    <div class="hero">
+      <div class="hero-lbl">Overall Training Progress</div>
+      <div class="hero-grid">
+        <div class="hstat"><div class="v" id="s-pct" style="color:var(--accent)">0%</div><div class="l">Complete</div></div>
+        <div class="hstat"><div class="v" id="s-wkts">0</div><div class="l">Workouts Done</div></div>
+        <div class="hstat"><div class="v" id="s-miles">0</div><div class="l" id="s-miles-lbl">Miles Run</div></div>
+        <div class="hstat"><div class="v" id="s-weeks">0/19</div><div class="l">Weeks Done</div></div>
+      </div>
+      <div class="pbar-wrap"><div class="pbar" id="pbar" style="width:0%"></div></div>
+      <div class="pbar-info"><span id="pbar-l">0 of 0 workouts</span><span>🏁 Oct 11, 2026</span></div>
+    </div>
+
+    <!-- STRENGTH & CONDITIONING -->
+    <div class="sc-section" id="sc-section">
+      <div class="sc-section-hdr" onclick="toggleStrengthSection()">
+        <div class="sc-section-hdr-left">
+          <div class="sc-section-icon">🏋️</div>
+          <div>
+            <div class="sc-section-title">Strength & Conditioning</div>
+            <div class="sc-section-sub">2-Day Split · 30lb DB · Cable Machine · Bench</div>
+          </div>
+        </div>
+        <div class="sc-section-right">
+          <span class="sc-pct-pill" id="sc-pct-pill">0/8 done today</span>
+          <span class="sc-section-chev">▼</span>
+        </div>
+      </div>
+      <div class="sc-body" id="sc-body"></div>
+    </div>
+
+    <!-- MOBILE QUICK-ACCESS STRIP (hidden on desktop, shown on mobile) -->
+    <div class="mobile-strip" id="mobile-strip">
+      <div class="ms-cell">
+        <div class="ms-val" id="ms-pace" style="color:#14b8a6;font-size:14px">8:00</div>
+        <div class="ms-lbl">Race Pace</div>
+      </div>
+      <div class="ms-cell">
+        <div class="ms-val" id="ms-buffer" style="color:#5a90f5">3</div>
+        <div class="ms-lbl">Buffer Wks</div>
+      </div>
+      <div class="ms-cell">
+        <div class="ms-val" id="ms-days" style="color:var(--accent)">—</div>
+        <div class="ms-lbl">Days Left</div>
+      </div>
+    </div>
+
+    <!-- CALENDAR -->
+    <div class="cal-hdr">
+      <div class="cal-title">Training Calendar</div>
+      <button class="exall-btn" id="exall-btn" onclick="toggleAll()">Expand All</button>
+    </div>
+    <div id="calendar"></div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <!-- Pace Guide -->
+    <div class="scard">
+      <div class="sc-hdr"><h2>⚡ Pace Guide</h2><p id="pace-sub">All paces in min/mile</p></div>
+      <div class="pace-list" id="pace-list"></div>
+    </div>
+    <!-- Buffer widget — injected by JS -->
+    <div id="buffer-widget"></div>
+    <!-- PT Tracker — injected by JS when ITB mode ON -->
+    <div id="pt-tracker-slot"></div>
+    <!-- Foam Roll Reference -->
+    <div class="foam-card" id="foam-card">
+      <button class="foam-toggle-btn" onclick="toggleFoamRoll()">
+        <div class="fhd">
+          <div>
+            <h2>🧴 How to Foam Roll ITB</h2>
+            <p>Critical protocol — click to expand</p>
+          </div>
+        </div>
+        <span class="foam-chev">▼</span>
+      </button>
+      <div class="foam-body">
+        <div class="foam-dont">
+          <div class="foam-section-title">❌ Do NOT Roll These Areas</div>
+          <div class="foam-item"><span class="foam-item-icon">🦴</span><span><strong style="color:#f87171">Never roll directly over the lateral knee bone.</strong> This compresses the bursa between the band and bone, causing inflammation — exactly what you're trying to fix.</span></div>
+          <div class="foam-item"><span class="foam-item-icon">🚫</span><span>Do not aggressively roll the IT band strap along the outer thigh. It's a tendon, not a muscle — it cannot release via compression. The pain you feel is nerve irritation, not a therapeutic release.</span></div>
+        </div>
+        <div class="foam-do">
+          <div class="foam-section-title">✅ DO Roll These Upstream Sources</div>
+          <div class="foam-item"><span class="foam-item-icon">🎯</span><span><strong style="color:#4ade80">TFL (Tensor Fasciae Latae)</strong> — your hip pocket muscle. Find the front-top of your hip crest (ASIS), move 2 inches forward and down. Lie face-down/angled, roll slowly. Hold tender spots 20–30 sec. This is the primary driver of IT band tension.</span></div>
+          <div class="foam-item"><span class="foam-item-icon">🍑</span><span><strong style="color:#4ade80">Gluteus Maximus &amp; Medius</strong> — sit on the roller, cross one ankle over the opposite knee (figure-4 / pigeon). Roll the entire posterior hip. Weak glutes force the TFL to overwork, which is the root of most ITBS.</span></div>
+          <div class="foam-item"><span class="foam-item-icon">💎</span><span><strong style="color:#4ade80">Piriformis (deep glute)</strong> — same pigeon position, focus on the area near your sit bone. 60–90 seconds each side.</span></div>
+        </div>
+        <div class="foam-tip">
+          <strong>Pro Protocol:</strong> Roll TFL → Glutes → Piriformis (3–5 min total). Finish with 10 slow hip circles each side. Do this after every run and before bed during recovery weeks.
+        </div>
+      </div>
+    </div>
+    <!-- Chicago Tips -->
+    <div class="scard">
+      <div class="sc-hdr"><h2>🏙️ Chicago Tips</h2><p>Race-day intelligence</p></div>
+      <div class="stips" id="stips"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// TRAINING DATA
+// ═══════════════════════════════════════════════════════════
+const DATA = [
+  {week:1,dates:"June 1 – June 7, 2026",phase:"Base & Efficiency",tot:26,schedule:[
+    {day:"Monday",type:"Rest",dist:0,pace:"N/A",notes:"Complete rest day. Focus on mobility."},
+    {day:"Tuesday",type:"Intervals",dist:5,pace:"6:45 – 7:00",notes:"1.5 mi warmup, 4×800m @ Interval pace with 2 min walking rest, 1.5 mi cooldown."},
+    {day:"Wednesday",type:"Easy",dist:4,pace:"8:45 – 9:45",notes:"Comfortable, conversational pace."},
+    {day:"Thursday",type:"Tempo",dist:5,pace:"7:15 – 7:30",notes:"1.5 mi warmup, 2 mi sustained @ Tempo pace, 1.5 mi cooldown."},
+    {day:"Friday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day. Hydrate."},
+    {day:"Saturday",type:"Long Run",dist:10,pace:"8:45 – 9:45",notes:"Steady aerobic long run. Building base durability."},
+    {day:"Sunday",type:"Recovery",dist:2,pace:"9:45+",notes:"Very slow shakeout run to flush legs."}
+  ]},
+  {week:2,dates:"June 8 – June 14, 2026",phase:"Base & Efficiency",tot:28,schedule:[
+    {day:"Monday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
+    {day:"Tuesday",type:"Intervals",dist:5,pace:"6:45 – 7:00",notes:"1.5 mi warmup, 4×800m @ Interval pace (2 min rest), 1.5 mi cooldown."},
+    {day:"Wednesday",type:"Easy",dist:4,pace:"8:45 – 9:45",notes:"Keep it easy."},
+    {day:"Thursday",type:"Tempo",dist:5,pace:"7:15 – 7:30",notes:"1.5 mi warmup, 2 mi sustained @ Tempo, 1.5 mi cooldown."},
+    {day:"Friday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
+    {day:"Saturday",type:"Long Run",dist:11,pace:"8:45 – 9:45",notes:"Aerobic long run."},
+    {day:"Sunday",type:"Recovery",dist:3,pace:"9:45+",notes:"Slow shakeout."}
+  ]},
+  {week:3,dates:"June 15 – June 21, 2026",phase:"Base & Efficiency",tot:30,schedule:[
+    {day:"Monday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
+    {day:"Tuesday",type:"Intervals",dist:5,pace:"6:45 – 7:00",notes:"1.5 mi warmup, 5×800m @ Interval pace (2 min rest), 1.5 mi cooldown."},
+    {day:"Wednesday",type:"Easy",dist:5,pace:"8:45 – 9:45",notes:"Easy mileage block."},
+    {day:"Thursday",type:"Tempo",dist:5,pace:"7:15 – 7:30",notes:"1.5 mi warmup, 2 mi sustained @ Tempo, 1.5 mi cooldown."},
+    {day:"Friday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
+    {day:"Saturday",type:"Long Run",dist:12,pace:"8:45 – 9:45",notes:"Focus on consistent pacing throughout."},
+    {day:"Sunday",type:"Recovery",dist:3,pace:"9:45+",notes:"Slow recovery shakeout."}
+  ]},
+  {week:4,dates:"June 22 – June 28, 2026",phase:"Base & Efficiency (Cutback)",tot:24,schedule:[
+    {day:"Monday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
+    {day:"Tuesday",type:"Easy",dist:4,pace:"8:45 – 9:45",notes:"No speedwork this week. Active recovery."},
+    {day:"Wednesday",type:"Easy",dist:4,pace:"8:45 – 9:45",notes:"Easy cruising."},
+    {day:"Thursday",type:"Easy",dist:4,pace:"8:45 – 9:45",notes:"Keep effort strictly light."},
+    {day:"Friday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
+    {day:"Saturday",type:"Long Run",dist:9,pace:"8:45 – 9:45",notes:"Shorter long run to allow muscles to rebuild."},
+    {day:"Sunday",type:"Recovery",dist:3,pace:"9:45+",notes:"Flush out the legs."}
+  ]},
+  {week:5,dates:"June 29 – July 5, 2026",phase:"Strength & Stamina",tot:32,schedule:[
+    {day:"Monday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
+    {day:"Tuesday",type:"Intervals",dist:6,pace:"6:45 – 7:00",notes:"1.5 mi warmup, 6×800m @ Interval pace, 1.5 mi cooldown."},
+    {day:"Wednesday",type:"Easy",dist:5,pace:"8:45 – 9:45",notes:"Aerobic base building."},
+    {day:"Thursday",type:"Tempo",dist:5,pace:"7:15 – 7:30",notes:"1.5 mi warmup, 2 mi Tempo, 1.5 mi cooldown."},
+    {day:"Friday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
+    {day:"Saturday",type:"Long Run",dist:13,pace:"8:45 – 9:45",notes:"Stepping into higher distance blocks."},
+    {day:"Sunday",type:"Recovery",dist:3,pace:"9:45+",notes:"Slow shakeout."}
+  ]},
+  {week:6,dates:"July 6 – July 12, 2026",phase:"Strength & Stamina",tot:35,schedule:[
+    {day:"Monday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
+    {day:"Tuesday",type:"Intervals",dist:6,pace:"6:45 – 7:00",notes:"1.5 mi warmup, 6×800m @ Interval pace, 1.5 mi cooldown."},
+    {day:"Wednesday",type:"Easy",dist:6,pace:"8:45 – 9:45",notes:"Easy run."},
+    {day:"Thursday",type:"Tempo",dist:6,pace:"7:15 – 7:30",notes:"1.5 mi warmup, 3 mi Tempo, 1.5 mi cooldown."},
+    {day:"Friday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
+    {day:"Saturday",type:"Long Run",dist:14,pace:"8:45 – 9:45",notes:"Consistent, controlled continuous effort."},
+    {day:"Sunday",type:"Recovery",dist:3,pace:"9:45+",notes:"Slow shakeout."}
+  ]},
+  {week:7,dates:"July 13 – July 19, 2026",phase:"Strength & Stamina",tot:38,schedule:[
+    {day:"Monday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
+    {day:"Tuesday",type:"Intervals",dist:6,pace:"6:45 – 7:00",notes:"1.5 mi warmup, 3×1 Mile @ Interval pace (3 min jogging rest), 1.5 mi cooldown."},
+    {day:"Wednesday",type:"Easy",dist:6,pace:"8:45 – 9:45",notes:"Easy conversational pace."},
+    {day:"Thursday",type:"MP Workout",dist:7,pace:"8:00",notes:"1 mi warmup, 5 mi continuous at Marathon Pace (8:00), 1 mi cooldown."},
+    {day:"Friday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
+    {day:"Saturday",type:"Long Run",dist:15,pace:"Mixed",notes:"Run first 12 miles Easy, accelerate to exact Marathon Pace (8:00) for the last 3 miles."},
+    {day:"Sunday",type:"Recovery",dist:4,pace:"9:45+",notes:"Flush out the accumulated leg fatigue."}
+  ]},
+  {week:8,dates:"July 20 – July 26, 2026",phase:"Strength & Stamina (Cutback)",tot:30,schedule:[
+    {day:"Monday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
+    {day:"Tuesday",type:"Easy",dist:5,pace:"8:45 – 9:45",notes:"Strictly easy running."},
+    {day:"Wednesday",type:"Easy",dist:5,pace:"8:45 – 9:45",notes:"Cruising recovery miles."},
+    {day:"Thursday",type:"Easy",dist:6,pace:"8:45 – 9:45",notes:"Steady comfortable pace."},
+    {day:"Friday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
+    {day:"Saturday",type:"Long Run",dist:10,pace:"8:45 – 9:45",notes:"Abbreviated long run for joint recovery."},
+    {day:"Sunday",type:"Recovery",dist:4,pace:"9:45+",notes:"Very light jog."}
+  ]},
+  {week:9,dates:"July 27 – August 2, 2026",phase:"Strength & Stamina",tot:40,schedule:[
+    {day:"Monday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
+    {day:"Tuesday",type:"Intervals",dist:7,pace:"6:45 – 7:00",notes:"1.5 mi warmup, 3×1 Mile @ Interval pace (3 min jogging rest), 1.5 mi cooldown."},
+    {day:"Wednesday",type:"Easy",dist:6,pace:"8:45 – 9:45",notes:"Aerobic conditioning."},
+    {day:"Thursday",type:"Tempo",dist:7,pace:"7:15 – 7:30",notes:"1.5 mi warmup, 4 mi sustained Tempo, 1.5 mi cooldown."},
+    {day:"Friday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
+    {day:"Saturday",type:"Long Run",dist:16,pace:"8:45 – 9:45",notes:"Long steady aerobic time on your feet."},
+    {day:"Sunday",type:"Recovery",dist:4,pace:"9:45+",notes:"Slow active recovery shakeout."}
+  ]},
+  {week:10,dates:"August 3 – August 9, 2026",phase:"Peak Volume & Specificity",tot:42,schedule:[
+    {day:"Monday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
+    {day:"Tuesday",type:"Intervals",dist:7,pace:"6:45 – 7:00",notes:"2 mi warmup, 4×1200m @ Interval pace (3 min rest), 2 mi cooldown."},
+    {day:"Wednesday",type:"Easy",dist:7,pace:"8:45 – 9:45",notes:"Midweek base volume block."},
+    {day:"Thursday",type:"Tempo",dist:7,pace:"7:15 – 7:30",notes:"1.5 mi warmup, 4 mi sustained Tempo, 1.5 mi cooldown."},
+    {day:"Friday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
+    {day:"Saturday",type:"Long Run",dist:17,pace:"8:45 – 9:45",notes:"Focus on steady fuel and hydration intake strategies."},
+    {day:"Sunday",type:"Recovery",dist:4,pace:"9:45+",notes:"Slow recovery jog."}
+  ]},
+  {week:11,dates:"August 10 – August 16, 2026",phase:"Peak Volume & Specificity",tot:45,schedule:[
+    {day:"Monday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
+    {day:"Tuesday",type:"Intervals",dist:7,pace:"6:45 – 7:00",notes:"2 mi warmup, 4×1200m @ Interval pace, 2 mi cooldown."},
+    {day:"Wednesday",type:"Easy",dist:7,pace:"8:45 – 9:45",notes:"Aerobic focus."},
+    {day:"Thursday",type:"MP Workout",dist:8,pace:"8:00",notes:"1 mi warmup, 6 mi continuous at Marathon Pace (8:00), 1 mi cooldown."},
+    {day:"Friday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
+    {day:"Saturday",type:"Long Run",dist:18,pace:"Mixed",notes:"Run first 12 miles Easy, transition immediately to 6 miles at Marathon Pace (8:00)."},
+    {day:"Sunday",type:"Recovery",dist:5,pace:"9:45+",notes:"Flush legs thoroughly."}
+  ]},
+  {week:12,dates:"August 17 – August 23, 2026",phase:"Peak Volume & Specificity (Cutback)",tot:35,schedule:[
+    {day:"Monday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
+    {day:"Tuesday",type:"Easy",dist:6,pace:"8:45 – 9:45",notes:"Deliberately slow things down."},
+    {day:"Wednesday",type:"Easy",dist:6,pace:"8:45 – 9:45",notes:"Regenerative miles."},
+    {day:"Thursday",type:"Easy",dist:6,pace:"8:45 – 9:45",notes:"Easy cruising."},
+    {day:"Friday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
+    {day:"Saturday",type:"Long Run",dist:12,pace:"8:45 – 9:45",notes:"Reduced volume long run to prepare for peak 20-miler next week."},
+    {day:"Sunday",type:"Recovery",dist:5,pace:"9:45+",notes:"Slow active recovery shakeout."}
+  ]},
+  {week:13,dates:"August 24 – August 30, 2026",phase:"Peak Volume & Specificity",tot:48,schedule:[
+    {day:"Monday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
+    {day:"Tuesday",type:"Intervals",dist:8,pace:"6:45 – 7:00",notes:"2 mi warmup, 4×1600m (1 Mile) @ Interval pace (3 min rest), 2 mi cooldown."},
+    {day:"Wednesday",type:"Easy",dist:7,pace:"8:45 – 9:45",notes:"Midweek baseline maintenance."},
+    {day:"Thursday",type:"Tempo",dist:8,pace:"7:15 – 7:30",notes:"1.5 mi warmup, 5 mi sustained Tempo, 1.5 mi cooldown."},
+    {day:"Friday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
+    {day:"Saturday",type:"Long Run",dist:20,pace:"8:45 – 9:45",notes:"First Peak 20-Miler. Strictly easy and conversational. Time on feet is the goal."},
+    {day:"Sunday",type:"Recovery",dist:5,pace:"9:45+",notes:"Very slow active recovery shakeout."}
+  ]},
+  {week:14,dates:"August 31 – September 6, 2026",phase:"Peak Volume & Specificity",tot:46,schedule:[
+    {day:"Monday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
+    {day:"Tuesday",type:"Intervals",dist:8,pace:"6:45 – 7:00",notes:"2 mi warmup, 4×1600m @ Interval pace, 2 mi cooldown."},
+    {day:"Wednesday",type:"Easy",dist:8,pace:"8:45 – 9:45",notes:"Solid easy base run."},
+    {day:"Thursday",type:"MP Workout",dist:9,pace:"8:00",notes:"1 mi warmup, 7 mi continuous at Marathon Pace (8:00), 1 mi cooldown."},
+    {day:"Friday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
+    {day:"Saturday",type:"Long Run",dist:16,pace:"Mixed",notes:"Fast-Finish Long Run. Run 12 miles Easy, smash the final 4 miles exactly at 8:00 MP."},
+    {day:"Sunday",type:"Recovery",dist:5,pace:"9:45+",notes:"Slow active recovery shakeout."}
+  ]},
+  {week:15,dates:"September 7 – September 13, 2026",phase:"Peak Volume & Specificity",tot:50,schedule:[
+    {day:"Monday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
+    {day:"Tuesday",type:"Intervals",dist:8,pace:"6:45 – 7:00",notes:"2 mi warmup, 4×1600m @ Interval pace, 2 mi cooldown."},
+    {day:"Wednesday",type:"Easy",dist:8,pace:"8:45 – 9:45",notes:"Highest midweek base run volume."},
+    {day:"Thursday",type:"Tempo",dist:9,pace:"7:15 – 7:30",notes:"1.5 mi warmup, 6 mi sustained Tempo, 1.5 mi cooldown."},
+    {day:"Friday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
+    {day:"Saturday",type:"Long Run",dist:20,pace:"Mixed",notes:"Final Peak 20-Miler. Run 15 miles Easy, finish the final 5 miles dynamically at 8:00 MP."},
+    {day:"Sunday",type:"Recovery",dist:5,pace:"9:45+",notes:"Highest mileage block cleared! Great job."}
+  ]},
+  {week:16,dates:"September 14 – September 20, 2026",phase:"The Taper",tot:38,schedule:[
+    {day:"Monday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day. Taper begins."},
+    {day:"Tuesday",type:"Intervals",dist:7,pace:"6:45 – 7:00",notes:"2 mi warmup, 3×1200m @ Interval pace, 2 mi cooldown."},
+    {day:"Wednesday",type:"Easy",dist:6,pace:"8:45 – 9:45",notes:"Slightly abbreviated mileage."},
+    {day:"Thursday",type:"MP Workout",dist:7,pace:"8:00",notes:"1 mi warmup, 5 mi at Marathon Pace, 1 mi cooldown."},
+    {day:"Friday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
+    {day:"Saturday",type:"Long Run",dist:14,pace:"8:45 – 9:45",notes:"Shorter long run. Feeling fresh and springy is the goal."},
+    {day:"Sunday",type:"Recovery",dist:4,pace:"9:45+",notes:"Slow recovery jog."}
+  ]},
+  {week:17,dates:"September 21 – September 27, 2026",phase:"The Taper",tot:30,schedule:[
+    {day:"Monday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
+    {day:"Tuesday",type:"Tempo",dist:6,pace:"7:15 – 7:30",notes:"1.5 mi warmup, 3 mi Tempo, 1.5 mi cooldown."},
+    {day:"Wednesday",type:"Easy",dist:5,pace:"8:45 – 9:45",notes:"Easy low-impact miles."},
+    {day:"Thursday",type:"Easy",dist:5,pace:"8:45 – 9:45",notes:"Focus on recovery, nutrition, and sleep."},
+    {day:"Friday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
+    {day:"Saturday",type:"Long Run",dist:10,pace:"Mixed",notes:"6 miles Easy, 4 miles locked smoothly into 8:00 MP."},
+    {day:"Sunday",type:"Recovery",dist:4,pace:"9:45+",notes:"Slow active recovery shakeout."}
+  ]},
+  {week:18,dates:"September 28 – October 4, 2026",phase:"The Taper",tot:20,schedule:[
+    {day:"Monday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
+    {day:"Tuesday",type:"Easy",dist:4,pace:"8:45 – 9:45",notes:"Keep legs moving gently."},
+    {day:"Wednesday",type:"Easy",dist:4,pace:"8:45 – 9:45",notes:"Easy short block."},
+    {day:"Thursday",type:"Easy",dist:3,pace:"8:45 – 9:45",notes:"Very light running."},
+    {day:"Friday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
+    {day:"Saturday",type:"Long Run",dist:7,pace:"8:45 – 9:45",notes:"Abbreviated psychological long run."},
+    {day:"Sunday",type:"Recovery",dist:2,pace:"9:45+",notes:"Slow shakeout."}
+  ]},
+  {week:19,dates:"October 5 – October 11, 2026",phase:"Race Week",tot:38.2,schedule:[
+    {day:"Monday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day. Carbo-loading window begins mid-week."},
+    {day:"Tuesday",type:"Strides",dist:4,pace:"Mixed",notes:"3 miles Easy, finish last mile with 4×100m progressive strides to keep leg turnover sharp."},
+    {day:"Wednesday",type:"Easy",dist:3,pace:"8:45 – 9:45",notes:"Short cruise. Rest up."},
+    {day:"Thursday",type:"Easy",dist:3,pace:"8:45 – 9:45",notes:"Final short run before Chicago. Lock in the baseline state."},
+    {day:"Friday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day. Travel to Chicago / Expo packet pickup."},
+    {day:"Saturday",type:"Shakeout",dist:2,pace:"9:45+",notes:"Short shakeout jog in Chicago to get rid of nervous energy."},
+    {day:"Sunday",type:"RACE DAY",dist:26.2,pace:"8:00",notes:"Chicago Marathon! Lock into 8:00/mile rhythm early. Watch out for GPS dropouts downtown. Dominate Roosevelt Road at mile 26. Collect your 3:30 medal!"}
+  ]}
+];
+
+// ═══════════════════════════════════════════════════════════
+// CHICAGO TIPS
+// ═══════════════════════════════════════════════════════════
+const TIPS = {
+  7:  {icon:"🎯",title:"First MP Workout",text:"8:00/mile is your race pace. Building this rhythm now is key — your body needs to learn what it feels like when you're locked in. Notice how sustainable it feels vs. your Tempo effort."},
+  10: {icon:"📍",title:"Chicago Course Insight",text:"Chicago is pancake flat. No downhill relief means constant repetitive muscular stress. Practice running your long runs at perfectly even effort — no hills to break the monotony.\n\nStart practicing in-run nutrition: gels every 45–60 min with the aid stations every mile."},
+  13: {icon:"🏔️",title:"First 20-Miler",text:"This is the psychological summit. Once you run 20, you know you can run 26.2. Keep it strictly conversational — ego-checking this run is the smartest decision you'll make."},
+  15: {icon:"🏆",title:"Peak Week Complete",text:"Your highest mileage week is behind you. The fitness gains are banked. Trust the taper — your legs will rebuild and you'll toe the line stronger than you've ever felt."},
+  16: {icon:"😰",title:"Taper Madness Warning",text:"Taper weeks often feel awful: sluggish legs, phantom aches, restlessness. This is completely normal — your body is loading glycogen and healing micro-tears. Do NOT add extra miles."},
+  18: {icon:"✈️",title:"Travel & Expo Week",text:"Fly or drive to Chicago Thursday or Friday. Expo is at McCormick Place — budget 1–2 hours. Stay off your feet after bib pickup. Hydrate aggressively during travel.\n\nPre-lay your race-day kit Saturday night. Nothing new on race day."},
+  19: {icon:"🏙️",title:"Race Day Intelligence",text:"⚡ GPS drops in the downtown canyon (miles 1–3). Use pace alerts, not GPS splits.\n🏔️ Roosevelt Road at mile 25.5 is a subtle uphill — save quad power.\n🚦 Corrals close at 7:45 AM. Arrive by 6:15 AM for bag check.\n🐢 Start conservative — the first 10 miles must feel embarrassingly easy.\n🌡️ Chicago Oct weather: 45–65°F. Layer for the start corral wait."}
+};
+
+// ═══════════════════════════════════════════════════════════
+// PACE GUIDE
+// ═══════════════════════════════════════════════════════════
+const PACES = [
+  {key:"mp",   label:"Marathon Pace", dot:"#14b8a6",cls:"pi-mp",   mi:"8:00",       km:"4:58"},
+  {key:"easy", label:"Easy",          dot:"#20d470",cls:"pi-easy", mi:"8:45 – 9:45",km:"5:26 – 6:03"},
+  {key:"tempo",label:"Tempo",         dot:"#f97316",cls:"pi-tempo",mi:"7:15 – 7:30",km:"4:30 – 4:39"},
+  {key:"int",  label:"Intervals",     dot:"#ef4444",cls:"pi-int",  mi:"6:45 – 7:00",km:"4:12 – 4:21"},
+  {key:"rec",  label:"Recovery",      dot:"#a855f7",cls:"pi-rec",  mi:"9:45+",      km:"6:03+"}
+];
+
+// ═══════════════════════════════════════════════════════════
+// PHASE GROUPING
+// ═══════════════════════════════════════════════════════════
+const PHASES = [
+  {label:"Phase 1 — Base & Efficiency",        weeks:[1,2,3,4]},
+  {label:"Phase 2 — Strength & Stamina",       weeks:[5,6,7,8]},
+  {label:"Phase 3 — Peak Volume & Specificity",weeks:[9,10,11,12,13,14,15]},
+  {label:"Phase 4 — The Taper",                weeks:[16,17,18]},
+  {label:"Race Week",                          weeks:[19]}
+];
+
+// ═══════════════════════════════════════════════════════════
+// PT EXERCISES
+// ═══════════════════════════════════════════════════════════
+const PT_EX = [
+  {key:"clamshells",label:"Banded Clamshells",    sets:"2 sets × 15 reps",icon:"🦀"},
+  {key:"legRaises", label:"Side-Lying Leg Raises",sets:"2 sets × 15 reps",icon:"🦵"},
+  {key:"monster",   label:"Monster Walks",         sets:"2 sets × 20 paces",icon:"👾"},
+  {key:"bridges",   label:"Single-Leg Glute Bridges",sets:"2 sets × 10 reps",icon:"🍑"}
+];
+
+// ═══════════════════════════════════════════════════════════
+// STRENGTH DATA  —  6 exercises per day, ITBS-specific
+// Day A: Hip Stability & Single-Leg Control  (Tuesday after run)
+// Day B: Posterior Chain & Injury-Proof Resilience  (Thursday after run)
+// ═══════════════════════════════════════════════════════════
+const STRENGTH = {
+  A: {
+    label: 'Day A', title: 'Hip Stability & Single-Leg Control', calDay: 'Tuesday',
+    exercises: [
+      {
+        id: 'copenplank', name: 'Copenhagen Adductor Plank',
+        equipment: ['Bench'], sets: '3 × 12–15 s hold / side', itbCrucial: true,
+        cue: 'Top foot on bench edge, bottom leg lifts to meet it — ribs braced, hips square.',
+        why: 'The adductors are the neglected counterpart to glute med. Weak adductors create lateral pelvic instability that forces the IT band to compensate on every stride. This is the most evidence-backed adductor strengthener available with a bench.',
+        cues: [
+          'Lie on your side; prop on forearm. Place the top foot (laces down) on the bench edge closest to you',
+          'Lift your hips off the floor into a side plank — bottom leg hangs free',
+          'From there, raise the bottom leg up toward the top foot using your adductor. Hold the top position',
+          'Keep your body in a straight line — do not let your hips pike or sag'
+        ],
+        mistakes: [
+          'Letting the top hip rotate backward — this turns it into a hip flexor exercise, not adductor',
+          'Starting with the active lift before you can hold the base plank cleanly — build the plank hold first'
+        ],
+        load: 'Weeks 1–3: Hold the base side plank only (no bottom leg lift), 20–30s. Weeks 4–8: Add the bottom leg lift, aim for 10 reps. Weeks 9+: 15 reps with 2-second holds at the top.'
+      },
+      {
+        id: 'lsd', name: 'Lateral Step-Down',
+        equipment: ['Bench'], sets: '3 × 10 reps / leg', itbCrucial: true,
+        cue: 'Stand on one leg at the bench edge, lower the free foot slowly toward the floor — knee tracks directly over the second toe the entire way.',
+        why: 'The single most ITBS-specific exercise in existence. Research shows that failure to eccentrically control the quad and hip during single-leg loading is the mechanical root cause of IT band impingement. This trains the exact motor pattern that breaks down during miles 16–20.',
+        cues: [
+          'Stand sideways on the bench edge on one foot; let the other leg hang freely off the side',
+          'Slowly lower the hanging foot toward the floor by bending your standing knee — 4-second descent',
+          'Knee must track in line with the second toe — not caving inward (valgus), not flaring out',
+          'Touch the floor lightly, then press back to standing. Do not push off the floor — all force from the standing leg'
+        ],
+        mistakes: [
+          'Letting the knee collapse inward during the descent — place a mirror to the side if possible to monitor',
+          'Speeding through the eccentric — a fast lowering defeats the entire purpose; 4 full seconds minimum'
+        ],
+        load: 'Weeks 1–3: Bodyweight only on a low surface (use a step if the bench is too challenging). Weeks 4–9: Add 1×10–15lb DB held in each hand. Weeks 10+: 2×20lb DBs. Difficulty should never compromise knee tracking.'
+      },
+      {
+        id: 'bss', name: 'Bulgarian Split Squats',
+        equipment: ['DB','Bench'], sets: '3 × 8–10 reps / leg', itbCrucial: true,
+        cue: 'Drive through the front heel and feel the glute load — not the quad.',
+        why: 'Single-leg loading exposes and corrects the quad/glute imbalances that cause lateral knee drift and IT band stress on every running stride.',
+        cues: [
+          'Front foot far enough forward that your shin stays close to vertical at the bottom',
+          'Drive through the full heel of the front foot — if you feel it only in your quad, your foot is too close',
+          'Torso stays upright; lean forward slightly from the hip only — not the spine',
+          'Rear knee hovers 1–2 inches off the floor at the bottom; touch and go, no bouncing'
+        ],
+        mistakes: [
+          'Front knee collapsing inward (valgus) — this is the exact movement fault you\'re training to eliminate',
+          'Pushing off the back toes at the bottom — your rear leg is a balance assist, not a launch pad'
+        ],
+        load: 'Weeks 1–3: Bodyweight only. Weeks 4–7: 2×10–15lb. Weeks 8–15: 2×20–30lb. Add weight only when 10 reps feel genuinely controlled, not just completed.'
+      },
+      {
+        id: 'cha', name: 'Cable Hip Abductions',
+        equipment: ['Cable'], sets: '3 × 15 reps / side', itbCrucial: true,
+        cue: 'Pelvis stays level throughout — lift the leg, do not hike the hip.',
+        why: 'Directly trains the Gluteus Medius — the primary muscle preventing hip drop during every running stride. Hip drop is the #1 biomechanical driver of IT band overload.',
+        cues: [
+          'Ankle cuff at the lowest cable position; stand sideways with the working leg furthest from the stack',
+          'Slight bend in the standing knee; stand tall, do not lean away from the cable',
+          'Lift the working leg directly to the side in a pure abduction arc — no forward swing, no trunk lean',
+          'Lower slowly over 3 seconds — the eccentric return is where glute med strength is built'
+        ],
+        mistakes: [
+          'Leaning away from the cable to help the lift — this is the obliques compensating, not glute med working',
+          'Hiking the hip upward instead of abducting — if your hip rises, the weight is too heavy'
+        ],
+        load: 'Start at 5–10 lbs. This is a precision exercise, not a strength exercise. Build to 15–20 lbs over 8 weeks. Never sacrifice pelvic level for more weight.'
+      },
+      {
+        id: 'wsu', name: 'Weighted Step-Ups',
+        equipment: ['DB','Bench'], sets: '3 × 10 reps / leg', itbCrucial: false,
+        cue: 'Drive through the heel of the elevated foot; the trailing leg is completely passive.',
+        why: 'Mimics the single-leg push-off load of each running stride. Builds concentric quad and glute strength at the exact knee flexion angle used during the propulsion phase of gait.',
+        cues: [
+          'Step onto the bench fully — entire foot planted, not just the ball of the foot',
+          'Initiate by pressing the elevated heel into the bench — not by pushing off the ground foot',
+          'Stand fully upright at the top, hips extended, for a 1-second pause',
+          'Lower the trailing leg slowly over 3 seconds — this controlled descent is the eccentric stimulus'
+        ],
+        mistakes: [
+          'Bouncing off the trailing leg to propel yourself up — this defeats the single-leg loading entirely',
+          'Leaning the torso forward — shifts load off the glutes and onto the lower back'
+        ],
+        load: 'Weeks 1–4: 2×15lb. Weeks 5–10: 2×20–25lb. Weeks 11+: 2×30lb. When 30lb for 10 reps is easy, slow the lowering phase to 4 seconds.'
+      },
+      {
+        id: 'cpp', name: 'Cable Pallof Press',
+        equipment: ['Cable'], sets: '3 × 10 reps / side', itbCrucial: false,
+        cue: 'Press straight out, hold 2 full seconds. Resisting the rotation IS the entire exercise.',
+        why: 'Anti-rotation core stability — the ability to hold your pelvis and spine neutral against lateral forces. This is what keeps your trunk from twisting and your gait from breaking down after mile 18.',
+        cues: [
+          'Cable at chest height; stand perpendicular to the stack, feet shoulder-width',
+          'Pull handle to your sternum, brace your full core hard',
+          'Press directly forward until arms are fully extended — zero hip or shoulder rotation',
+          'Hold 2 full seconds extended, then return slowly to sternum'
+        ],
+        mistakes: [
+          'Hips rotating toward the cable during the press — that rotation is exactly what you\'re training to prevent',
+          'Going too heavy — control at light weight beats wobbling at heavy weight every time'
+        ],
+        load: '5–15 lbs is typical and appropriate. If you can\'t hold 2 seconds perfectly extended, you\'re too heavy. This is a control drill, not a strength drill.'
+      }
+    ]
+  },
+  B: {
+    label: 'Day B', title: 'Posterior Chain & Resilience', calDay: 'Thursday',
+    exercises: [
+      {
+        id: 'nordic', name: 'Nordic Curl Negatives',
+        equipment: ['Bench'], sets: '3 × 4–5 reps', itbCrucial: false,
+        cue: 'Lower your body as slowly as possible — aim for 5+ seconds. Catch with hands at the bottom.',
+        why: 'The gold standard for hamstring injury prevention in runners. The eccentric hamstring strength built here directly protects against hamstring strains and late-race breakdown. A 2015 FIFA study showed 51% reduction in hamstring injuries with this exercise alone.',
+        cues: [
+          'Kneel on a mat, anchor your feet by sliding them under the bench (bench presses down on your ankles)',
+          'Arms crossed over chest or lightly at your sides. Whole body in a straight line from knees to crown',
+          'Lower your body SLOWLY toward the floor using only the strength of your hamstrings resisting',
+          'When you can no longer control the descent, catch yourself with both hands and do a light push-up back to start',
+          'The push-up return does not count as a rep — only the lowering phase does'
+        ],
+        mistakes: [
+          'Dropping fast — the entire stimulus is in the slow eccentric; if you fall in under 2 seconds, the exercise is wasted',
+          'Hinging at the hips — you should fall as one rigid unit from knee to crown, like a plank being lowered'
+        ],
+        load: 'Weeks 1–3: 3×3 reps, aim for 3-second lowering. Weeks 4–8: 3×5 reps, 5-second lowering. Weeks 9–15: 3×6 reps, 7-second lowering. These will always feel hard — that means they\'re working.'
+      },
+      {
+        id: 'slrdl', name: 'Single-Leg RDLs',
+        equipment: ['DB'], sets: '3 × 10 reps / leg', itbCrucial: false,
+        cue: 'Hinge at the hips with a proud chest — the lower back never rounds.',
+        why: 'Builds eccentric hamstring strength and single-leg balance under load. Critical for the flight and landing phase of every running stride. Weakness here is a leading cause of late-race hamstring cramping.',
+        cues: [
+          'Hold DBs in front of your thighs; as you hinge, drag them down along the standing leg — they should nearly brush your shin',
+          'Hinge from the hip joint, not the waist — torso and rear leg are a single seesaw pivoting at the hip',
+          'Proud chest throughout; shoulder blades drawn back, spine long from tailbone to crown',
+          'Stop when you feel a strong hamstring stretch in the standing leg — usually around parallel'
+        ],
+        mistakes: [
+          'Rounding the lower back to reach further — stop where you can maintain a neutral spine',
+          'Rotating the rear hip open — keep both hip points facing straight down the entire time'
+        ],
+        load: 'Weeks 1–4: 1×15–20lb DB. Weeks 5–9: 1×25lb. Weeks 10+: 1×30lb. Prioritise balance and hamstring feel. If wobbling, go lighter — instability negates the stimulus.'
+      },
+      {
+        id: 'wht', name: 'Weighted Hip Thrusts',
+        equipment: ['DB','Bench'], sets: '3 × 12 reps', itbCrucial: false,
+        cue: 'Squeeze the glutes maximally at the top for 2 seconds — ribs down, do not hyperextend.',
+        why: 'The most direct gluteus maximus builder available. Weak glutes force the TFL and IT band to compensate for propulsion on every stride — this is the root cause of most ITBS cases.',
+        cues: [
+          'Upper back rests on the bench at shoulder blade level, not the neck',
+          'Feet flat, hip-width apart; shins vertical when hips are at full height',
+          'Drive through both heels — feeling it in quads means feet are too close',
+          'At the top: ribs down, glutes fully squeezed, hips fully extended — hold 2 seconds'
+        ],
+        mistakes: [
+          'Hyperextending the lower back at the top — ribs must stay braced down; lumbar arch = lumbar loading, not glute loading',
+          'Driving through the toes — this activates quads and hip flexors instead of glutes'
+        ],
+        load: 'Weeks 1–3: 1×30lb DB across lap. Weeks 4–8: both 30lb DBs side by side. Weeks 9+: add a resistance band just above the knees for additional glute med activation at the top.'
+      },
+      {
+        id: 'cpt', name: 'Cable Pull-Through',
+        equipment: ['Cable'], sets: '3 × 12–15 reps', itbCrucial: false,
+        cue: 'Hinge your hips back as the cable loads, then drive your hips forward explosively — like a kettlebell swing but controlled.',
+        why: 'Builds explosive hip extension power — the same motion as push-off during running. The cable provides constant tension through the full hip extension range that dumbbells cannot replicate.',
+        cues: [
+          'Set the cable at its lowest position. Stand facing away from the stack, feet shoulder-width, straddle the cable',
+          'Reach between your legs and grab the rope or handle; take a step forward until there is clear tension',
+          'Hinge your hips backward — weight in your heels, soft bend in the knees, torso leans forward',
+          'Drive your hips powerfully forward to standing, squeezing your glutes hard at lockout — arms just along for the ride'
+        ],
+        mistakes: [
+          'Squatting instead of hinging — knees should bend only slightly; this is a hip hinge, not a leg press',
+          'Rounding the lower back during the hinge — maintain a proud chest throughout the entire movement'
+        ],
+        load: 'This is a power exercise: use a weight where you can feel the glute snap at the top but still control the hinge. Typically 20–40 lbs on the cable stack. 3-second hinge back, explosive drive forward.'
+      },
+      {
+        id: 'cfp', name: 'Cable Face Pulls',
+        equipment: ['Cable'], sets: '3 × 15 reps', itbCrucial: false,
+        cue: 'Elbows high and wide at the peak, thumbs pointing behind you — full external rotation every rep.',
+        why: 'Counteracts the forward-rounded posture that accumulates across long training weeks. Posterior shoulder and rotator cuff strength directly improves arm drive mechanics and reduces shoulder fatigue in the final miles.',
+        cues: [
+          'Cable at face height or slightly above; rope attachment preferred',
+          'Pull toward your forehead — elbows flare high and wide, forming a "W" at the peak',
+          'At peak: externally rotate fully so thumbs point directly behind you',
+          '2-second pull, 2-second return — every rep deliberate'
+        ],
+        mistakes: [
+          'Pulling to the chin or chest — too low, loads the lats instead of rear delts and external rotators',
+          'Using momentum — this is a corrective exercise; a half-rep done fast achieves nothing'
+        ],
+        load: 'Keep moderate (15–25 lbs), always high-rep. This is postural correction, not a strength lift. Never sacrifice external rotation quality for heavier weight.'
+      },
+      {
+        id: 'slcr', name: 'Single-Leg Calf Raises',
+        equipment: ['Bench'], sets: '3 × 15–20 reps / leg', itbCrucial: false,
+        cue: 'Full range every single rep: deep Achilles stretch at the bottom, full plantarflexion at the top.',
+        why: 'The calf-Achilles complex absorbs ~8× body weight per running stride and provides 40% of total push-off energy. Insufficient eccentric calf strength is the primary cause of Achilles tendinopathy and plantar fasciitis in marathon runners.',
+        cues: [
+          'Ball of foot on bench edge, heel hangs completely off — full range is non-negotiable',
+          'Lower all the way until you feel a deep Achilles stretch; do not cut the range short',
+          'Rise to full plantarflexion; hard squeeze at the top for 1 second',
+          '3-second lowering — the slow eccentric is the entire therapeutic stimulus'
+        ],
+        mistakes: [
+          'Partial range of motion — skipping the bottom stretch bypasses the most important part of the exercise',
+          'Bouncing at the bottom — pause briefly at full stretch before pressing up'
+        ],
+        load: 'Weeks 1–4: Bodyweight. Weeks 5–9: 1×15lb DB. Weeks 10+: 1×25–30lb DB. When 20 reps at 30lb is easy, progress to a loaded backpack or weighted vest.'
+      }
+    ]
+  }
+};
+
+// ═══════════════════════════════════════════════════════════
+// CONSTANTS
+// ═══════════════════════════════════════════════════════════
+const MILES_TO_KM = 1.60934;
+const RACE_DATE = new Date('2026-10-11T07:30:00');
+const WEEK_STARTS = [
+  '2026-06-01','2026-06-08','2026-06-15','2026-06-22','2026-06-29',
+  '2026-07-06','2026-07-13','2026-07-20','2026-07-27','2026-08-03',
+  '2026-08-10','2026-08-17','2026-08-24','2026-08-31','2026-09-07',
+  '2026-09-14','2026-09-21','2026-09-28','2026-10-05'
+];
+const DAY_OFFSET = {Monday:0,Tuesday:1,Wednesday:2,Thursday:3,Friday:4,Saturday:5,Sunday:6};
+
+// ═══════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════
+let isMetric    = false;
+let completed   = {};   // { "1-Tuesday": true }
+let expanded    = new Set();
+let allExpanded = false;
+let itbMode     = false;
+let ptData      = {};   // { "YYYY-MM-DD": { clamshells:false, legRaises:false, monster:false, bridges:false } }
+let wkMeta      = {};   // { "1-Tuesday": { pain: null, cadence: false } }
+let foamOpen    = false;
+let scOpen      = false;
+let scActiveDay = 'A';
+let scCompleted = {};
+const expandedExercises = new Set(); // "A-bss" etc — UI state, not persisted
+let missed      = {};     // { "1-Tuesday": true } — logged but not run
+let weekBuffer  = 3;      // available "repeat a week" credits
+let repeatedWks = {};     // { 1: true } — weeks flagged to repeat
+
+// ═══════════════════════════════════════════════════════════
+// PERSISTENCE
+// ═══════════════════════════════════════════════════════════
+function save() {
+  try {
+    localStorage.setItem('mc_completed', JSON.stringify(completed));
+    localStorage.setItem('mc_metric',    JSON.stringify(isMetric));
+    localStorage.setItem('mc_expanded',  JSON.stringify([...expanded]));
+    localStorage.setItem('mc_itb',       JSON.stringify(itbMode));
+    localStorage.setItem('mc_pt',        JSON.stringify(ptData));
+    localStorage.setItem('mc_wkmeta',    JSON.stringify(wkMeta));
+    localStorage.setItem('mc_foam',      JSON.stringify(foamOpen));
+    localStorage.setItem('mc_sc_open',  JSON.stringify(scOpen));
+    localStorage.setItem('mc_sc_day',   JSON.stringify(scActiveDay));
+    localStorage.setItem('mc_sc_done',  JSON.stringify(scCompleted));
+    localStorage.setItem('mc_missed',   JSON.stringify(missed));
+    localStorage.setItem('mc_buffer',   JSON.stringify(weekBuffer));
+    localStorage.setItem('mc_rpt',      JSON.stringify(repeatedWks));
+  } catch(e) {}
+  syncToCloud();
+}
+
+function load() {
+  try {
+    const c = localStorage.getItem('mc_completed'); if (c) completed = JSON.parse(c);
+    const m = localStorage.getItem('mc_metric');    if (m) isMetric = JSON.parse(m);
+    const e = localStorage.getItem('mc_expanded');  if (e) expanded = new Set(JSON.parse(e));
+    const i = localStorage.getItem('mc_itb');       if (i) itbMode = JSON.parse(i);
+    const p = localStorage.getItem('mc_pt');        if (p) ptData = JSON.parse(p);
+    const w = localStorage.getItem('mc_wkmeta');    if (w) wkMeta = JSON.parse(w);
+    const f  = localStorage.getItem('mc_foam');     if (f)  foamOpen    = JSON.parse(f);
+    const so = localStorage.getItem('mc_sc_open'); if (so) scOpen      = JSON.parse(so);
+    const sd  = localStorage.getItem('mc_sc_day');  if (sd)  scActiveDay = JSON.parse(sd);
+    const sc  = localStorage.getItem('mc_sc_done'); if (sc)  scCompleted = JSON.parse(sc);
+    const mi  = localStorage.getItem('mc_missed');  if (mi)  missed      = JSON.parse(mi);
+    const buf = localStorage.getItem('mc_buffer');  if (buf) weekBuffer  = JSON.parse(buf);
+    const rpt = localStorage.getItem('mc_rpt');     if (rpt) repeatedWks = JSON.parse(rpt);
+  } catch(e) {}
+}
+
+// ═══════════════════════════════════════════════════════════
+// DATE HELPERS
+// ═══════════════════════════════════════════════════════════
+function parseLocal(s) {
+  const [y,m,d] = s.split('-').map(Number);
+  return new Date(y, m-1, d);
+}
+function todayKey() {
+  const t = new Date();
+  return `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`;
+}
+function getCurrentWeek() {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const starts = WEEK_STARTS.map(parseLocal);
+  for (let i = starts.length-1; i >= 0; i--) { if (today >= starts[i]) return i+1; }
+  return null;
+}
+function getWorkoutDate(weekIdx, dayName) {
+  const d = parseLocal(WEEK_STARTS[weekIdx]);
+  d.setDate(d.getDate() + (DAY_OFFSET[dayName] || 0));
+  return d;
+}
+function isToday(weekIdx, dayName) {
+  const d = getWorkoutDate(weekIdx, dayName);
+  const t = new Date();
+  return d.getFullYear()===t.getFullYear() && d.getMonth()===t.getMonth() && d.getDate()===t.getDate();
+}
+
+// ═══════════════════════════════════════════════════════════
+// PACE / DISTANCE CONVERSION
+// ═══════════════════════════════════════════════════════════
+function secToStr(s) {
+  const m = Math.floor(s/60), sec = Math.round(s%60);
+  return `${m}:${sec.toString().padStart(2,'0')}`;
+}
+function convertOnePace(p) {
+  if (!p || p==='N/A' || p==='Mixed') return p;
+  if (p==='8:00' && isMetric) return '4:58';
+  if (p==='8:00') return p;
+  const hasPlus = p.endsWith('+');
+  const base = hasPlus ? p.slice(0,-1) : p;
+  const parts = base.split(/\s*[–-]\s*/);
+  const conv = parts.map(pp => {
+    const [mm,ss] = pp.trim().split(':').map(Number);
+    return secToStr((mm*60+(ss||0))/MILES_TO_KM);
+  });
+  return conv.join(' – ') + (hasPlus ? '+' : '');
+}
+function displayPace(pace) { return isMetric ? convertOnePace(pace) : pace; }
+function displayDist(d)     { return isMetric ? (d*MILES_TO_KM).toFixed(1) : String(d); }
+function distUnit()         { return isMetric ? 'km' : 'mi'; }
+function convertNotes(text) {
+  if (!isMetric) return text;
+  return text.replace(/(\d+(?:\.\d+)?)\s*mi(?:les?)?(?!\w)/gi, (_, n) =>
+    `${(parseFloat(n) * MILES_TO_KM).toFixed(1)} km`
+  );
+}
+
+// ═══════════════════════════════════════════════════════════
+// WEEK HELPERS
+// ═══════════════════════════════════════════════════════════
+function weekWorkouts(wk) { return wk.schedule.filter(d => d.type !== 'Rest'); }
+function weekCompletedCount(wk) { return weekWorkouts(wk).filter(d => completed[`${wk.week}-${d.day}`]).length; }
+function isWeekDone(wk) { const wl = weekWorkouts(wk); return wl.length>0 && wl.every(d => completed[`${wk.week}-${d.day}`]); }
+
+function badgeClass(type) {
+  const m = {'Rest':'b-rest','Easy':'b-easy','Tempo':'b-tempo','Intervals':'b-intervals','Long Run':'b-long','Recovery':'b-recovery','MP Workout':'b-mp','Strides':'b-strides','Shakeout':'b-shakeout','RACE DAY':'b-race'};
+  return m[type] || 'b-rest';
+}
+
+// ═══════════════════════════════════════════════════════════
+// PROGRESS
+// ═══════════════════════════════════════════════════════════
+function updateProgress() {
+  const allWorkouts = DATA.flatMap(wk => weekWorkouts(wk).map(d => ({wk, d})));
+  const totalAll  = allWorkouts.length;
+  const doneCount = allWorkouts.filter(({wk,d}) => completed[`${wk.week}-${d.day}`]).length;
+  const missCount = allWorkouts.filter(({wk,d}) => missed[`${wk.week}-${d.day}`]).length;
+  // Missed workouts are excluded from denominator so they don't drag down %
+  const effective = totalAll - missCount;
+  const pct       = effective > 0 ? Math.round(doneCount / effective * 100) : 0;
+  let doneMi = 0;
+  DATA.forEach(wk => wk.schedule.forEach(d => { if (completed[`${wk.week}-${d.day}`]) doneMi += d.dist; }));
+  const weeksCompleted = DATA.filter(wk => isWeekDone(wk)).length;
+  document.getElementById('s-pct').textContent   = pct + '%';
+  document.getElementById('s-wkts').textContent  = doneCount;
+  document.getElementById('s-miles').textContent = isMetric ? (doneMi*MILES_TO_KM).toFixed(0) : doneMi.toFixed(0);
+  document.getElementById('s-miles-lbl').textContent = isMetric ? 'Km Run' : 'Miles Run';
+  document.getElementById('s-weeks').textContent = `${weeksCompleted}/19`;
+  document.getElementById('pbar').style.width    = pct + '%';
+  const missNote = missCount > 0 ? ` · ${missCount} missed` : '';
+  document.getElementById('pbar-l').textContent  = `${doneCount} of ${effective} workouts completed${missNote}`;
+}
+
+// ═══════════════════════════════════════════════════════════
+// COUNTDOWN
+// ═══════════════════════════════════════════════════════════
+function renderCountdown() {
+  const diff = RACE_DATE - new Date();
+  if (diff <= 0) { document.getElementById('countdown').textContent = '🏁 Race Day!'; return; }
+  document.getElementById('countdown').textContent = `${Math.ceil(diff/(1000*60*60*24))} days to race`;
+}
+
+// ═══════════════════════════════════════════════════════════
+// PACE GUIDE
+// ═══════════════════════════════════════════════════════════
+function renderPaceGuide() {
+  document.getElementById('pace-sub').textContent = `All paces in min/${isMetric?'km':'mile'}`;
+  const ul = isMetric ? 'min/km' : 'min/mi';
+  document.getElementById('pace-list').innerHTML = PACES.map(p => `
+    <div class="pi ${p.cls}">
+      <div class="pi-l"><div class="pi-dot" style="background:${p.dot}"></div>${p.label}</div>
+      <div class="pi-r"><div class="pi-val">${isMetric?p.km:p.mi}</div><div class="pi-u">${ul}</div></div>
+    </div>`).join('');
+}
+
+// ═══════════════════════════════════════════════════════════
+// SIDEBAR TIPS
+// ═══════════════════════════════════════════════════════════
+function renderSidebarTips() {
+  document.getElementById('stips').innerHTML = Object.entries(TIPS).map(([wk,t]) => `
+    <div class="stip" onclick="openWeek(${wk})">
+      <div class="stip-wk">${t.icon} Week ${wk} — ${DATA[wk-1].phase}</div>
+      <div class="stip-txt">${t.text.split('\n')[0]}</div>
+    </div>`).join('');
+}
+
+// ═══════════════════════════════════════════════════════════
+// PT TRACKER
+// ═══════════════════════════════════════════════════════════
+function getTodayPT() {
+  const key = todayKey();
+  if (!ptData[key]) ptData[key] = {clamshells:false,legRaises:false,monster:false,bridges:false};
+  return ptData[key];
+}
+function renderPTTracker() {
+  const slot = document.getElementById('pt-tracker-slot');
+  if (!itbMode) { slot.innerHTML = ''; return; }
+  const today = getTodayPT();
+  const doneCount = Object.values(today).filter(Boolean).length;
+  const pct = Math.round(doneCount/PT_EX.length*100);
+  const allDone = doneCount === PT_EX.length;
+
+  const rows = PT_EX.map(ex => {
+    const done = today[ex.key];
+    return `
+      <div class="pt-row${done?' done':''}" onclick="togglePT('${ex.key}')">
+        <div class="pt-check">${done?'✓':''}</div>
+        <div class="pt-icon">${ex.icon}</div>
+        <div class="pt-info">
+          <div class="pt-label">${ex.label}</div>
+          <div class="pt-sets">${ex.sets}</div>
+        </div>
+      </div>`;
+  }).join('');
+
+  slot.innerHTML = `
+    <div class="pt-card">
+      <div class="pt-card-hdr">
+        <h2>💪 Bulletproof Hip Routine</h2>
+        <p>${allDone ? '✅ All done today — great work!' : `${doneCount}/${PT_EX.length} exercises completed today`}</p>
+        <div class="pt-pbar-wrap"><div class="pt-pbar" style="width:${pct}%"></div></div>
+      </div>
+      <div class="pt-body">
+        ${rows}
+        <button class="pt-reset-btn" onclick="resetPT(event)">↺ Reset today's checklist</button>
+      </div>
+    </div>`;
+}
+
+// ═══════════════════════════════════════════════════════════
+// FOAM ROLL
+// ═══════════════════════════════════════════════════════════
+function toggleFoamRoll() {
+  foamOpen = !foamOpen;
+  const card = document.getElementById('foam-card');
+  card.classList.toggle('open', foamOpen);
+  save();
+}
+
+// ═══════════════════════════════════════════════════════════
+// STRENGTH SECTION
+// ═══════════════════════════════════════════════════════════
+function scDateKey(day) {
+  // Return the "current" date key for the given strength day letter,
+  // snapping to the upcoming or current Tue (A) / Thu (B) if not today.
+  // For simplicity: key is always today's date — user logs when they actually train.
+  return todayKey();
+}
+
+function scDayCompletedCount(dayLetter, dKey) {
+  return STRENGTH[dayLetter].exercises.filter(ex => scCompleted[`${dKey}-${dayLetter}-${ex.id}`]).length;
+}
+
+function renderStrengthSection() {
+  const section = document.getElementById('sc-section');
+  section.classList.toggle('open', scOpen);
+
+  // Update summary pill
+  const todayK = todayKey();
+  const doneA = scDayCompletedCount('A', todayK);
+  const doneB = scDayCompletedCount('B', todayK);
+  const totalDone = doneA + doneB;
+  const totalEx   = STRENGTH.A.exercises.length + STRENGTH.B.exercises.length;
+  const pill = document.getElementById('sc-pct-pill');
+  if (pill) {
+    const allDone = totalDone === totalEx;
+    pill.textContent = allDone ? `✓ All ${totalEx} done today` : `${totalDone}/${totalEx} done today`;
+    pill.style.background = allDone ? 'rgba(32,212,112,.18)' : 'rgba(90,144,245,.18)';
+    pill.style.color       = allDone ? '#20d470' : '#5a90f5';
+  }
+
+  if (!scOpen) { document.getElementById('sc-body').innerHTML = ''; return; }
+
+  const todayKey_ = todayKey();
+  const dayA = STRENGTH.A;
+  const dayB = STRENGTH.B;
+
+  function renderDay(dayLetter) {
+    const day = STRENGTH[dayLetter];
+    const dk  = todayKey_;
+    const doneCnt = scDayCompletedCount(dayLetter, dk);
+    const allDone = doneCnt === day.exercises.length;
+
+    const exRows = day.exercises.map(ex => {
+      const key     = `${dk}-${dayLetter}-${ex.id}`;
+      const done    = !!scCompleted[key];
+      const guideKey= `${dayLetter}-${ex.id}`;
+      const isExp   = expandedExercises.has(guideKey);
+      const eqBadges = ex.equipment.map(e => `<span class="eq-badge eq-${e.toLowerCase()}">${e}</span>`).join('');
+      const crucialBadge = ex.itbCrucial ? `<span class="itb-crucial">🦴 ITB Crucial</span>` : '';
+      const guidePanel = isExp ? `
+        <div class="sc-guide">
+          <div class="sc-guide-why">${ex.why}</div>
+          <div class="sc-guide-cols">
+            <div class="sc-guide-block">
+              <div class="sc-guide-lbl">Form Cues</div>
+              ${ex.cues.map(c => `<div class="sc-guide-item">${c}</div>`).join('')}
+            </div>
+            <div class="sc-guide-block">
+              <div class="sc-guide-lbl">Common Mistakes</div>
+              ${ex.mistakes.map(m => `<div class="sc-guide-item bad">${m}</div>`).join('')}
+            </div>
+          </div>
+          <div class="sc-guide-load">${ex.load}</div>
+        </div>` : '';
+      return `
+        <div class="sc-ex-row${done?' sc-done':''}" onclick="toggleStrengthEx('${dayLetter}','${ex.id}')">
+          <div class="sc-check">${done?'✓':''}</div>
+          <div class="sc-ex-info">
+            <div class="sc-ex-name">${ex.name}</div>
+            <div class="sc-ex-meta">
+              <span class="sc-sets">${ex.sets}</span>
+              ${eqBadges}${crucialBadge}
+            </div>
+            <div class="sc-cue"><span class="sc-cue-icon">💡</span><span>${ex.cue}</span></div>
+            <button class="sc-expand-btn${isExp?' open':''}" onclick="toggleExerciseGuide('${dayLetter}','${ex.id}',event)">
+              ${isExp ? '▲ hide guide' : '▼ full coaching guide'}
+            </button>
+          </div>
+        </div>${guidePanel}`;
+    }).join('');
+
+    return `
+      <div class="sc-day-title">
+        ${day.label}: ${day.title}
+        <span class="sc-day-done-count">${doneCnt}/${day.exercises.length} done</span>
+      </div>
+      ${exRows}
+      <button class="sc-reset-btn" onclick="resetStrengthDay('${dayLetter}',event)">↺ Reset ${day.label} for today</button>`;
+  }
+
+  const isAComplete = scDayCompletedCount('A', todayKey_) === STRENGTH.A.exercises.length;
+  const isBComplete = scDayCompletedCount('B', todayKey_) === STRENGTH.B.exercises.length;
+
+  document.getElementById('sc-body').innerHTML = `
+    <div class="sc-tabs">
+      <button class="sc-tab${scActiveDay==='A'?' active':''}${isAComplete?' complete-tab':''}" onclick="setScDay('A')">
+        <div class="sc-tab-dot"></div>
+        Day A · Quad &amp; Hip
+      </button>
+      <button class="sc-tab${scActiveDay==='B'?' active':''}${isBComplete?' complete-tab':''}" onclick="setScDay('B')">
+        <div class="sc-tab-dot"></div>
+        Day B · Posterior Chain
+      </button>
+    </div>
+    <div class="sc-day-panel">
+      ${renderDay(scActiveDay)}
+    </div>`;
+}
+
+function toggleStrengthSection() {
+  scOpen = !scOpen;
+  save();
+  renderStrengthSection();
+}
+
+function setScDay(letter) {
+  scActiveDay = letter;
+  save();
+  renderStrengthSection();
+}
+
+function toggleStrengthEx(dayLetter, exId) {
+  const key = `${todayKey()}-${dayLetter}-${exId}`;
+  scCompleted[key] = !scCompleted[key];
+  save();
+  renderStrengthSection();
+}
+
+function toggleExerciseGuide(dayLetter, exId, e) {
+  e.stopPropagation();
+  const k = `${dayLetter}-${exId}`;
+  expandedExercises.has(k) ? expandedExercises.delete(k) : expandedExercises.add(k);
+  renderStrengthSection();
+}
+
+function resetStrengthDay(dayLetter, e) {
+  e.stopPropagation();
+  const dk = todayKey();
+  STRENGTH[dayLetter].exercises.forEach(ex => { delete scCompleted[`${dk}-${dayLetter}-${ex.id}`]; });
+  save();
+  renderStrengthSection();
+  renderCalendar();
+}
+
+// ═══════════════════════════════════════════════════════════
+// CALENDAR RENDER
+// ═══════════════════════════════════════════════════════════
+function renderCalendar() {
+  const curWeek = getCurrentWeek();
+  let html = '';
+  PHASES.forEach(phase => {
+    html += `<div class="phase-sep">${phase.label}</div>`;
+    phase.weeks.forEach(wkNum => {
+      const wk = DATA[wkNum-1];
+      const isOpen = expanded.has(wkNum);
+      const isCur  = curWeek === wkNum;
+      const isDone = isWeekDone(wk);
+      const hasTip = !!TIPS[wkNum];
+      const wkts   = weekWorkouts(wk);
+      const doneCnt= weekCompletedCount(wk);
+      const pct    = wkts.length>0 ? Math.round(doneCnt/wkts.length*100) : 0;
+
+      const cls = ['wk', isOpen?'open':'', isCur?'is-cur':'', isDone?'is-done':'', (hasTip&&!isDone)?'has-tip':''].filter(Boolean).join(' ');
+      const totD = isMetric ? (wk.tot*MILES_TO_KM).toFixed(0) : (wk.tot%1===0 ? wk.tot : wk.tot.toFixed(1));
+
+      const dots = wkts.map(d => {
+        const k = `${wk.week}-${d.day}`;
+        const todayD = isCur && isToday(wkNum-1, d.day);
+        const doneD  = completed[k];
+        return `<div class="wdot${doneD?' d':''}${todayD&&!doneD?' c':''}"></div>`;
+      }).join('');
+
+      const badges = [
+        isCur  ? '<span class="cur-badge">Current</span>' : '',
+        hasTip ? '<span class="tip-badge">Chicago Tip</span>' : '',
+        doneCnt>0&&!isDone ? `<span class="wk-pct">${pct}%</span>` : '',
+        isDone ? '<span class="wk-pct">✓ Done</span>' : ''
+      ].filter(Boolean).join('');
+
+      html += `<div class="${cls}" id="wk-${wkNum}">
+        <div class="wk-hdr" onclick="toggleWeek(${wkNum})">
+          <div class="wnum">${wkNum}</div>
+          <div class="wk-meta">
+            <div class="wk-title">Week ${wkNum} ${badges}</div>
+            <div class="wk-dates">${wk.dates}</div>
+          </div>
+          <div class="wk-right">
+            <div class="wdots">${dots}</div>
+            <div class="wk-tot"><div class="mi">${totD}</div><div class="u">${distUnit()}</div></div>
+            <div class="chev">▼</div>
+          </div>
+        </div>
+        ${isOpen ? renderWeekBody(wk, wkNum) : ''}
+      </div>`;
+    });
+  });
+  document.getElementById('calendar').innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════════════
+// WEEK BODY RENDER (with ITB features)
+// ═══════════════════════════════════════════════════════════
+function renderWeekBody(wk, wkNum) {
+  const tip = TIPS[wkNum];
+  const tipHtml = tip ? `
+    <div class="ctip">
+      <div class="ctip-icon">${tip.icon}</div>
+      <div><div class="ctip-title">Chicago Tip · ${tip.title}</div><div class="ctip-txt">${tip.text}</div></div>
+    </div>` : '';
+
+  const rows = wk.schedule.map(d => {
+    const key    = `${wk.week}-${d.day}`;
+    const isDone = completed[key];
+    const isRest = d.type === 'Rest';
+    const isRace = d.type === 'RACE DAY';
+    const today  = isToday(wkNum-1, d.day);
+    const meta   = wkMeta[key] || {pain:null,cadence:false};
+
+    const isMissed = !!missed[key];
+    const rowCls = ['srow', isRest?'s-rest':'', isRace?'s-race':'', isDone?'s-done':'', isMissed?'s-missed':''].filter(Boolean).join(' ');
+
+    // Contextual ITB badges
+    let itbBadgeHtml = '';
+    if (itbMode && d.day==='Tuesday' && d.type==='Intervals') {
+      itbBadgeHtml = `<span class="itb-badge">⚠ ITB Safety<div class="itb-tooltip">Do not run tight track loops. Execute these intervals on a straight bike path or wide road to prevent asymmetrical hip dipping and IT band overload.</div></span>`;
+    }
+    if (itbMode && d.day==='Saturday' && d.type==='Long Run') {
+      itbBadgeHtml = `<span class="itb-badge">📐 Flat Course<div class="itb-tooltip">Chicago is flat — highly repetitive knee flexion angles with zero downhill relief. Focus on upright posture, a high cadence (170+ spm), and short strides to reduce lateral knee stress.</div></span>`;
+    }
+
+    // Strength reminder for Tuesday (Day A) and Thursday (Day B)
+    let strengthReminderHtml = '';
+    if (d.day === 'Tuesday' || d.day === 'Thursday') {
+      const scDay = d.day === 'Tuesday' ? 'A' : 'B';
+      const scDayData = STRENGTH[scDay];
+      strengthReminderHtml = `
+        <div class="sc-reminder">
+          <span>🏋️</span>
+          <span>Strength Day — <strong>${scDayData.label}: ${scDayData.title}</strong> after your run</span>
+        </div>`;
+    }
+
+    const distHtml = d.dist===0
+      ? `<div class="sdist s-zero">—</div>`
+      : `<div class="sdist">${displayDist(d.dist)}<span class="su"> ${distUnit()}</span></div>`;
+
+    const missedTagHtml = isMissed ? `<span class="missed-tag">missed</span>` : '';
+    const checkHtml = isRest
+      ? `<div class="wk-btns"><div class="cbox" style="opacity:0;pointer-events:none"></div><div class="mbox" style="opacity:0;pointer-events:none"></div></div>`
+      : `<div class="wk-btns">
+           <button class="cbox${isDone?' on':''}" onclick="toggleWorkout(${wkNum},'${d.day}',event)" title="Mark complete">${isDone?'✓':''}</button>
+           <button class="mbox${isMissed?' on':''}" onclick="markMissed(${wkNum},'${d.day}',event)" title="${isMissed?'Undo missed':'Mark as missed'}" style="${isRace?'opacity:0;pointer-events:none':''}">✕</button>
+         </div>`;
+
+    // ITB log row (pain + cadence) — shown on all non-rest, non-race days when ITB mode active
+    const showLog = itbMode && !isRest && !isRace;
+    const painVal = meta.pain;
+    const cadenceVal = meta.cadence;
+    const painColor = painVal===null ? '' : painVal===0 ? 'color:#20d470' : painVal<=2 ? 'color:#86efac' : painVal<=5 ? 'color:#fbbf24' : 'color:#ef4444';
+    const alertTag = (painVal!==null && painVal>=3)
+      ? `<span class="itb-alert-tag">⚠ ${painVal}/10 logged</span>` : '';
+
+    const logRow = showLog ? `
+      <div class="itb-log-row">
+        <label class="itb-cadence-label">
+          <input type="checkbox" ${cadenceVal?'checked':''} onchange="setCadence(${wkNum},'${d.day}',this.checked)" onclick="event.stopPropagation()">
+          Cadence focus ✓
+        </label>
+        <span style="color:var(--text3);font-size:10px">|</span>
+        <div class="itb-pain-wrap">
+          <span>Pain:</span>
+          <select class="itb-pain-select" onchange="setPain(${wkNum},'${d.day}',+this.value)" onclick="event.stopPropagation()" style="${painColor}">
+            <option value="" ${painVal===null?'selected':''} disabled>0–10</option>
+            <option value="0" ${painVal===0?'selected':''}>0 — None</option>
+            <option value="1" ${painVal===1?'selected':''}>1 — Minimal</option>
+            <option value="2" ${painVal===2?'selected':''}>2 — Mild</option>
+            <option value="3" ${painVal===3?'selected':''}>3 — Moderate ⚠</option>
+            <option value="4" ${painVal===4?'selected':''}>4 — Noticeable ⚠</option>
+            <option value="5" ${painVal===5?'selected':''}>5 — Significant ⚠</option>
+            <option value="6" ${painVal===6?'selected':''}>6 — Strong ⛔</option>
+            <option value="7" ${painVal===7?'selected':''}>7 — Intense ⛔</option>
+            <option value="8" ${painVal===8?'selected':''}>8 — Severe ⛔</option>
+            <option value="9" ${painVal===9?'selected':''}>9 — Extreme ⛔</option>
+            <option value="10" ${painVal===10?'selected':''}>10 — Stop Now ⛔</option>
+          </select>
+        </div>
+        ${alertTag}
+      </div>` : '';
+
+    return `
+      <div class="${rowCls}">
+        <div class="sday${today?' is-today':''}">${d.day}${today?' ●':''}</div>
+        <div><span class="badge ${badgeClass(d.type)}">${d.type}</span>${itbBadgeHtml}${missedTagHtml}</div>
+        ${distHtml}
+        <div class="space">${displayPace(d.pace)}</div>
+        <div class="snotes">${convertNotes(d.notes)}</div>
+        ${checkHtml}
+      </div>${logRow}${strengthReminderHtml}`;
+  }).join('');
+
+  const missedInWeek = wk.schedule.filter(d => missed[`${wk.week}-${d.day}`]).length;
+  const isRepeated   = !!repeatedWks[wkNum];
+  const repeatRow    = missedInWeek > 0 ? `
+    <div class="rpt-row">
+      <div class="rpt-info">
+        <strong>${missedInWeek} workout${missedInWeek>1?'s':''} missed</strong> — use a buffer week to repeat this block
+      </div>
+      <button class="rpt-btn${isRepeated?' active':''}${weekBuffer<=0&&!isRepeated?' disabled':''}"
+              onclick="repeatWeek(${wkNum},event)">
+        ${isRepeated ? '✓ Repeating' : '↺ Repeat Week'}
+      </button>
+    </div>` : '';
+
+  return `<div class="wk-body">${tipHtml}<div class="stable">${rows}</div>${repeatRow}</div>`;
+}
+
+// ═══════════════════════════════════════════════════════════
+// INTERACTIONS — TRAINING
+// ═══════════════════════════════════════════════════════════
+function toggleWeek(wkNum) {
+  expanded.has(wkNum) ? expanded.delete(wkNum) : expanded.add(wkNum);
+  save(); renderCalendar();
+}
+function toggleAll() {
+  allExpanded = !allExpanded;
+  if (allExpanded) DATA.forEach(wk => expanded.add(wk.week)); else expanded.clear();
+  document.getElementById('exall-btn').textContent = allExpanded ? 'Collapse All' : 'Expand All';
+  save(); renderCalendar();
+}
+function toggleWorkout(wkNum, day, e) {
+  e.stopPropagation();
+  const key = `${wkNum}-${day}`;
+  completed[key] = !completed[key];
+  if (completed[key]) delete missed[key]; // completing clears missed state
+  save(); updateProgress(); renderCalendar(); renderBufferWidget();
+}
+function setUnit(toMetric) {
+  isMetric = toMetric;
+  document.getElementById('btn-mi').classList.toggle('on', !isMetric);
+  document.getElementById('btn-km').classList.toggle('on', isMetric);
+  save(); renderPaceGuide(); updateProgress(); renderCalendar();
+}
+function openWeek(wkNum) {
+  expanded.add(wkNum); renderCalendar(); save();
+  setTimeout(() => { const el = document.getElementById(`wk-${wkNum}`); if (el) el.scrollIntoView({behavior:'smooth',block:'start'}); }, 80);
+}
+
+// ═══════════════════════════════════════════════════════════
+// INTERACTIONS — ITB MODE
+// ═══════════════════════════════════════════════════════════
+function setITBMode(on) {
+  itbMode = on;
+  document.body.classList.toggle('itb-on', on);
+  document.getElementById('itb-wrap').classList.toggle('on', on);
+  // Auto-open foam roll when activating ITB mode for the first time
+  if (on && !foamOpen) { foamOpen = true; document.getElementById('foam-card').classList.add('open'); }
+  save(); renderPTTracker(); renderCalendar();
+}
+
+// ═══════════════════════════════════════════════════════════
+// INTERACTIONS — PT TRACKER
+// ═══════════════════════════════════════════════════════════
+function togglePT(exKey) {
+  const key = todayKey();
+  if (!ptData[key]) ptData[key] = {clamshells:false,legRaises:false,monster:false,bridges:false};
+  ptData[key][exKey] = !ptData[key][exKey];
+  save(); renderPTTracker();
+}
+function resetPT(e) {
+  e.stopPropagation();
+  ptData[todayKey()] = {clamshells:false,legRaises:false,monster:false,bridges:false};
+  save(); renderPTTracker();
+}
+
+// ═══════════════════════════════════════════════════════════
+// INTERACTIONS — PAIN & CADENCE LOGGER
+// ═══════════════════════════════════════════════════════════
+function setPain(wkNum, day, score) {
+  const key = `${wkNum}-${day}`;
+  if (!wkMeta[key]) wkMeta[key] = {pain:null,cadence:false};
+  wkMeta[key].pain = score;
+  save();
+  if (score >= 3) showPainModal(score);
+  // Re-render just the week body for live feedback
+  const wk = DATA[wkNum-1];
+  const el = document.getElementById(`wk-${wkNum}`);
+  if (el) {
+    const body = el.querySelector('.wk-body');
+    if (body) body.outerHTML = renderWeekBody(wk, wkNum);
+  }
+}
+function setCadence(wkNum, day, val) {
+  const key = `${wkNum}-${day}`;
+  if (!wkMeta[key]) wkMeta[key] = {pain:null,cadence:false};
+  wkMeta[key].cadence = val;
+  save();
+}
+
+// ═══════════════════════════════════════════════════════════
+// PAIN MODAL
+// ═══════════════════════════════════════════════════════════
+function showPainModal(score) {
+  const desc = score<=4 ? 'moderate' : score<=6 ? 'significant' : 'severe';
+  document.getElementById('pain-modal-score-text').textContent = `You recorded ${score}/10 (${desc}) pain — above the 3/10 stop-running threshold.`;
+  document.getElementById('pain-overlay').classList.add('visible');
+  document.body.style.overflow = 'hidden';
+}
+function hidePainModal() {
+  document.getElementById('pain-overlay').classList.remove('visible');
+  document.body.style.overflow = '';
+}
+
+// ═══════════════════════════════════════════════════════════
+// SMART PIVOT ADVICE
+// ═══════════════════════════════════════════════════════════
+function getPivotAdvice(type, day) {
+  const t = type.toLowerCase();
+  if (['easy','recovery','shakeout'].includes(t)) {
+    return {
+      icon: '😌', title: 'Easy Day — Let It Go',
+      advice: 'No sweat! Easy miles are structural filler — they support your aerobic base but won\'t make or break your fitness. Do NOT try to make these up. Move cleanly to tomorrow\'s scheduled workout and don\'t look back.'
+    };
+  }
+  if (t === 'intervals') {
+    return {
+      icon: '⚡', title: 'Missed Speed Day',
+      advice: 'Missed speed day. If your legs feel 100% fresh tomorrow, you can swap Wednesday\'s easy run for this exact interval session. Otherwise, let it go entirely — one missed speed session will not derail your fitness. Consistency over perfection.'
+    };
+  }
+  if (t === 'tempo' || t === 'mp workout') {
+    return {
+      icon: '🏃', title: 'Missed Tempo Block',
+      advice: 'Missed your tempo block. You can push this to Friday, BUT if you do, you must move Saturday\'s Long Run to Sunday to protect your 48-hour joint and connective tissue recovery window. If Friday doesn\'t work either, skip it — do not stack a tempo workout directly before your long run.'
+    };
+  }
+  if (t === 'long run') {
+    return {
+      icon: '🗓️', title: 'Long Run — Critical Pivot Needed',
+      advice: 'The Long Run is the most important workout of the week and cannot be dropped. Pivot it to Sunday, skip Sunday\'s recovery run entirely, and ensure Monday is a strict rest day. Your legs need at least 48 hours before any intensity after a long run.'
+    };
+  }
+  return {
+    icon: '📋', title: 'Workout Logged as Missed',
+    advice: 'Logged and noted. Do not attempt to double up workouts to compensate — stacking sessions increases injury risk significantly. Stay consistent, move forward, and focus on the next scheduled workout.'
+  };
+}
+
+function showPivotModal(advice) {
+  document.getElementById('pivot-icon').textContent    = advice.icon;
+  document.getElementById('pivot-title').textContent   = advice.title;
+  document.getElementById('pivot-advice').textContent  = advice.advice;
+  document.getElementById('pivot-overlay').classList.add('visible');
+  document.body.style.overflow = 'hidden';
+}
+function hidePivotModal() {
+  document.getElementById('pivot-overlay').classList.remove('visible');
+  document.body.style.overflow = '';
+}
+
+function markMissed(wkNum, day, e) {
+  e.stopPropagation();
+  const key = `${wkNum}-${day}`;
+  const wasAlreadyMissed = !!missed[key];
+  if (wasAlreadyMissed) {
+    delete missed[key];
+    save(); updateProgress(); renderCalendar(); renderBufferWidget();
+    return;
+  }
+  missed[key] = true;
+  delete completed[key];
+  save(); updateProgress(); renderCalendar(); renderBufferWidget();
+  const wk = DATA[wkNum-1];
+  const d  = wk.schedule.find(s => s.day === day);
+  if (d) showPivotModal(getPivotAdvice(d.type, d.day));
+}
+
+// ═══════════════════════════════════════════════════════════
+// BUFFER WIDGET & REPEAT WEEK
+// ═══════════════════════════════════════════════════════════
+const MAX_BUFFER = 3;
+
+function renderBufferWidget() {
+  const avail = weekBuffer;
+  const spent = MAX_BUFFER - avail;
+  const pips  = Array.from({length: MAX_BUFFER}, (_, i) => {
+    if (i < avail) return '<div class="b-pip avail"></div>';
+    return '<div class="b-pip spent"></div>';
+  }).join('');
+
+  const warnHtml = avail === 0
+    ? `<div class="buffer-warn">⚠ Buffer exhausted. No additional training weeks can be repeated before race day. Prioritise consistency and recovery from here.</div>` : '';
+  const spentNote = spent > 0
+    ? `<span style="color:rgba(249,115,22,.7)"> · ${spent} used</span>` : '';
+
+  updateMobileStrip();
+  document.getElementById('buffer-widget').innerHTML = `
+    <div class="buffer-card">
+      <div class="buffer-hdr">
+        <h2>🛡️ Schedule Buffer</h2>
+        <p>Safety margin before race day</p>
+      </div>
+      <div class="buffer-body">
+        <div class="buffer-pips">${pips}</div>
+        <div class="buffer-stat${avail === 0 ? ' empty' : ''}">${avail}<span style="font-size:13px;font-weight:600;color:var(--text2)"> wk${avail !== 1 ? 's' : ''} available</span>${spentNote}</div>
+        <div class="buffer-desc">If a full week slips, use <strong>Repeat Week</strong> on any week card to re-run it. Each repeat costs 1 buffer week.</div>
+        ${warnHtml}
+      </div>
+    </div>`;
+}
+
+function repeatWeek(wkNum, e) {
+  e.stopPropagation();
+  if (repeatedWks[wkNum]) {
+    repeatedWks[wkNum] = false;
+    weekBuffer = Math.min(MAX_BUFFER, weekBuffer + 1);
+  } else {
+    if (weekBuffer <= 0) {
+      showPivotModal({
+        icon: '⚠️',
+        title: 'Buffer Exhausted',
+        advice: 'You have used all 3 available buffer weeks. No additional training weeks can be repeated before race day. Focus on completing scheduled workouts and staying healthy through to Chicago.'
+      });
+      return;
+    }
+    repeatedWks[wkNum] = true;
+    weekBuffer--;
+  }
+  save();
+  renderBufferWidget();
+  renderCalendar();
+}
+
+// ═══════════════════════════════════════════════════════════
+// EXPORT / IMPORT
+// ═══════════════════════════════════════════════════════════
+const LS_KEYS = ['mc_completed','mc_metric','mc_expanded','mc_itb','mc_pt',
+  'mc_wkmeta','mc_foam','mc_sc_open','mc_sc_day','mc_sc_done',
+  'mc_missed','mc_buffer','mc_rpt'];
+
+function exportData() {
+  const data = {};
+  LS_KEYS.forEach(k => { const v = localStorage.getItem(k); if (v) data[k] = v; });
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url;
+  a.download = `marathon-progress-${todayKey()}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importData() {
+  const input = document.createElement('input');
+  input.type   = 'file';
+  input.accept = '.json';
+  input.onchange = e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = evt => {
+      try {
+        const data = JSON.parse(evt.target.result);
+        LS_KEYS.forEach(k => { if (data[k] !== undefined) localStorage.setItem(k, data[k]); });
+        load();
+        rehydrate();
+        alert('Progress imported. Welcome back! 🏃');
+      } catch { alert('Could not read file — make sure it\'s a valid marathon-progress.json export.'); }
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+
+function rehydrate() {
+  document.body.classList.toggle('itb-on', itbMode);
+  document.getElementById('itb-wrap').classList.toggle('on', itbMode);
+  document.getElementById('btn-mi').classList.toggle('on', !isMetric);
+  document.getElementById('btn-km').classList.toggle('on', isMetric);
+  if (foamOpen) document.getElementById('foam-card').classList.add('open');
+  else document.getElementById('foam-card').classList.remove('open');
+  renderPaceGuide();
+  renderBufferWidget();
+  renderSidebarTips();
+  renderStrengthSection();
+  renderCalendar();
+  renderPTTracker();
+  updateProgress();
+  updateMobileStrip();
+}
+
+// ═══════════════════════════════════════════════════════════
+// MOBILE STRIP
+// ═══════════════════════════════════════════════════════════
+function updateMobileStrip() {
+  const days = Math.max(0, Math.ceil((RACE_DATE - new Date()) / (1000*60*60*24)));
+  const daysEl = document.getElementById('ms-days');
+  const bufEl  = document.getElementById('ms-buffer');
+  const paceEl = document.getElementById('ms-pace');
+  if (daysEl) daysEl.textContent = days > 0 ? days : '🏁';
+  if (bufEl)  bufEl.textContent  = weekBuffer;
+  if (paceEl) paceEl.textContent = isMetric ? '4:58' : '8:00';
+}
+
+// ═══════════════════════════════════════════════════════════
+// PWA — MANIFEST + INSTALL PROMPT
+// ═══════════════════════════════════════════════════════════
+let _installPrompt = null;
+
+function setupPWA() {
+  // Inline manifest via blob URL (works for file:// and http://)
+  const iconSvg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23e8387a'/><text y='.9em' font-size='80' x='10'>🏃</text></svg>`;
+  const manifest = {
+    name: 'Chicago Marathon 2026 — Training Dashboard',
+    short_name: 'Marathon 2026',
+    description: '19-Week marathon training tracker with strength, ITB recovery, and smart pivot guidance.',
+    start_url: './',
+    display: 'standalone',
+    background_color: '#07070f',
+    theme_color: '#e8387a',
+    orientation: 'portrait-primary',
+    icons: [
+      {src:`data:image/svg+xml,${iconSvg}`, sizes:'any', type:'image/svg+xml'},
+      {src:`data:image/svg+xml,${iconSvg}`, sizes:'192x192', type:'image/svg+xml'},
+      {src:`data:image/svg+xml,${iconSvg}`, sizes:'512x512', type:'image/svg+xml'}
+    ]
+  };
+  const blob = new Blob([JSON.stringify(manifest)], {type:'application/manifest+json'});
+  const link = document.createElement('link');
+  link.rel  = 'manifest';
+  link.href = URL.createObjectURL(blob);
+  document.head.appendChild(link);
+
+  // Android Chrome install prompt
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    _installPrompt = e;
+    document.getElementById('install-banner').classList.remove('hidden');
+  });
+  window.addEventListener('appinstalled', () => {
+    document.getElementById('install-banner').classList.add('hidden');
+    _installPrompt = null;
+  });
+
+  // iOS Safari: show banner if not already in standalone mode
+  const isIOS    = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isSafari = /safari/i.test(navigator.userAgent) && !/chrome/i.test(navigator.userAgent);
+  const isStandalone = window.navigator.standalone === true;
+  if (isIOS && isSafari && !isStandalone) {
+    const banner = document.getElementById('install-banner');
+    banner.querySelector('.install-banner-txt').innerHTML =
+      '<strong>Add to Home Screen</strong> — tap the Share button <span style="font-size:13px">⎙</span> then "Add to Home Screen"';
+    document.getElementById('install-btn').style.display = 'none';
+    banner.classList.remove('hidden');
+  }
+}
+
+function triggerInstall() {
+  if (_installPrompt) {
+    _installPrompt.prompt();
+    _installPrompt.userChoice.then(() => {
+      _installPrompt = null;
+      document.getElementById('install-banner').classList.add('hidden');
+    });
+  }
+}
+function dismissInstall() {
+  document.getElementById('install-banner').classList.add('hidden');
+}
+
+// ═══════════════════════════════════════════════════════════
+// CLOUD SYNC
+// ═══════════════════════════════════════════════════════════
+let syncUser = null;
+let syncTimer = null;
+
+async function initSync() {
+  // Gracefully no-ops when running on file:// or GitHub Pages (no API available)
+  try {
+    const res = await fetch('/api/me', { credentials: 'include' });
+    if (!res.ok) { renderSyncUI(null); return; }
+    syncUser = await res.json();
+    renderSyncUI(syncUser);
+
+    const pRes = await fetch('/api/progress', { credentials: 'include' });
+    if (pRes.ok) {
+      const { data } = await pRes.json();
+      if (data && Object.keys(data).length > 0) {
+        LS_KEYS.forEach(k => { if (data[k] !== undefined) localStorage.setItem(k, data[k]); });
+        load();
+        rehydrate();
+      }
+    }
+  } catch {
+    renderSyncUI(null);
+  }
+}
+
+function renderSyncUI(user) {
+  const el = document.getElementById('sync-status');
+  if (!el) return;
+  if (!user) {
+    el.innerHTML = `<div class="sync-pill"><a href="/api/auth/google">☁ <span>Sign in to sync</span></a></div>`;
+  } else {
+    el.innerHTML = `<div class="sync-pill synced" id="sync-pill" title="${user.email}">☁ <span>Synced</span></div>`;
+  }
+}
+
+function syncToCloud() {
+  if (!syncUser) return;
+  clearTimeout(syncTimer);
+  const pill = document.getElementById('sync-pill');
+  if (pill) { pill.className = 'sync-pill saving'; pill.innerHTML = '<span class="sync-spin">↻</span> <span>Saving…</span>'; }
+  syncTimer = setTimeout(async () => {
+    const data = {};
+    LS_KEYS.forEach(k => { const v = localStorage.getItem(k); if (v) data[k] = v; });
+    try {
+      const res = await fetch('/api/progress', {
+        method: 'PUT',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ data }),
+      });
+      const p = document.getElementById('sync-pill');
+      if (p) {
+        if (res.ok) { p.className = 'sync-pill synced'; p.innerHTML = '☁ <span>Synced</span>'; }
+        else         { p.className = 'sync-pill offline'; p.innerHTML = '⚠ <span>Sync failed</span>'; }
+      }
+    } catch {
+      const p = document.getElementById('sync-pill');
+      if (p) { p.className = 'sync-pill offline'; p.innerHTML = '⚠ <span>Offline</span>'; }
+    }
+  }, 1500);
+}
+
+// ═══════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════
+function init() {
+  load();
+
+  // Apply loaded state to UI
+  if (isMetric) {
+    document.getElementById('btn-mi').classList.remove('on');
+    document.getElementById('btn-km').classList.add('on');
+  }
+  if (itbMode) {
+    document.body.classList.add('itb-on');
+    document.getElementById('itb-wrap').classList.add('on');
+  }
+  if (foamOpen) {
+    document.getElementById('foam-card').classList.add('open');
+  }
+
+  // Auto-expand current week
+  const cur = getCurrentWeek();
+  if (cur && !expanded.has(cur)) expanded.add(cur);
+
+  setupPWA();
+  initSync();
+  renderCountdown();
+  renderPaceGuide();
+  renderBufferWidget();
+  renderSidebarTips();
+  renderStrengthSection();
+  renderCalendar();
+  renderPTTracker();
+  updateProgress();
+  updateMobileStrip();
+  setInterval(() => { renderCountdown(); updateMobileStrip(); }, 60000);
+}
+
+init();
+</script>
+</body>
+</html>
