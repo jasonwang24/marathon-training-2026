@@ -2138,66 +2138,47 @@ function dismissInstall() {
 }
 
 // ═══════════════════════════════════════════════════════════
-// CLOUD SYNC
+// CLOUD SYNC  — no auth, single row, auto-sync on every save
 // ═══════════════════════════════════════════════════════════
-let syncUser = null;
 let syncTimer = null;
 
-async function initSync() {
-  // Gracefully no-ops when running on file:// or GitHub Pages (no API available)
-  try {
-    const res = await fetch('/api/me', { credentials: 'include' });
-    if (!res.ok) { renderSyncUI(null); return; }
-    syncUser = await res.json();
-    renderSyncUI(syncUser);
-
-    const pRes = await fetch('/api/progress', { credentials: 'include' });
-    if (pRes.ok) {
-      const { data } = await pRes.json();
-      if (data && Object.keys(data).length > 0) {
-        LS_KEYS.forEach(k => { if (data[k] !== undefined) localStorage.setItem(k, data[k]); });
-        load();
-        rehydrate();
-      }
-    }
-  } catch {
-    renderSyncUI(null);
-  }
+function setSyncStatus(cls, html) {
+  const el = document.getElementById('sync-status');
+  if (el) el.innerHTML = `<div class="sync-pill ${cls}">${html}</div>`;
 }
 
-function renderSyncUI(user) {
-  const el = document.getElementById('sync-status');
-  if (!el) return;
-  if (!user) {
-    el.innerHTML = `<div class="sync-pill"><a href="/api/auth/google">☁ <span>Sign in to sync</span></a></div>`;
-  } else {
-    el.innerHTML = `<div class="sync-pill synced" id="sync-pill" title="${user.email}">☁ <span>Synced</span></div>`;
+async function initSync() {
+  setSyncStatus('saving', '<span class="sync-spin">↻</span> <span>Connecting…</span>');
+  try {
+    const res = await fetch('/api/progress');
+    if (!res.ok) { setSyncStatus('', ''); return; }
+    const { data } = await res.json();
+    if (data && Object.keys(data).length > 0) {
+      LS_KEYS.forEach(k => { if (data[k] !== undefined) localStorage.setItem(k, data[k]); });
+      load();
+      rehydrate();
+    }
+    setSyncStatus('synced', '☁ <span>Synced</span>');
+  } catch {
+    setSyncStatus('', ''); // offline / not deployed — fail silently
   }
 }
 
 function syncToCloud() {
-  if (!syncUser) return;
   clearTimeout(syncTimer);
-  const pill = document.getElementById('sync-pill');
-  if (pill) { pill.className = 'sync-pill saving'; pill.innerHTML = '<span class="sync-spin">↻</span> <span>Saving…</span>'; }
+  setSyncStatus('saving', '<span class="sync-spin">↻</span> <span>Saving…</span>');
   syncTimer = setTimeout(async () => {
     const data = {};
     LS_KEYS.forEach(k => { const v = localStorage.getItem(k); if (v) data[k] = v; });
     try {
       const res = await fetch('/api/progress', {
         method: 'PUT',
-        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ data }),
       });
-      const p = document.getElementById('sync-pill');
-      if (p) {
-        if (res.ok) { p.className = 'sync-pill synced'; p.innerHTML = '☁ <span>Synced</span>'; }
-        else         { p.className = 'sync-pill offline'; p.innerHTML = '⚠ <span>Sync failed</span>'; }
-      }
+      setSyncStatus(res.ok ? 'synced' : 'offline', res.ok ? '☁ <span>Synced</span>' : '⚠ <span>Sync failed</span>');
     } catch {
-      const p = document.getElementById('sync-pill');
-      if (p) { p.className = 'sync-pill offline'; p.innerHTML = '⚠ <span>Offline</span>'; }
+      setSyncStatus('offline', '⚠ <span>Offline</span>');
     }
   }, 1500);
 }
