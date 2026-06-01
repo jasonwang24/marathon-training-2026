@@ -9,6 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Marathon 2026">
 <meta name="theme-color" content="#07070f">
 <link rel="icon" type="image/svg+xml" href="/icon.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <title>Chicago Marathon 2026 — Training Dashboard</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={corePlugins:{preflight:false}}</script>
@@ -2096,6 +2097,7 @@ function setupPWA() {
     theme_color: '#e8387a',
     orientation: 'portrait-primary',
     icons: [
+      {src:'/apple-touch-icon.png', sizes:'180x180', type:'image/png'},
       {src:'/icon.svg', sizes:'any', type:'image/svg+xml'}
     ]
   };
