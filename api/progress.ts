@@ -1,27 +1,21 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { Pool } from 'pg';
-
-const pool = new Pool({
-  connectionString: process.env.POSTGRES_URL ?? process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false },
-});
+import { neon } from '@neondatabase/serverless';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  const client = await pool.connect();
   try {
-    await client.query(`
+    const sql = neon(process.env.POSTGRES_URL!);
+
+    await sql`
       CREATE TABLE IF NOT EXISTS progress (
         key TEXT PRIMARY KEY,
         data TEXT NOT NULL,
         updated_at TIMESTAMPTZ DEFAULT NOW()
       )
-    `);
+    `;
 
     if (req.method === 'GET') {
-      const { rows } = await client.query(
-        `SELECT data FROM progress WHERE key = 'main'`
-      );
-      return res.json({ data: rows[0] ? JSON.parse(rows[0].data) : null });
+      const rows = await sql`SELECT data FROM progress WHERE key = 'main'`;
+      return res.json({ data: rows[0] ? JSON.parse(rows[0].data as string) : null });
     }
 
     if (req.method === 'PUT') {
@@ -30,12 +24,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         return res.status(400).json({ error: 'Missing data' });
       }
       const serialized = JSON.stringify(data);
-      await client.query(
-        `INSERT INTO progress (key, data, updated_at)
-         VALUES ('main', $1, NOW())
-         ON CONFLICT (key) DO UPDATE SET data = $1, updated_at = NOW()`,
-        [serialized]
-      );
+      await sql`
+        INSERT INTO progress (key, data, updated_at)
+        VALUES ('main', ${serialized}, NOW())
+        ON CONFLICT (key) DO UPDATE SET data = ${serialized}, updated_at = NOW()
+      `;
       return res.json({ ok: true });
     }
 
@@ -43,7 +36,5 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : String(e);
     res.status(500).json({ error: msg });
-  } finally {
-    client.release();
   }
 }
