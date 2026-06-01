@@ -2,9 +2,9 @@
   "name": "marathon-training-2026",
   "version": "1.0.0",
   "private": true,
-  "engines": { "node": ">=18.x" },
+  "engines": { "node": "20.x" },
   "scripts": {
-    "postinstall": "prisma generate",
+    "build": "prisma generate",
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
     "db:studio": "prisma studio"
