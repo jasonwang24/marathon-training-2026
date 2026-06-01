@@ -2,6 +2,15 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { sql } from '@vercel/postgres';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  // Ensure table exists on first use
+  await sql`
+    CREATE TABLE IF NOT EXISTS progress (
+      key TEXT PRIMARY KEY,
+      data TEXT NOT NULL,
+      updated_at TIMESTAMPTZ DEFAULT NOW()
+    )
+  `;
+
   if (req.method === 'GET') {
     const { rows } = await sql`SELECT data FROM progress WHERE key = 'main'`;
     return res.json({ data: rows[0] ? JSON.parse(rows[0].data) : null });
