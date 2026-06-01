@@ -3,7 +3,7 @@ import { prisma } from '../lib/db';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method === 'GET') {
-    const row = await prisma.progress.findUnique({ where: { id: 1 } });
+    const row = await prisma.progress.findUnique({ where: { key: 'main' } });
     return res.json({ data: row ? JSON.parse(row.data) : null });
   }
 
@@ -15,7 +15,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     await prisma.progress.upsert({
       where:  { id: 1 },
       update: { data: JSON.stringify(data) },
-      create: { id: 1, data: JSON.stringify(data) },
+      create: { key: 'main', data: JSON.stringify(data) },
     });
     return res.json({ ok: true });
   }

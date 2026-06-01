@@ -9,7 +9,7 @@ datasource db {
 }
 
 model Progress {
-  id        Int      @id @default(1)
+  key       String   @id @default("main")
   data      String   @db.Text
   updatedAt DateTime @updatedAt
 }
