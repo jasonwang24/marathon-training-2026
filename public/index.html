@@ -459,6 +459,28 @@ body.itb-on .foam-card{border-color:rgba(245,158,11,.25)}
 }
 .sc-reset-btn:hover{background:rgba(90,144,245,.08);color:#5a90f5;border-color:rgba(90,144,245,.4)}
 
+/* ── CALENDAR INLINE STRENGTH CHECKLIST ─────────────────── */
+.sc-cal-block{padding:7px 13px 9px;background:rgba(90,144,245,.04);border-bottom:1px solid rgba(90,144,245,.1)}
+.sc-cal-title{font-size:9px;font-weight:800;color:#5a90f5;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.sc-cal-items{display:flex;flex-direction:column;gap:3px}
+.sc-cal-item{
+  display:flex;align-items:center;gap:7px;cursor:pointer;
+  padding:5px 7px;border-radius:6px;border:1px solid transparent;
+  font-size:11px;color:var(--text2);transition:all .12s;
+  user-select:none;
+}
+.sc-cal-item:hover{background:rgba(90,144,245,.07);border-color:rgba(90,144,245,.15)}
+.sc-cal-item.done{opacity:.5}
+.sc-cal-chk{
+  width:17px;height:17px;border-radius:4px;flex-shrink:0;
+  border:1.5px solid rgba(90,144,245,.35);
+  display:flex;align-items:center;justify-content:center;
+  font-size:9px;color:transparent;transition:all .13s;
+}
+.sc-cal-item.done .sc-cal-chk{background:rgba(32,212,112,.18);border-color:var(--green);color:var(--green)}
+.sc-cal-item .itb-mini{font-size:7px;font-weight:800;color:#f59e0b;background:rgba(245,158,11,.14);border-radius:3px;padding:1px 4px;margin-left:2px}
+@media(max-width:600px){.sc-cal-block{padding:7px 10px 9px}}
+
 /* Exercise guide panel */
 .sc-expand-btn{
   display:inline-flex;align-items:center;gap:3px;margin-top:5px;
@@ -1007,221 +1029,140 @@ const PT_EX = [
 // ═══════════════════════════════════════════════════════════
 const STRENGTH = {
   A: {
-    label: 'Day A', title: 'Hip Stability & Single-Leg Control', calDay: 'Tuesday',
+    label: 'Day A', title: 'Hip Stability',
+    subtitle: '3 ITB-critical exercises · ~20 min · do immediately after your run',
+    calDay: 'Tuesday',
     exercises: [
       {
         id: 'copenplank', name: 'Copenhagen Adductor Plank',
-        equipment: ['Bench'], sets: '3 × 12–15 s hold / side', itbCrucial: true,
+        equipment: ['Bench'], sets: '3 × 10–15 s hold / side', itbCrucial: true,
         cue: 'Top foot on bench edge, bottom leg lifts to meet it — ribs braced, hips square.',
-        why: 'The adductors are the neglected counterpart to glute med. Weak adductors create lateral pelvic instability that forces the IT band to compensate on every stride. This is the most evidence-backed adductor strengthener available with a bench.',
+        why: 'The adductors are the neglected counterpart to glute med. Weak adductors create lateral pelvic instability that forces the IT band to compensate on every stride.',
         cues: [
-          'Lie on your side; prop on forearm. Place the top foot (laces down) on the bench edge closest to you',
-          'Lift your hips off the floor into a side plank — bottom leg hangs free',
-          'From there, raise the bottom leg up toward the top foot using your adductor. Hold the top position',
+          'Lie on your side; prop on forearm. Place the top foot (laces down) on the bench edge',
+          'Lift hips into a side plank — bottom leg hangs free',
+          'Raise the bottom leg up toward the top foot using your adductor. Hold the top position',
           'Keep your body in a straight line — do not let your hips pike or sag'
         ],
         mistakes: [
-          'Letting the top hip rotate backward — this turns it into a hip flexor exercise, not adductor',
-          'Starting with the active lift before you can hold the base plank cleanly — build the plank hold first'
+          'Letting the top hip rotate backward — turns it into a hip flexor exercise, not adductor',
+          'Starting with the active lift before you can hold the base plank cleanly'
         ],
-        load: 'Weeks 1–3: Hold the base side plank only (no bottom leg lift), 20–30s. Weeks 4–8: Add the bottom leg lift, aim for 10 reps. Weeks 9+: 15 reps with 2-second holds at the top.'
+        load: 'Weeks 1–3: Base plank hold only, 20–30s. Weeks 4–8: Add bottom leg lift, aim 10 reps. Weeks 9+: 15 reps with 2-second holds at the top.'
       },
       {
         id: 'lsd', name: 'Lateral Step-Down',
         equipment: ['Bench'], sets: '3 × 10 reps / leg', itbCrucial: true,
-        cue: 'Stand on one leg at the bench edge, lower the free foot slowly toward the floor — knee tracks directly over the second toe the entire way.',
-        why: 'The single most ITBS-specific exercise in existence. Research shows that failure to eccentrically control the quad and hip during single-leg loading is the mechanical root cause of IT band impingement. This trains the exact motor pattern that breaks down during miles 16–20.',
+        cue: 'Stand on one leg at the bench edge, lower the free foot slowly toward the floor — knee tracks over second toe the entire way.',
+        why: 'The single most ITBS-specific exercise. Failure to eccentrically control the quad and hip during single-leg loading is the mechanical root cause of IT band impingement.',
         cues: [
-          'Stand sideways on the bench edge on one foot; let the other leg hang freely off the side',
+          'Stand sideways on the bench edge on one foot; other leg hangs freely off the side',
           'Slowly lower the hanging foot toward the floor by bending your standing knee — 4-second descent',
-          'Knee must track in line with the second toe — not caving inward (valgus), not flaring out',
-          'Touch the floor lightly, then press back to standing. Do not push off the floor — all force from the standing leg'
+          'Knee must track in line with the second toe — not caving inward (valgus)',
+          'Touch the floor lightly, then press back to standing. All force from the standing leg only'
         ],
         mistakes: [
-          'Letting the knee collapse inward during the descent — place a mirror to the side if possible to monitor',
-          'Speeding through the eccentric — a fast lowering defeats the entire purpose; 4 full seconds minimum'
+          'Letting the knee collapse inward — use a mirror if possible to monitor',
+          'Speeding through the eccentric — 4 full seconds minimum, every rep'
         ],
-        load: 'Weeks 1–3: Bodyweight only on a low surface (use a step if the bench is too challenging). Weeks 4–9: Add 1×10–15lb DB held in each hand. Weeks 10+: 2×20lb DBs. Difficulty should never compromise knee tracking.'
-      },
-      {
-        id: 'bss', name: 'Bulgarian Split Squats',
-        equipment: ['DB','Bench'], sets: '3 × 8–10 reps / leg', itbCrucial: true,
-        cue: 'Drive through the front heel and feel the glute load — not the quad.',
-        why: 'Single-leg loading exposes and corrects the quad/glute imbalances that cause lateral knee drift and IT band stress on every running stride.',
-        cues: [
-          'Front foot far enough forward that your shin stays close to vertical at the bottom',
-          'Drive through the full heel of the front foot — if you feel it only in your quad, your foot is too close',
-          'Torso stays upright; lean forward slightly from the hip only — not the spine',
-          'Rear knee hovers 1–2 inches off the floor at the bottom; touch and go, no bouncing'
-        ],
-        mistakes: [
-          'Front knee collapsing inward (valgus) — this is the exact movement fault you\'re training to eliminate',
-          'Pushing off the back toes at the bottom — your rear leg is a balance assist, not a launch pad'
-        ],
-        load: 'Weeks 1–3: Bodyweight only. Weeks 4–7: 2×10–15lb. Weeks 8–15: 2×20–30lb. Add weight only when 10 reps feel genuinely controlled, not just completed.'
+        load: 'Weeks 1–3: Bodyweight on a low surface. Weeks 4–9: Add 1×10–15lb DB each hand. Weeks 10+: 2×20lb DBs. Never compromise knee tracking for more load.'
       },
       {
         id: 'cha', name: 'Cable Hip Abductions',
         equipment: ['Cable'], sets: '3 × 15 reps / side', itbCrucial: true,
         cue: 'Pelvis stays level throughout — lift the leg, do not hike the hip.',
-        why: 'Directly trains the Gluteus Medius — the primary muscle preventing hip drop during every running stride. Hip drop is the #1 biomechanical driver of IT band overload.',
+        why: 'Directly trains the Gluteus Medius — the primary muscle preventing hip drop during every running stride. Hip drop = IT band overload.',
         cues: [
           'Ankle cuff at the lowest cable position; stand sideways with the working leg furthest from the stack',
           'Slight bend in the standing knee; stand tall, do not lean away from the cable',
-          'Lift the working leg directly to the side in a pure abduction arc — no forward swing, no trunk lean',
+          'Lift the working leg directly to the side in a pure abduction arc — no forward swing',
           'Lower slowly over 3 seconds — the eccentric return is where glute med strength is built'
         ],
         mistakes: [
-          'Leaning away from the cable to help the lift — this is the obliques compensating, not glute med working',
-          'Hiking the hip upward instead of abducting — if your hip rises, the weight is too heavy'
+          'Leaning away from the cable to help the lift — obliques compensating, not glute med',
+          'Hiking the hip upward — if your hip rises, the weight is too heavy'
         ],
-        load: 'Start at 5–10 lbs. This is a precision exercise, not a strength exercise. Build to 15–20 lbs over 8 weeks. Never sacrifice pelvic level for more weight.'
-      },
-      {
-        id: 'wsu', name: 'Weighted Step-Ups',
-        equipment: ['DB','Bench'], sets: '3 × 10 reps / leg', itbCrucial: false,
-        cue: 'Drive through the heel of the elevated foot; the trailing leg is completely passive.',
-        why: 'Mimics the single-leg push-off load of each running stride. Builds concentric quad and glute strength at the exact knee flexion angle used during the propulsion phase of gait.',
-        cues: [
-          'Step onto the bench fully — entire foot planted, not just the ball of the foot',
-          'Initiate by pressing the elevated heel into the bench — not by pushing off the ground foot',
-          'Stand fully upright at the top, hips extended, for a 1-second pause',
-          'Lower the trailing leg slowly over 3 seconds — this controlled descent is the eccentric stimulus'
-        ],
-        mistakes: [
-          'Bouncing off the trailing leg to propel yourself up — this defeats the single-leg loading entirely',
-          'Leaning the torso forward — shifts load off the glutes and onto the lower back'
-        ],
-        load: 'Weeks 1–4: 2×15lb. Weeks 5–10: 2×20–25lb. Weeks 11+: 2×30lb. When 30lb for 10 reps is easy, slow the lowering phase to 4 seconds.'
-      },
-      {
-        id: 'cpp', name: 'Cable Pallof Press',
-        equipment: ['Cable'], sets: '3 × 10 reps / side', itbCrucial: false,
-        cue: 'Press straight out, hold 2 full seconds. Resisting the rotation IS the entire exercise.',
-        why: 'Anti-rotation core stability — the ability to hold your pelvis and spine neutral against lateral forces. This is what keeps your trunk from twisting and your gait from breaking down after mile 18.',
-        cues: [
-          'Cable at chest height; stand perpendicular to the stack, feet shoulder-width',
-          'Pull handle to your sternum, brace your full core hard',
-          'Press directly forward until arms are fully extended — zero hip or shoulder rotation',
-          'Hold 2 full seconds extended, then return slowly to sternum'
-        ],
-        mistakes: [
-          'Hips rotating toward the cable during the press — that rotation is exactly what you\'re training to prevent',
-          'Going too heavy — control at light weight beats wobbling at heavy weight every time'
-        ],
-        load: '5–15 lbs is typical and appropriate. If you can\'t hold 2 seconds perfectly extended, you\'re too heavy. This is a control drill, not a strength drill.'
+        load: 'Start at 5–10 lbs. Build to 15–20 lbs over 8 weeks. Never sacrifice pelvic level for more weight.'
       }
     ]
   },
   B: {
-    label: 'Day B', title: 'Posterior Chain & Resilience', calDay: 'Thursday',
+    label: 'Day B', title: 'Posterior Chain & Resilience',
+    subtitle: '4 injury-prevention essentials · ~25 min · do immediately after your run',
+    calDay: 'Thursday',
     exercises: [
       {
         id: 'nordic', name: 'Nordic Curl Negatives',
         equipment: ['Bench'], sets: '3 × 4–5 reps', itbCrucial: false,
         cue: 'Lower your body as slowly as possible — aim for 5+ seconds. Catch with hands at the bottom.',
-        why: 'The gold standard for hamstring injury prevention in runners. The eccentric hamstring strength built here directly protects against hamstring strains and late-race breakdown. A 2015 FIFA study showed 51% reduction in hamstring injuries with this exercise alone.',
+        why: 'The gold standard for hamstring injury prevention. A 2015 FIFA study showed 51% reduction in hamstring injuries. The eccentric strength built here directly protects against late-race hamstring breakdown.',
         cues: [
-          'Kneel on a mat, anchor your feet by sliding them under the bench (bench presses down on your ankles)',
-          'Arms crossed over chest or lightly at your sides. Whole body in a straight line from knees to crown',
-          'Lower your body SLOWLY toward the floor using only the strength of your hamstrings resisting',
-          'When you can no longer control the descent, catch yourself with both hands and do a light push-up back to start',
-          'The push-up return does not count as a rep — only the lowering phase does'
+          'Kneel on a mat, anchor feet under the bench (bench presses down on your ankles)',
+          'Arms crossed over chest. Whole body straight from knees to crown',
+          'Lower your body SLOWLY using only hamstring eccentric strength',
+          'Catch yourself with hands when you can no longer control it — push-up return does not count as a rep'
         ],
         mistakes: [
-          'Dropping fast — the entire stimulus is in the slow eccentric; if you fall in under 2 seconds, the exercise is wasted',
-          'Hinging at the hips — you should fall as one rigid unit from knee to crown, like a plank being lowered'
+          'Dropping fast — the entire stimulus is the slow eccentric; falling in under 2 seconds wastes the exercise',
+          'Hinging at the hips — fall as one rigid plank from knee to crown'
         ],
-        load: 'Weeks 1–3: 3×3 reps, aim for 3-second lowering. Weeks 4–8: 3×5 reps, 5-second lowering. Weeks 9–15: 3×6 reps, 7-second lowering. These will always feel hard — that means they\'re working.'
-      },
-      {
-        id: 'slrdl', name: 'Single-Leg RDLs',
-        equipment: ['DB'], sets: '3 × 10 reps / leg', itbCrucial: false,
-        cue: 'Hinge at the hips with a proud chest — the lower back never rounds.',
-        why: 'Builds eccentric hamstring strength and single-leg balance under load. Critical for the flight and landing phase of every running stride. Weakness here is a leading cause of late-race hamstring cramping.',
-        cues: [
-          'Hold DBs in front of your thighs; as you hinge, drag them down along the standing leg — they should nearly brush your shin',
-          'Hinge from the hip joint, not the waist — torso and rear leg are a single seesaw pivoting at the hip',
-          'Proud chest throughout; shoulder blades drawn back, spine long from tailbone to crown',
-          'Stop when you feel a strong hamstring stretch in the standing leg — usually around parallel'
-        ],
-        mistakes: [
-          'Rounding the lower back to reach further — stop where you can maintain a neutral spine',
-          'Rotating the rear hip open — keep both hip points facing straight down the entire time'
-        ],
-        load: 'Weeks 1–4: 1×15–20lb DB. Weeks 5–9: 1×25lb. Weeks 10+: 1×30lb. Prioritise balance and hamstring feel. If wobbling, go lighter — instability negates the stimulus.'
+        load: 'Weeks 1–3: 3×3 reps, 3-second lowering. Weeks 4–8: 3×5 reps, 5-second. Weeks 9+: 3×6 reps, 7-second lowering.'
       },
       {
         id: 'wht', name: 'Weighted Hip Thrusts',
         equipment: ['DB','Bench'], sets: '3 × 12 reps', itbCrucial: false,
         cue: 'Squeeze the glutes maximally at the top for 2 seconds — ribs down, do not hyperextend.',
-        why: 'The most direct gluteus maximus builder available. Weak glutes force the TFL and IT band to compensate for propulsion on every stride — this is the root cause of most ITBS cases.',
+        why: 'The most direct gluteus maximus builder. Weak glutes force the TFL and IT band to compensate for propulsion — this is the root cause of most ITBS.',
         cues: [
-          'Upper back rests on the bench at shoulder blade level, not the neck',
+          'Upper back rests on the bench at shoulder blade level',
           'Feet flat, hip-width apart; shins vertical when hips are at full height',
           'Drive through both heels — feeling it in quads means feet are too close',
           'At the top: ribs down, glutes fully squeezed, hips fully extended — hold 2 seconds'
         ],
         mistakes: [
-          'Hyperextending the lower back at the top — ribs must stay braced down; lumbar arch = lumbar loading, not glute loading',
-          'Driving through the toes — this activates quads and hip flexors instead of glutes'
+          'Hyperextending the lower back at the top — ribs must stay braced; that's lumbar loading, not glute loading',
+          'Driving through the toes — activates quads and hip flexors instead of glutes'
         ],
-        load: 'Weeks 1–3: 1×30lb DB across lap. Weeks 4–8: both 30lb DBs side by side. Weeks 9+: add a resistance band just above the knees for additional glute med activation at the top.'
+        load: 'Weeks 1–3: 1×30lb DB across lap. Weeks 4–8: both 30lb DBs. Weeks 9+: add a resistance band above the knees.'
       },
       {
-        id: 'cpt', name: 'Cable Pull-Through',
-        equipment: ['Cable'], sets: '3 × 12–15 reps', itbCrucial: false,
-        cue: 'Hinge your hips back as the cable loads, then drive your hips forward explosively — like a kettlebell swing but controlled.',
-        why: 'Builds explosive hip extension power — the same motion as push-off during running. The cable provides constant tension through the full hip extension range that dumbbells cannot replicate.',
+        id: 'slrdl', name: 'Single-Leg RDLs',
+        equipment: ['DB'], sets: '3 × 10 reps / leg', itbCrucial: false,
+        cue: 'Hinge at the hips with a proud chest — the lower back never rounds.',
+        why: 'Builds eccentric hamstring strength and single-leg balance under load. Weakness here is a leading cause of late-race hamstring cramping and breakdown.',
         cues: [
-          'Set the cable at its lowest position. Stand facing away from the stack, feet shoulder-width, straddle the cable',
-          'Reach between your legs and grab the rope or handle; take a step forward until there is clear tension',
-          'Hinge your hips backward — weight in your heels, soft bend in the knees, torso leans forward',
-          'Drive your hips powerfully forward to standing, squeezing your glutes hard at lockout — arms just along for the ride'
+          'Hold DBs in front of thighs; drag them down along the standing leg as you hinge',
+          'Hinge from the hip joint — torso and rear leg are a seesaw pivoting at the hip',
+          'Proud chest throughout; shoulder blades drawn back',
+          'Stop when you feel a strong hamstring stretch — around parallel'
         ],
         mistakes: [
-          'Squatting instead of hinging — knees should bend only slightly; this is a hip hinge, not a leg press',
-          'Rounding the lower back during the hinge — maintain a proud chest throughout the entire movement'
+          'Rounding the lower back to reach further — stop where you can maintain a neutral spine',
+          'Rotating the rear hip open — keep both hip points facing straight down'
         ],
-        load: 'This is a power exercise: use a weight where you can feel the glute snap at the top but still control the hinge. Typically 20–40 lbs on the cable stack. 3-second hinge back, explosive drive forward.'
-      },
-      {
-        id: 'cfp', name: 'Cable Face Pulls',
-        equipment: ['Cable'], sets: '3 × 15 reps', itbCrucial: false,
-        cue: 'Elbows high and wide at the peak, thumbs pointing behind you — full external rotation every rep.',
-        why: 'Counteracts the forward-rounded posture that accumulates across long training weeks. Posterior shoulder and rotator cuff strength directly improves arm drive mechanics and reduces shoulder fatigue in the final miles.',
-        cues: [
-          'Cable at face height or slightly above; rope attachment preferred',
-          'Pull toward your forehead — elbows flare high and wide, forming a "W" at the peak',
-          'At peak: externally rotate fully so thumbs point directly behind you',
-          '2-second pull, 2-second return — every rep deliberate'
-        ],
-        mistakes: [
-          'Pulling to the chin or chest — too low, loads the lats instead of rear delts and external rotators',
-          'Using momentum — this is a corrective exercise; a half-rep done fast achieves nothing'
-        ],
-        load: 'Keep moderate (15–25 lbs), always high-rep. This is postural correction, not a strength lift. Never sacrifice external rotation quality for heavier weight.'
+        load: 'Weeks 1–4: 1×15–20lb DB. Weeks 5–9: 1×25lb. Weeks 10+: 1×30lb. Prioritise balance over load.'
       },
       {
         id: 'slcr', name: 'Single-Leg Calf Raises',
         equipment: ['Bench'], sets: '3 × 15–20 reps / leg', itbCrucial: false,
-        cue: 'Full range every single rep: deep Achilles stretch at the bottom, full plantarflexion at the top.',
-        why: 'The calf-Achilles complex absorbs ~8× body weight per running stride and provides 40% of total push-off energy. Insufficient eccentric calf strength is the primary cause of Achilles tendinopathy and plantar fasciitis in marathon runners.',
+        cue: 'Full range every rep: deep Achilles stretch at the bottom, full plantarflexion at the top.',
+        why: 'The calf-Achilles complex absorbs ~8× body weight per stride. Inadequate eccentric calf strength is the primary cause of Achilles tendinopathy in marathon runners.',
         cues: [
-          'Ball of foot on bench edge, heel hangs completely off — full range is non-negotiable',
-          'Lower all the way until you feel a deep Achilles stretch; do not cut the range short',
-          'Rise to full plantarflexion; hard squeeze at the top for 1 second',
+          'Ball of foot on bench edge, heel hangs completely off',
+          'Lower all the way until you feel a deep Achilles stretch — do not cut range short',
+          'Rise to full plantarflexion; hard squeeze at top for 1 second',
           '3-second lowering — the slow eccentric is the entire therapeutic stimulus'
         ],
         mistakes: [
-          'Partial range of motion — skipping the bottom stretch bypasses the most important part of the exercise',
+          'Partial range of motion — skipping the bottom stretch bypasses the most important part',
           'Bouncing at the bottom — pause briefly at full stretch before pressing up'
         ],
-        load: 'Weeks 1–4: Bodyweight. Weeks 5–9: 1×15lb DB. Weeks 10+: 1×25–30lb DB. When 20 reps at 30lb is easy, progress to a loaded backpack or weighted vest.'
+        load: 'Weeks 1–4: Bodyweight. Weeks 5–9: 1×15lb DB. Weeks 10+: 1×25–30lb DB.'
       }
     ]
   }
 };
+
 
 // ═══════════════════════════════════════════════════════════
 // CONSTANTS
@@ -1493,10 +1434,16 @@ function renderStrengthSection() {
   const section = document.getElementById('sc-section');
   section.classList.toggle('open', scOpen);
 
-  // Update summary pill
-  const todayK = todayKey();
-  const doneA = scDayCompletedCount('A', todayK);
-  const doneB = scDayCompletedCount('B', todayK);
+  // Update summary pill — use current week's T/Th dates
+  function _wkDateKey(targetDay) {
+    const curWeek = getCurrentWeek();
+    if (!curWeek) return todayKey();
+    const d = parseLocal(WEEK_STARTS[curWeek - 1]);
+    d.setDate(d.getDate() + (DAY_OFFSET[targetDay] || 0));
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  }
+  const doneA = scDayCompletedCount('A', _wkDateKey('Tuesday'));
+  const doneB = scDayCompletedCount('B', _wkDateKey('Thursday'));
   const totalDone = doneA + doneB;
   const totalEx   = STRENGTH.A.exercises.length + STRENGTH.B.exercises.length;
   const pill = document.getElementById('sc-pct-pill');
@@ -1509,13 +1456,20 @@ function renderStrengthSection() {
 
   if (!scOpen) { document.getElementById('sc-body').innerHTML = ''; return; }
 
-  const todayKey_ = todayKey();
-  const dayA = STRENGTH.A;
-  const dayB = STRENGTH.B;
+  // Use actual workout date for current week so widget syncs with calendar checkboxes
+  function getWorkoutDateKey(targetDay) {
+    const curWeek = getCurrentWeek();
+    if (!curWeek) return todayKey();
+    const wkDate = parseLocal(WEEK_STARTS[curWeek - 1]);
+    wkDate.setDate(wkDate.getDate() + (DAY_OFFSET[targetDay] || 0));
+    return `${wkDate.getFullYear()}-${String(wkDate.getMonth()+1).padStart(2,'0')}-${String(wkDate.getDate()).padStart(2,'0')}`;
+  }
+  const dayAKey = getWorkoutDateKey('Tuesday');
+  const dayBKey = getWorkoutDateKey('Thursday');
 
   function renderDay(dayLetter) {
     const day = STRENGTH[dayLetter];
-    const dk  = todayKey_;
+    const dk  = dayLetter === 'A' ? dayAKey : dayBKey;
     const doneCnt = scDayCompletedCount(dayLetter, dk);
     const allDone = doneCnt === day.exercises.length;
 
@@ -1567,8 +1521,8 @@ function renderStrengthSection() {
       <button class="sc-reset-btn" onclick="resetStrengthDay('${dayLetter}',event)">↺ Reset ${day.label} for today</button>`;
   }
 
-  const isAComplete = scDayCompletedCount('A', todayKey_) === STRENGTH.A.exercises.length;
-  const isBComplete = scDayCompletedCount('B', todayKey_) === STRENGTH.B.exercises.length;
+  const isAComplete = scDayCompletedCount('A', dayAKey) === STRENGTH.A.exercises.length;
+  const isBComplete = scDayCompletedCount('B', dayBKey) === STRENGTH.B.exercises.length;
 
   document.getElementById('sc-body').innerHTML = `
     <div class="sc-tabs">
@@ -1602,6 +1556,15 @@ function toggleStrengthEx(dayLetter, exId) {
   const key = `${todayKey()}-${dayLetter}-${exId}`;
   scCompleted[key] = !scCompleted[key];
   save();
+  renderStrengthSection();
+}
+
+function toggleCalStrength(dateKey, dayLetter, exId, e) {
+  e.stopPropagation();
+  const key = `${dateKey}-${dayLetter}-${exId}`;
+  scCompleted[key] = !scCompleted[key];
+  save();
+  renderCalendar();
   renderStrengthSection();
 }
 
@@ -1707,15 +1670,34 @@ function renderWeekBody(wk, wkNum) {
       itbBadgeHtml = `<span class="itb-badge">📐 Flat Course<div class="itb-tooltip">Chicago is flat — highly repetitive knee flexion angles with zero downhill relief. Focus on upright posture, a high cadence (170+ spm), and short strides to reduce lateral knee stress.</div></span>`;
     }
 
-    // Strength reminder for Tuesday (Day A) and Thursday (Day B)
+    // Strength inline checklist for Tuesday (Day A) and Thursday (Day B)
     let strengthReminderHtml = '';
     if (d.day === 'Tuesday' || d.day === 'Thursday') {
       const scDay = d.day === 'Tuesday' ? 'A' : 'B';
       const scDayData = STRENGTH[scDay];
+      // Use the actual calendar date for this workout as the key
+      const wkDate = parseLocal(WEEK_STARTS[wkNum - 1]);
+      wkDate.setDate(wkDate.getDate() + (DAY_OFFSET[d.day] || 0));
+      const wkDateKey = `${wkDate.getFullYear()}-${String(wkDate.getMonth()+1).padStart(2,'0')}-${String(wkDate.getDate()).padStart(2,'0')}`;
+      const exItems = scDayData.exercises.map(ex => {
+        const key = `${wkDateKey}-${scDay}-${ex.id}`;
+        const done = !!scCompleted[key];
+        return `<div class="sc-cal-item${done?' done':''}" onclick="toggleCalStrength('${wkDateKey}','${scDay}','${ex.id}',event)">
+          <div class="sc-cal-chk">${done?'✓':''}</div>
+          <span>${ex.name}</span>
+          ${ex.itbCrucial ? '<span class="itb-mini">🦴 ITB</span>' : ''}
+          <span style="font-size:9px;color:var(--text3);margin-left:auto">${ex.sets}</span>
+        </div>`;
+      }).join('');
+      const doneCount = scDayData.exercises.filter(ex => scCompleted[`${wkDateKey}-${scDay}-${ex.id}`]).length;
+      const allDone = doneCount === scDayData.exercises.length;
       strengthReminderHtml = `
-        <div class="sc-reminder">
-          <span>🏋️</span>
-          <span>Strength Day — <strong>${scDayData.label}: ${scDayData.title}</strong> after your run</span>
+        <div class="sc-cal-block">
+          <div class="sc-cal-title">
+            🏋️ ${scDayData.label}: ${scDayData.title}
+            <span style="margin-left:auto;font-size:9px;font-weight:700;color:${allDone?'var(--green)':'rgba(90,144,245,.6)'}">${allDone?'✓ done':doneCount+'/'+scDayData.exercises.length}</span>
+          </div>
+          <div class="sc-cal-items">${exItems}</div>
         </div>`;
     }
 
