@@ -8,8 +8,6 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Marathon 2026">
 <meta name="theme-color" content="#07070f">
-<link rel="icon" type="image/svg+xml" href="/icon.svg">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <title>Chicago Marathon 2026 — Training Dashboard</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={corePlugins:{preflight:false}}</script>
@@ -193,7 +191,8 @@ body.itb-on::before{
 .itb-alert-tag{font-size:9px;font-weight:800;color:#ef4444;display:flex;align-items:center;gap:3px}
 
 /* ── SIDEBAR ─────────────────────────────────────────────── */
-.sidebar{position:sticky;top:62px;display:flex;flex-direction:column;gap:12px}
+.sidebar{position:sticky;top:62px;display:flex;flex-direction:column;gap:12px;max-height:calc(100vh - 62px);overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border2) transparent}
+.sidebar::-webkit-scrollbar{width:4px}.sidebar::-webkit-scrollbar-track{background:transparent}.sidebar::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
 .scard{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;overflow:hidden}
 .sc-hdr{padding:13px 13px 8px;border-bottom:1px solid var(--border)}
 .sc-hdr h2{font-size:12px;font-weight:800}
@@ -459,28 +458,6 @@ body.itb-on .foam-card{border-color:rgba(245,158,11,.25)}
 }
 .sc-reset-btn:hover{background:rgba(90,144,245,.08);color:#5a90f5;border-color:rgba(90,144,245,.4)}
 
-/* ── CALENDAR INLINE STRENGTH CHECKLIST ─────────────────── */
-.sc-cal-block{padding:7px 13px 9px;background:rgba(90,144,245,.04);border-bottom:1px solid rgba(90,144,245,.1)}
-.sc-cal-title{font-size:9px;font-weight:800;color:#5a90f5;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;display:flex;align-items:center;gap:5px}
-.sc-cal-items{display:flex;flex-direction:column;gap:3px}
-.sc-cal-item{
-  display:flex;align-items:center;gap:7px;cursor:pointer;
-  padding:5px 7px;border-radius:6px;border:1px solid transparent;
-  font-size:11px;color:var(--text2);transition:all .12s;
-  user-select:none;
-}
-.sc-cal-item:hover{background:rgba(90,144,245,.07);border-color:rgba(90,144,245,.15)}
-.sc-cal-item.done{opacity:.5}
-.sc-cal-chk{
-  width:17px;height:17px;border-radius:4px;flex-shrink:0;
-  border:1.5px solid rgba(90,144,245,.35);
-  display:flex;align-items:center;justify-content:center;
-  font-size:9px;color:transparent;transition:all .13s;
-}
-.sc-cal-item.done .sc-cal-chk{background:rgba(32,212,112,.18);border-color:var(--green);color:var(--green)}
-.sc-cal-item .itb-mini{font-size:7px;font-weight:800;color:#f59e0b;background:rgba(245,158,11,.14);border-radius:3px;padding:1px 4px;margin-left:2px}
-@media(max-width:600px){.sc-cal-block{padding:7px 10px 9px}}
-
 /* Exercise guide panel */
 .sc-expand-btn{
   display:inline-flex;align-items:center;gap:3px;margin-top:5px;
@@ -555,17 +532,6 @@ body.itb-on .foam-card{border-color:rgba(245,158,11,.25)}
 .data-btn:hover{color:var(--text);border-color:var(--border2)}
 .data-btn:active{transform:scale(.93)}
 
-/* ── CLOUD SYNC INDICATOR ────────────────────────────────── */
-.sync-pill{display:flex;align-items:center;gap:5px;font-size:10px;font-weight:600;flex-shrink:0;padding:4px 9px;border-radius:6px;border:1px solid var(--border);background:var(--surface);white-space:nowrap;transition:all .2s}
-.sync-pill.synced{color:var(--green);border-color:rgba(32,212,112,.28)}
-.sync-pill.saving{color:var(--text2)}
-.sync-pill.offline{color:var(--orange);border-color:rgba(249,115,22,.3)}
-.sync-pill a{color:var(--text2);text-decoration:none;transition:color .15s}
-.sync-pill a:hover{color:var(--text)}
-@keyframes spin-cw{to{transform:rotate(360deg)}}
-.sync-spin{display:inline-block;animation:spin-cw .8s linear infinite}
-@media(max-width:480px){#sync-status{display:none}}
-
 /* ── MOBILE IMPROVEMENTS ─────────────────────────────────── */
 /* Larger touch targets on touch devices */
 @media(pointer:coarse){
@@ -585,11 +551,9 @@ body.itb-on .foam-card{border-color:rgba(245,158,11,.25)}
 /* Compact header subtitle on small screens */
 @media(max-width:480px){
   .h-txt .hs{display:none}
-  .h-txt .ht{font-size:12px}
-  .h-countdown{display:none}
+  .h-countdown{font-size:10px;padding:3px 8px}
   .itb-lbl{display:none}
   .itb-wrap{padding:5px 8px}
-  .data-btns{display:none}
 }
 /* Mobile-specific layout: put buffer + pace summary strip above calendar */
 .mobile-strip{
@@ -607,15 +571,64 @@ body.itb-on .foam-card{border-color:rgba(245,158,11,.25)}
 .ms-div{width:1px;background:var(--border);margin:0 auto}
 /* Safe area padding for notched phones */
 @supports(padding:max(0px)){
-  .hdr{
-    padding-top:max(10px,env(safe-area-inset-top));
-    height:auto;min-height:54px;
-    padding-left:max(18px,env(safe-area-inset-left));
-    padding-right:max(18px,env(safe-area-inset-right));
-  }
+  .hdr{padding-top:max(10px,env(safe-area-inset-top));height:auto;min-height:54px;padding-left:max(18px,env(safe-area-inset-left));padding-right:max(18px,env(safe-area-inset-right))}
   .layout{padding-left:max(20px,env(safe-area-inset-left));padding-right:max(20px,env(safe-area-inset-right))}
   @media(max-width:860px){.layout{padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right))}}
 }
+
+/* ── STRAVA ──────────────────────────────────────────── */
+.strava-card{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:14px}
+.strava-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.strava-hdr h2{font-size:13px;font-weight:800;display:flex;align-items:center;gap:6px}
+.strava-hdr p{font-size:10px;color:var(--text2)}
+.strava-connect-btn{display:flex;align-items:center;justify-content:center;gap:7px;background:#FC4C02;color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;width:100%;transition:opacity .15s}
+.strava-connect-btn:hover{opacity:.85}
+.strava-desc{font-size:11px;color:var(--text2);margin-bottom:10px;line-height:1.5}
+.strava-athlete{display:flex;align-items:center;gap:7px;margin-bottom:10px;padding:8px 10px;background:rgba(252,76,2,.07);border-radius:8px;border:1px solid rgba(252,76,2,.18)}
+.strava-dot{width:8px;height:8px;background:#FC4C02;border-radius:50%;flex-shrink:0}
+.strava-athlete-name{font-size:12px;font-weight:700;flex:1}
+.strava-athlete-sub{font-size:10px;color:var(--text2)}
+.strava-actions{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.strava-sync-btn{background:var(--surface);border:1px solid var(--border2);color:var(--text);border-radius:6px;padding:5px 10px;font-size:11px;cursor:pointer;font-weight:600;transition:all .15s}
+.strava-sync-btn:hover{border-color:#FC4C02;color:#FC4C02}
+.strava-disc-btn{background:none;border:none;color:var(--text3);font-size:10px;cursor:pointer;padding:4px 6px;transition:color .15s;margin-left:auto;border-radius:4px}
+.strava-disc-btn:hover{color:#ef4444}
+.strava-status{font-size:10px;color:var(--text3);margin-top:6px}
+.strava-cal-banner{background:rgba(252,76,2,.07);border:1px solid rgba(252,76,2,.2);border-radius:8px;padding:10px 12px;margin-top:10px}
+.strava-cal-title{font-size:11px;font-weight:700;color:#FC4C02;margin-bottom:3px}
+.strava-cal-desc{font-size:10px;color:var(--text2);line-height:1.5;margin-bottom:8px}
+.strava-cal-btns{display:flex;align-items:center;gap:6px}
+.strava-cal-apply{background:#FC4C02;color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer;transition:opacity .15s}
+.strava-cal-apply:hover{opacity:.85}
+.strava-cal-dismiss{background:none;border:none;color:var(--text3);font-size:10px;cursor:pointer;padding:4px 6px;border-radius:4px}
+.strava-cal-dismiss:hover{color:var(--text2)}
+.strava-tag{display:inline-flex;align-items:center;gap:3px;background:rgba(252,76,2,.13);color:#FC4C02;border-radius:4px;padding:1px 5px;font-size:9px;font-weight:700;margin-left:5px;vertical-align:middle;line-height:1.4}
+
+/* ── COROS ──────────────────────────────────────────── */
+.coros-card{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:14px}
+.coros-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.coros-hdr h2{font-size:13px;font-weight:800;display:flex;align-items:center;gap:6px}
+.coros-brand{color:#00C8B4}
+.coros-synced{font-size:9px;color:var(--text3)}
+.coros-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px}
+.coros-stat{background:var(--surface);border-radius:8px;padding:8px 10px;border:1px solid var(--border)}
+.coros-stat .v{font-size:18px;font-weight:900;letter-spacing:-.5px;line-height:1}
+.coros-stat .l{font-size:9px;color:var(--text2);margin-top:2px;text-transform:uppercase;letter-spacing:.4px}
+.coros-prediction{background:rgba(0,200,180,.07);border:1px solid rgba(0,200,180,.2);border-radius:8px;padding:8px 12px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between}
+.coros-prediction .cp-label{font-size:10px;color:var(--text2)}
+.coros-prediction .cp-value{font-size:15px;font-weight:900;color:#00C8B4;letter-spacing:-.3px}
+.coros-recovery-label{display:flex;justify-content:space-between;font-size:10px;margin-bottom:4px}
+.coros-recovery-label .cp-pct{font-weight:800}
+.coros-recovery-label .cp-status{color:var(--text2)}
+.coros-bar-wrap{background:rgba(255,255,255,.06);border-radius:99px;height:5px;overflow:hidden;margin-bottom:8px}
+.coros-bar{height:100%;border-radius:99px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+.coros-load{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;background:var(--surface);border-radius:7px;border:1px solid var(--border)}
+.coros-load .cl-comment{font-size:11px;font-weight:700}
+.coros-load .cl-ratio{font-size:10px;color:var(--text2)}
+.coros-pace-note{font-size:9px;color:#00C8B4;margin-top:6px;text-align:center}
+.coros-tag{display:inline-flex;align-items:center;gap:3px;background:rgba(0,200,180,.13);color:#00C8B4;border-radius:4px;padding:1px 5px;font-size:9px;font-weight:700;margin-left:5px;vertical-align:middle;line-height:1.4}
+.coros-tag.adj-warn{background:rgba(249,115,22,.13);color:#f97316}
+.coros-tag.adj-crit{background:rgba(239,68,68,.13);color:#ef4444}
 </style>
 </head>
 
@@ -665,15 +678,13 @@ body.itb-on .foam-card{border-color:rgba(245,158,11,.25)}
 ══════════════════════════════════════════════════════ -->
 <header class="hdr">
   <div class="h-brand">
-    <img src="/icon.svg" alt="Chicago Marathon" style="height:28px;width:auto;flex-shrink:0">
+    <div class="h-icon">🏃</div>
     <div class="h-txt">
       <div class="ht">Chicago Marathon 2026</div>
       <div class="hs">19-Week Training Dashboard &nbsp;·&nbsp; Target: 3:30:00</div>
     </div>
   </div>
   <div class="h-countdown" id="countdown">— days to race</div>
-  <!-- Cloud Sync Status -->
-  <div id="sync-status"></div>
   <!-- ITB Recovery Mode Toggle -->
   <div class="itb-wrap" id="itb-wrap" onclick="setITBMode(!itbMode)" title="Toggle ITB Recovery Mode">
     <div class="itb-sw" id="itb-sw"><div class="itb-knob"></div></div>
@@ -759,6 +770,10 @@ body.itb-on .foam-card{border-color:rgba(245,158,11,.25)}
       <div class="sc-hdr"><h2>⚡ Pace Guide</h2><p id="pace-sub">All paces in min/mile</p></div>
       <div class="pace-list" id="pace-list"></div>
     </div>
+    <!-- Coros Fitness — injected by JS -->
+    <div id="coros-widget"></div>
+    <!-- Strava Sync — injected by JS -->
+    <div id="strava-widget"></div>
     <!-- Buffer widget — injected by JS -->
     <div id="buffer-widget"></div>
     <!-- PT Tracker — injected by JS when ITB mode ON -->
@@ -993,13 +1008,39 @@ const TIPS = {
 // ═══════════════════════════════════════════════════════════
 // PACE GUIDE
 // ═══════════════════════════════════════════════════════════
-const PACES = [
+let PACES = [
   {key:"mp",   label:"Marathon Pace", dot:"#14b8a6",cls:"pi-mp",   mi:"8:00",       km:"4:58"},
   {key:"easy", label:"Easy",          dot:"#20d470",cls:"pi-easy", mi:"8:45 – 9:45",km:"5:26 – 6:03"},
   {key:"tempo",label:"Tempo",         dot:"#f97316",cls:"pi-tempo",mi:"7:15 – 7:30",km:"4:30 – 4:39"},
   {key:"int",  label:"Intervals",     dot:"#ef4444",cls:"pi-int",  mi:"6:45 – 7:00",km:"4:12 – 4:21"},
   {key:"rec",  label:"Recovery",      dot:"#a855f7",cls:"pi-rec",  mi:"9:45+",      km:"6:03+"}
 ];
+const DEFAULT_PACES = PACES.map(p => ({...p}));
+
+// ═══════════════════════════════════════════════════════════
+// COROS DATA — synced via Claude Code MCP (ask "sync Coros data" to refresh)
+// ═══════════════════════════════════════════════════════════
+const COROS_DATA = {
+  syncedDate: "2026-06-08",
+  fitness: {
+    vo2max: 62,
+    marathonPrediction: "3:20:45",
+    marathonPredictionSec: 12045,
+    thresholdPace: "4:15/km",
+    thresholdPaceKmSec: 255,
+    runningLevel: 87,
+  },
+  recovery: {
+    pct: 100,
+    level: "Heavy training allowed",
+  },
+  load: {
+    comment: "Maintaining",
+    shortTerm: 64,
+    longTerm: 66,
+    ratio: 0.96,
+  },
+};
 
 // ═══════════════════════════════════════════════════════════
 // PHASE GROUPING
@@ -1029,140 +1070,221 @@ const PT_EX = [
 // ═══════════════════════════════════════════════════════════
 const STRENGTH = {
   A: {
-    label: 'Day A', title: 'Hip Stability',
-    subtitle: '3 ITB-critical exercises · ~20 min · do immediately after your run',
-    calDay: 'Tuesday',
+    label: 'Day A', title: 'Hip Stability & Single-Leg Control', calDay: 'Tuesday',
     exercises: [
       {
         id: 'copenplank', name: 'Copenhagen Adductor Plank',
-        equipment: ['Bench'], sets: '3 × 10–15 s hold / side', itbCrucial: true,
+        equipment: ['Bench'], sets: '3 × 12–15 s hold / side', itbCrucial: true,
         cue: 'Top foot on bench edge, bottom leg lifts to meet it — ribs braced, hips square.',
-        why: 'The adductors are the neglected counterpart to glute med. Weak adductors create lateral pelvic instability that forces the IT band to compensate on every stride.',
+        why: 'The adductors are the neglected counterpart to glute med. Weak adductors create lateral pelvic instability that forces the IT band to compensate on every stride. This is the most evidence-backed adductor strengthener available with a bench.',
         cues: [
-          'Lie on your side; prop on forearm. Place the top foot (laces down) on the bench edge',
-          'Lift hips into a side plank — bottom leg hangs free',
-          'Raise the bottom leg up toward the top foot using your adductor. Hold the top position',
+          'Lie on your side; prop on forearm. Place the top foot (laces down) on the bench edge closest to you',
+          'Lift your hips off the floor into a side plank — bottom leg hangs free',
+          'From there, raise the bottom leg up toward the top foot using your adductor. Hold the top position',
           'Keep your body in a straight line — do not let your hips pike or sag'
         ],
         mistakes: [
-          'Letting the top hip rotate backward — turns it into a hip flexor exercise, not adductor',
-          'Starting with the active lift before you can hold the base plank cleanly'
+          'Letting the top hip rotate backward — this turns it into a hip flexor exercise, not adductor',
+          'Starting with the active lift before you can hold the base plank cleanly — build the plank hold first'
         ],
-        load: 'Weeks 1–3: Base plank hold only, 20–30s. Weeks 4–8: Add bottom leg lift, aim 10 reps. Weeks 9+: 15 reps with 2-second holds at the top.'
+        load: 'Weeks 1–3: Hold the base side plank only (no bottom leg lift), 20–30s. Weeks 4–8: Add the bottom leg lift, aim for 10 reps. Weeks 9+: 15 reps with 2-second holds at the top.'
       },
       {
         id: 'lsd', name: 'Lateral Step-Down',
         equipment: ['Bench'], sets: '3 × 10 reps / leg', itbCrucial: true,
-        cue: 'Stand on one leg at the bench edge, lower the free foot slowly toward the floor — knee tracks over second toe the entire way.',
-        why: 'The single most ITBS-specific exercise. Failure to eccentrically control the quad and hip during single-leg loading is the mechanical root cause of IT band impingement.',
+        cue: 'Stand on one leg at the bench edge, lower the free foot slowly toward the floor — knee tracks directly over the second toe the entire way.',
+        why: 'The single most ITBS-specific exercise in existence. Research shows that failure to eccentrically control the quad and hip during single-leg loading is the mechanical root cause of IT band impingement. This trains the exact motor pattern that breaks down during miles 16–20.',
         cues: [
-          'Stand sideways on the bench edge on one foot; other leg hangs freely off the side',
+          'Stand sideways on the bench edge on one foot; let the other leg hang freely off the side',
           'Slowly lower the hanging foot toward the floor by bending your standing knee — 4-second descent',
-          'Knee must track in line with the second toe — not caving inward (valgus)',
-          'Touch the floor lightly, then press back to standing. All force from the standing leg only'
+          'Knee must track in line with the second toe — not caving inward (valgus), not flaring out',
+          'Touch the floor lightly, then press back to standing. Do not push off the floor — all force from the standing leg'
         ],
         mistakes: [
-          'Letting the knee collapse inward — use a mirror if possible to monitor',
-          'Speeding through the eccentric — 4 full seconds minimum, every rep'
+          'Letting the knee collapse inward during the descent — place a mirror to the side if possible to monitor',
+          'Speeding through the eccentric — a fast lowering defeats the entire purpose; 4 full seconds minimum'
         ],
-        load: 'Weeks 1–3: Bodyweight on a low surface. Weeks 4–9: Add 1×10–15lb DB each hand. Weeks 10+: 2×20lb DBs. Never compromise knee tracking for more load.'
+        load: 'Weeks 1–3: Bodyweight only on a low surface (use a step if the bench is too challenging). Weeks 4–9: Add 1×10–15lb DB held in each hand. Weeks 10+: 2×20lb DBs. Difficulty should never compromise knee tracking.'
+      },
+      {
+        id: 'bss', name: 'Bulgarian Split Squats',
+        equipment: ['DB','Bench'], sets: '3 × 8–10 reps / leg', itbCrucial: true,
+        cue: 'Drive through the front heel and feel the glute load — not the quad.',
+        why: 'Single-leg loading exposes and corrects the quad/glute imbalances that cause lateral knee drift and IT band stress on every running stride.',
+        cues: [
+          'Front foot far enough forward that your shin stays close to vertical at the bottom',
+          'Drive through the full heel of the front foot — if you feel it only in your quad, your foot is too close',
+          'Torso stays upright; lean forward slightly from the hip only — not the spine',
+          'Rear knee hovers 1–2 inches off the floor at the bottom; touch and go, no bouncing'
+        ],
+        mistakes: [
+          'Front knee collapsing inward (valgus) — this is the exact movement fault you\'re training to eliminate',
+          'Pushing off the back toes at the bottom — your rear leg is a balance assist, not a launch pad'
+        ],
+        load: 'Weeks 1–3: Bodyweight only. Weeks 4–7: 2×10–15lb. Weeks 8–15: 2×20–30lb. Add weight only when 10 reps feel genuinely controlled, not just completed.'
       },
       {
         id: 'cha', name: 'Cable Hip Abductions',
         equipment: ['Cable'], sets: '3 × 15 reps / side', itbCrucial: true,
         cue: 'Pelvis stays level throughout — lift the leg, do not hike the hip.',
-        why: 'Directly trains the Gluteus Medius — the primary muscle preventing hip drop during every running stride. Hip drop = IT band overload.',
+        why: 'Directly trains the Gluteus Medius — the primary muscle preventing hip drop during every running stride. Hip drop is the #1 biomechanical driver of IT band overload.',
         cues: [
           'Ankle cuff at the lowest cable position; stand sideways with the working leg furthest from the stack',
           'Slight bend in the standing knee; stand tall, do not lean away from the cable',
-          'Lift the working leg directly to the side in a pure abduction arc — no forward swing',
+          'Lift the working leg directly to the side in a pure abduction arc — no forward swing, no trunk lean',
           'Lower slowly over 3 seconds — the eccentric return is where glute med strength is built'
         ],
         mistakes: [
-          'Leaning away from the cable to help the lift — obliques compensating, not glute med',
-          'Hiking the hip upward — if your hip rises, the weight is too heavy'
+          'Leaning away from the cable to help the lift — this is the obliques compensating, not glute med working',
+          'Hiking the hip upward instead of abducting — if your hip rises, the weight is too heavy'
         ],
-        load: 'Start at 5–10 lbs. Build to 15–20 lbs over 8 weeks. Never sacrifice pelvic level for more weight.'
+        load: 'Start at 5–10 lbs. This is a precision exercise, not a strength exercise. Build to 15–20 lbs over 8 weeks. Never sacrifice pelvic level for more weight.'
+      },
+      {
+        id: 'wsu', name: 'Weighted Step-Ups',
+        equipment: ['DB','Bench'], sets: '3 × 10 reps / leg', itbCrucial: false,
+        cue: 'Drive through the heel of the elevated foot; the trailing leg is completely passive.',
+        why: 'Mimics the single-leg push-off load of each running stride. Builds concentric quad and glute strength at the exact knee flexion angle used during the propulsion phase of gait.',
+        cues: [
+          'Step onto the bench fully — entire foot planted, not just the ball of the foot',
+          'Initiate by pressing the elevated heel into the bench — not by pushing off the ground foot',
+          'Stand fully upright at the top, hips extended, for a 1-second pause',
+          'Lower the trailing leg slowly over 3 seconds — this controlled descent is the eccentric stimulus'
+        ],
+        mistakes: [
+          'Bouncing off the trailing leg to propel yourself up — this defeats the single-leg loading entirely',
+          'Leaning the torso forward — shifts load off the glutes and onto the lower back'
+        ],
+        load: 'Weeks 1–4: 2×15lb. Weeks 5–10: 2×20–25lb. Weeks 11+: 2×30lb. When 30lb for 10 reps is easy, slow the lowering phase to 4 seconds.'
+      },
+      {
+        id: 'cpp', name: 'Cable Pallof Press',
+        equipment: ['Cable'], sets: '3 × 10 reps / side', itbCrucial: false,
+        cue: 'Press straight out, hold 2 full seconds. Resisting the rotation IS the entire exercise.',
+        why: 'Anti-rotation core stability — the ability to hold your pelvis and spine neutral against lateral forces. This is what keeps your trunk from twisting and your gait from breaking down after mile 18.',
+        cues: [
+          'Cable at chest height; stand perpendicular to the stack, feet shoulder-width',
+          'Pull handle to your sternum, brace your full core hard',
+          'Press directly forward until arms are fully extended — zero hip or shoulder rotation',
+          'Hold 2 full seconds extended, then return slowly to sternum'
+        ],
+        mistakes: [
+          'Hips rotating toward the cable during the press — that rotation is exactly what you\'re training to prevent',
+          'Going too heavy — control at light weight beats wobbling at heavy weight every time'
+        ],
+        load: '5–15 lbs is typical and appropriate. If you can\'t hold 2 seconds perfectly extended, you\'re too heavy. This is a control drill, not a strength drill.'
       }
     ]
   },
   B: {
-    label: 'Day B', title: 'Posterior Chain & Resilience',
-    subtitle: '4 injury-prevention essentials · ~25 min · do immediately after your run',
-    calDay: 'Thursday',
+    label: 'Day B', title: 'Posterior Chain & Resilience', calDay: 'Thursday',
     exercises: [
       {
         id: 'nordic', name: 'Nordic Curl Negatives',
         equipment: ['Bench'], sets: '3 × 4–5 reps', itbCrucial: false,
         cue: 'Lower your body as slowly as possible — aim for 5+ seconds. Catch with hands at the bottom.',
-        why: 'The gold standard for hamstring injury prevention. A 2015 FIFA study showed 51% reduction in hamstring injuries. The eccentric strength built here directly protects against late-race hamstring breakdown.',
+        why: 'The gold standard for hamstring injury prevention in runners. The eccentric hamstring strength built here directly protects against hamstring strains and late-race breakdown. A 2015 FIFA study showed 51% reduction in hamstring injuries with this exercise alone.',
         cues: [
-          'Kneel on a mat, anchor feet under the bench (bench presses down on your ankles)',
-          'Arms crossed over chest. Whole body straight from knees to crown',
-          'Lower your body SLOWLY using only hamstring eccentric strength',
-          'Catch yourself with hands when you can no longer control it — push-up return does not count as a rep'
+          'Kneel on a mat, anchor your feet by sliding them under the bench (bench presses down on your ankles)',
+          'Arms crossed over chest or lightly at your sides. Whole body in a straight line from knees to crown',
+          'Lower your body SLOWLY toward the floor using only the strength of your hamstrings resisting',
+          'When you can no longer control the descent, catch yourself with both hands and do a light push-up back to start',
+          'The push-up return does not count as a rep — only the lowering phase does'
         ],
         mistakes: [
-          'Dropping fast — the entire stimulus is the slow eccentric; falling in under 2 seconds wastes the exercise',
-          'Hinging at the hips — fall as one rigid plank from knee to crown'
+          'Dropping fast — the entire stimulus is in the slow eccentric; if you fall in under 2 seconds, the exercise is wasted',
+          'Hinging at the hips — you should fall as one rigid unit from knee to crown, like a plank being lowered'
         ],
-        load: 'Weeks 1–3: 3×3 reps, 3-second lowering. Weeks 4–8: 3×5 reps, 5-second. Weeks 9+: 3×6 reps, 7-second lowering.'
-      },
-      {
-        id: 'wht', name: 'Weighted Hip Thrusts',
-        equipment: ['DB','Bench'], sets: '3 × 12 reps', itbCrucial: false,
-        cue: 'Squeeze the glutes maximally at the top for 2 seconds — ribs down, do not hyperextend.',
-        why: 'The most direct gluteus maximus builder. Weak glutes force the TFL and IT band to compensate for propulsion — this is the root cause of most ITBS.',
-        cues: [
-          'Upper back rests on the bench at shoulder blade level',
-          'Feet flat, hip-width apart; shins vertical when hips are at full height',
-          'Drive through both heels — feeling it in quads means feet are too close',
-          'At the top: ribs down, glutes fully squeezed, hips fully extended — hold 2 seconds'
-        ],
-        mistakes: [
-          'Hyperextending the lower back at the top — ribs must stay braced; that\'s lumbar loading, not glute loading',
-          'Driving through the toes — activates quads and hip flexors instead of glutes'
-        ],
-        load: 'Weeks 1–3: 1×30lb DB across lap. Weeks 4–8: both 30lb DBs. Weeks 9+: add a resistance band above the knees.'
+        load: 'Weeks 1–3: 3×3 reps, aim for 3-second lowering. Weeks 4–8: 3×5 reps, 5-second lowering. Weeks 9–15: 3×6 reps, 7-second lowering. These will always feel hard — that means they\'re working.'
       },
       {
         id: 'slrdl', name: 'Single-Leg RDLs',
         equipment: ['DB'], sets: '3 × 10 reps / leg', itbCrucial: false,
         cue: 'Hinge at the hips with a proud chest — the lower back never rounds.',
-        why: 'Builds eccentric hamstring strength and single-leg balance under load. Weakness here is a leading cause of late-race hamstring cramping and breakdown.',
+        why: 'Builds eccentric hamstring strength and single-leg balance under load. Critical for the flight and landing phase of every running stride. Weakness here is a leading cause of late-race hamstring cramping.',
         cues: [
-          'Hold DBs in front of thighs; drag them down along the standing leg as you hinge',
-          'Hinge from the hip joint — torso and rear leg are a seesaw pivoting at the hip',
-          'Proud chest throughout; shoulder blades drawn back',
-          'Stop when you feel a strong hamstring stretch — around parallel'
+          'Hold DBs in front of your thighs; as you hinge, drag them down along the standing leg — they should nearly brush your shin',
+          'Hinge from the hip joint, not the waist — torso and rear leg are a single seesaw pivoting at the hip',
+          'Proud chest throughout; shoulder blades drawn back, spine long from tailbone to crown',
+          'Stop when you feel a strong hamstring stretch in the standing leg — usually around parallel'
         ],
         mistakes: [
           'Rounding the lower back to reach further — stop where you can maintain a neutral spine',
-          'Rotating the rear hip open — keep both hip points facing straight down'
+          'Rotating the rear hip open — keep both hip points facing straight down the entire time'
         ],
-        load: 'Weeks 1–4: 1×15–20lb DB. Weeks 5–9: 1×25lb. Weeks 10+: 1×30lb. Prioritise balance over load.'
+        load: 'Weeks 1–4: 1×15–20lb DB. Weeks 5–9: 1×25lb. Weeks 10+: 1×30lb. Prioritise balance and hamstring feel. If wobbling, go lighter — instability negates the stimulus.'
+      },
+      {
+        id: 'wht', name: 'Weighted Hip Thrusts',
+        equipment: ['DB','Bench'], sets: '3 × 12 reps', itbCrucial: false,
+        cue: 'Squeeze the glutes maximally at the top for 2 seconds — ribs down, do not hyperextend.',
+        why: 'The most direct gluteus maximus builder available. Weak glutes force the TFL and IT band to compensate for propulsion on every stride — this is the root cause of most ITBS cases.',
+        cues: [
+          'Upper back rests on the bench at shoulder blade level, not the neck',
+          'Feet flat, hip-width apart; shins vertical when hips are at full height',
+          'Drive through both heels — feeling it in quads means feet are too close',
+          'At the top: ribs down, glutes fully squeezed, hips fully extended — hold 2 seconds'
+        ],
+        mistakes: [
+          'Hyperextending the lower back at the top — ribs must stay braced down; lumbar arch = lumbar loading, not glute loading',
+          'Driving through the toes — this activates quads and hip flexors instead of glutes'
+        ],
+        load: 'Weeks 1–3: 1×30lb DB across lap. Weeks 4–8: both 30lb DBs side by side. Weeks 9+: add a resistance band just above the knees for additional glute med activation at the top.'
+      },
+      {
+        id: 'cpt', name: 'Cable Pull-Through',
+        equipment: ['Cable'], sets: '3 × 12–15 reps', itbCrucial: false,
+        cue: 'Hinge your hips back as the cable loads, then drive your hips forward explosively — like a kettlebell swing but controlled.',
+        why: 'Builds explosive hip extension power — the same motion as push-off during running. The cable provides constant tension through the full hip extension range that dumbbells cannot replicate.',
+        cues: [
+          'Set the cable at its lowest position. Stand facing away from the stack, feet shoulder-width, straddle the cable',
+          'Reach between your legs and grab the rope or handle; take a step forward until there is clear tension',
+          'Hinge your hips backward — weight in your heels, soft bend in the knees, torso leans forward',
+          'Drive your hips powerfully forward to standing, squeezing your glutes hard at lockout — arms just along for the ride'
+        ],
+        mistakes: [
+          'Squatting instead of hinging — knees should bend only slightly; this is a hip hinge, not a leg press',
+          'Rounding the lower back during the hinge — maintain a proud chest throughout the entire movement'
+        ],
+        load: 'This is a power exercise: use a weight where you can feel the glute snap at the top but still control the hinge. Typically 20–40 lbs on the cable stack. 3-second hinge back, explosive drive forward.'
+      },
+      {
+        id: 'cfp', name: 'Cable Face Pulls',
+        equipment: ['Cable'], sets: '3 × 15 reps', itbCrucial: false,
+        cue: 'Elbows high and wide at the peak, thumbs pointing behind you — full external rotation every rep.',
+        why: 'Counteracts the forward-rounded posture that accumulates across long training weeks. Posterior shoulder and rotator cuff strength directly improves arm drive mechanics and reduces shoulder fatigue in the final miles.',
+        cues: [
+          'Cable at face height or slightly above; rope attachment preferred',
+          'Pull toward your forehead — elbows flare high and wide, forming a "W" at the peak',
+          'At peak: externally rotate fully so thumbs point directly behind you',
+          '2-second pull, 2-second return — every rep deliberate'
+        ],
+        mistakes: [
+          'Pulling to the chin or chest — too low, loads the lats instead of rear delts and external rotators',
+          'Using momentum — this is a corrective exercise; a half-rep done fast achieves nothing'
+        ],
+        load: 'Keep moderate (15–25 lbs), always high-rep. This is postural correction, not a strength lift. Never sacrifice external rotation quality for heavier weight.'
       },
       {
         id: 'slcr', name: 'Single-Leg Calf Raises',
         equipment: ['Bench'], sets: '3 × 15–20 reps / leg', itbCrucial: false,
-        cue: 'Full range every rep: deep Achilles stretch at the bottom, full plantarflexion at the top.',
-        why: 'The calf-Achilles complex absorbs ~8× body weight per stride. Inadequate eccentric calf strength is the primary cause of Achilles tendinopathy in marathon runners.',
+        cue: 'Full range every single rep: deep Achilles stretch at the bottom, full plantarflexion at the top.',
+        why: 'The calf-Achilles complex absorbs ~8× body weight per running stride and provides 40% of total push-off energy. Insufficient eccentric calf strength is the primary cause of Achilles tendinopathy and plantar fasciitis in marathon runners.',
         cues: [
-          'Ball of foot on bench edge, heel hangs completely off',
-          'Lower all the way until you feel a deep Achilles stretch — do not cut range short',
-          'Rise to full plantarflexion; hard squeeze at top for 1 second',
+          'Ball of foot on bench edge, heel hangs completely off — full range is non-negotiable',
+          'Lower all the way until you feel a deep Achilles stretch; do not cut the range short',
+          'Rise to full plantarflexion; hard squeeze at the top for 1 second',
           '3-second lowering — the slow eccentric is the entire therapeutic stimulus'
         ],
         mistakes: [
-          'Partial range of motion — skipping the bottom stretch bypasses the most important part',
+          'Partial range of motion — skipping the bottom stretch bypasses the most important part of the exercise',
           'Bouncing at the bottom — pause briefly at full stretch before pressing up'
         ],
-        load: 'Weeks 1–4: Bodyweight. Weeks 5–9: 1×15lb DB. Weeks 10+: 1×25–30lb DB.'
+        load: 'Weeks 1–4: Bodyweight. Weeks 5–9: 1×15lb DB. Weeks 10+: 1×25–30lb DB. When 20 reps at 30lb is easy, progress to a loaded backpack or weighted vest.'
       }
     ]
   }
 };
-
 
 // ═══════════════════════════════════════════════════════════
 // CONSTANTS
@@ -1196,6 +1318,12 @@ let missed      = {};     // { "1-Tuesday": true } — logged but not run
 let weekBuffer  = 3;      // available "repeat a week" credits
 let repeatedWks = {};     // { 1: true } — weeks flagged to repeat
 
+// Strava state
+let stravaMatched   = {}; // { "1-Tuesday": { dist_m, time_s, name, date } }
+let stravaCalibPending = null; // { runName, runDate, currentMp, suggestedMp, paces } or null
+let stravaAthlete   = null;   // athlete display name
+let stravaRunCount  = 0;
+
 // ═══════════════════════════════════════════════════════════
 // PERSISTENCE
 // ═══════════════════════════════════════════════════════════
@@ -1214,8 +1342,8 @@ function save() {
     localStorage.setItem('mc_missed',   JSON.stringify(missed));
     localStorage.setItem('mc_buffer',   JSON.stringify(weekBuffer));
     localStorage.setItem('mc_rpt',      JSON.stringify(repeatedWks));
+    localStorage.setItem('mc_strava_matched', JSON.stringify(stravaMatched));
   } catch(e) {}
-  syncToCloud();
 }
 
 function load() {
@@ -1233,6 +1361,10 @@ function load() {
     const mi  = localStorage.getItem('mc_missed');  if (mi)  missed      = JSON.parse(mi);
     const buf = localStorage.getItem('mc_buffer');  if (buf) weekBuffer  = JSON.parse(buf);
     const rpt = localStorage.getItem('mc_rpt');     if (rpt) repeatedWks = JSON.parse(rpt);
+    const sm  = localStorage.getItem('mc_strava_matched'); if (sm) stravaMatched = JSON.parse(sm);
+    // Restore calibrated paces
+    const sp = localStorage.getItem('mc_strava_paces');
+    if (sp) { try { applyCustomPaces(JSON.parse(sp)); } catch(_) {} }
   } catch(e) {}
 }
 
@@ -1434,16 +1566,10 @@ function renderStrengthSection() {
   const section = document.getElementById('sc-section');
   section.classList.toggle('open', scOpen);
 
-  // Update summary pill — use current week's T/Th dates
-  function _wkDateKey(targetDay) {
-    const curWeek = getCurrentWeek();
-    if (!curWeek) return todayKey();
-    const d = parseLocal(WEEK_STARTS[curWeek - 1]);
-    d.setDate(d.getDate() + (DAY_OFFSET[targetDay] || 0));
-    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-  }
-  const doneA = scDayCompletedCount('A', _wkDateKey('Tuesday'));
-  const doneB = scDayCompletedCount('B', _wkDateKey('Thursday'));
+  // Update summary pill
+  const todayK = todayKey();
+  const doneA = scDayCompletedCount('A', todayK);
+  const doneB = scDayCompletedCount('B', todayK);
   const totalDone = doneA + doneB;
   const totalEx   = STRENGTH.A.exercises.length + STRENGTH.B.exercises.length;
   const pill = document.getElementById('sc-pct-pill');
@@ -1456,20 +1582,13 @@ function renderStrengthSection() {
 
   if (!scOpen) { document.getElementById('sc-body').innerHTML = ''; return; }
 
-  // Use actual workout date for current week so widget syncs with calendar checkboxes
-  function getWorkoutDateKey(targetDay) {
-    const curWeek = getCurrentWeek();
-    if (!curWeek) return todayKey();
-    const wkDate = parseLocal(WEEK_STARTS[curWeek - 1]);
-    wkDate.setDate(wkDate.getDate() + (DAY_OFFSET[targetDay] || 0));
-    return `${wkDate.getFullYear()}-${String(wkDate.getMonth()+1).padStart(2,'0')}-${String(wkDate.getDate()).padStart(2,'0')}`;
-  }
-  const dayAKey = getWorkoutDateKey('Tuesday');
-  const dayBKey = getWorkoutDateKey('Thursday');
+  const todayKey_ = todayKey();
+  const dayA = STRENGTH.A;
+  const dayB = STRENGTH.B;
 
   function renderDay(dayLetter) {
     const day = STRENGTH[dayLetter];
-    const dk  = dayLetter === 'A' ? dayAKey : dayBKey;
+    const dk  = todayKey_;
     const doneCnt = scDayCompletedCount(dayLetter, dk);
     const allDone = doneCnt === day.exercises.length;
 
@@ -1521,8 +1640,8 @@ function renderStrengthSection() {
       <button class="sc-reset-btn" onclick="resetStrengthDay('${dayLetter}',event)">↺ Reset ${day.label} for today</button>`;
   }
 
-  const isAComplete = scDayCompletedCount('A', dayAKey) === STRENGTH.A.exercises.length;
-  const isBComplete = scDayCompletedCount('B', dayBKey) === STRENGTH.B.exercises.length;
+  const isAComplete = scDayCompletedCount('A', todayKey_) === STRENGTH.A.exercises.length;
+  const isBComplete = scDayCompletedCount('B', todayKey_) === STRENGTH.B.exercises.length;
 
   document.getElementById('sc-body').innerHTML = `
     <div class="sc-tabs">
@@ -1556,15 +1675,6 @@ function toggleStrengthEx(dayLetter, exId) {
   const key = `${todayKey()}-${dayLetter}-${exId}`;
   scCompleted[key] = !scCompleted[key];
   save();
-  renderStrengthSection();
-}
-
-function toggleCalStrength(dateKey, dayLetter, exId, e) {
-  e.stopPropagation();
-  const key = `${dateKey}-${dayLetter}-${exId}`;
-  scCompleted[key] = !scCompleted[key];
-  save();
-  renderCalendar();
   renderStrengthSection();
 }
 
@@ -1670,34 +1780,15 @@ function renderWeekBody(wk, wkNum) {
       itbBadgeHtml = `<span class="itb-badge">📐 Flat Course<div class="itb-tooltip">Chicago is flat — highly repetitive knee flexion angles with zero downhill relief. Focus on upright posture, a high cadence (170+ spm), and short strides to reduce lateral knee stress.</div></span>`;
     }
 
-    // Strength inline checklist for Tuesday (Day A) and Thursday (Day B)
+    // Strength reminder for Tuesday (Day A) and Thursday (Day B)
     let strengthReminderHtml = '';
     if (d.day === 'Tuesday' || d.day === 'Thursday') {
       const scDay = d.day === 'Tuesday' ? 'A' : 'B';
       const scDayData = STRENGTH[scDay];
-      // Use the actual calendar date for this workout as the key
-      const wkDate = parseLocal(WEEK_STARTS[wkNum - 1]);
-      wkDate.setDate(wkDate.getDate() + (DAY_OFFSET[d.day] || 0));
-      const wkDateKey = `${wkDate.getFullYear()}-${String(wkDate.getMonth()+1).padStart(2,'0')}-${String(wkDate.getDate()).padStart(2,'0')}`;
-      const exItems = scDayData.exercises.map(ex => {
-        const key = `${wkDateKey}-${scDay}-${ex.id}`;
-        const done = !!scCompleted[key];
-        return `<div class="sc-cal-item${done?' done':''}" onclick="toggleCalStrength('${wkDateKey}','${scDay}','${ex.id}',event)">
-          <div class="sc-cal-chk">${done?'✓':''}</div>
-          <span>${ex.name}</span>
-          ${ex.itbCrucial ? '<span class="itb-mini">🦴 ITB</span>' : ''}
-          <span style="font-size:9px;color:var(--text3);margin-left:auto">${ex.sets}</span>
-        </div>`;
-      }).join('');
-      const doneCount = scDayData.exercises.filter(ex => scCompleted[`${wkDateKey}-${scDay}-${ex.id}`]).length;
-      const allDone = doneCount === scDayData.exercises.length;
       strengthReminderHtml = `
-        <div class="sc-cal-block">
-          <div class="sc-cal-title">
-            🏋️ ${scDayData.label}: ${scDayData.title}
-            <span style="margin-left:auto;font-size:9px;font-weight:700;color:${allDone?'var(--green)':'rgba(90,144,245,.6)'}">${allDone?'✓ done':doneCount+'/'+scDayData.exercises.length}</span>
-          </div>
-          <div class="sc-cal-items">${exItems}</div>
+        <div class="sc-reminder">
+          <span>🏋️</span>
+          <span>Strength Day — <strong>${scDayData.label}: ${scDayData.title}</strong> after your run</span>
         </div>`;
     }
 
@@ -1706,6 +1797,22 @@ function renderWeekBody(wk, wkNum) {
       : `<div class="sdist">${displayDist(d.dist)}<span class="su"> ${distUnit()}</span></div>`;
 
     const missedTagHtml = isMissed ? `<span class="missed-tag">missed</span>` : '';
+    const stravaRun = stravaMatched[key];
+    let stravaTagHtml = '';
+    if (stravaRun && !isRest) {
+      const secPerMile = stravaRun.time_s / (stravaRun.dist_m / 1609.34);
+      const paceStr = isMetric
+        ? secToStr(Math.round(secPerMile / MILES_TO_KM)) + '/km'
+        : secToStr(Math.round(secPerMile)) + '/mi';
+      stravaTagHtml = `<span class="strava-tag">⚡ ${displayDist(stravaRun.dist_m / 1609.34)} ${distUnit()} · ${paceStr}</span>`;
+    }
+
+    const corosAdj = (!isDone && !isMissed && !isRest && !isRace) ? getCorosAdjustment(d, wkNum-1) : null;
+    const adjType  = corosAdj ? corosAdj.type : d.type;
+    const adjPace  = corosAdj ? (getPaceStrForType(corosAdj.type) || 'N/A') : null;
+    const corosTagHtml = corosAdj
+      ? `<span class="coros-tag${corosAdj.severity==='crit'?' adj-crit':corosAdj.severity==='warn'?' adj-warn':''}">◎ ${d.type}→${corosAdj.type} · ${corosAdj.reason}</span>`
+      : '';
     const checkHtml = isRest
       ? `<div class="wk-btns"><div class="cbox" style="opacity:0;pointer-events:none"></div><div class="mbox" style="opacity:0;pointer-events:none"></div></div>`
       : `<div class="wk-btns">
@@ -1751,9 +1858,9 @@ function renderWeekBody(wk, wkNum) {
     return `
       <div class="${rowCls}">
         <div class="sday${today?' is-today':''}">${d.day}${today?' ●':''}</div>
-        <div><span class="badge ${badgeClass(d.type)}">${d.type}</span>${itbBadgeHtml}${missedTagHtml}</div>
+        <div><span class="badge ${badgeClass(adjType)}">${adjType}</span>${itbBadgeHtml}${missedTagHtml}${stravaTagHtml}${corosTagHtml}</div>
         ${distHtml}
-        <div class="space">${displayPace(d.pace)}</div>
+        <div class="space">${adjPace !== null ? adjPace : displayPace(d.pace)}</div>
         <div class="snotes">${convertNotes(d.notes)}</div>
         ${checkHtml}
       </div>${logRow}${strengthReminderHtml}`;
@@ -1996,7 +2103,7 @@ function repeatWeek(wkNum, e) {
 // ═══════════════════════════════════════════════════════════
 const LS_KEYS = ['mc_completed','mc_metric','mc_expanded','mc_itb','mc_pt',
   'mc_wkmeta','mc_foam','mc_sc_open','mc_sc_day','mc_sc_done',
-  'mc_missed','mc_buffer','mc_rpt'];
+  'mc_missed','mc_buffer','mc_rpt','mc_strava_matched','mc_strava_paces','mc_strava_paces_dismissed'];
 
 function exportData() {
   const data = {};
@@ -2069,6 +2176,7 @@ let _installPrompt = null;
 
 function setupPWA() {
   // Inline manifest via blob URL (works for file:// and http://)
+  const iconSvg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23e8387a'/><text y='.9em' font-size='80' x='10'>🏃</text></svg>`;
   const manifest = {
     name: 'Chicago Marathon 2026 — Training Dashboard',
     short_name: 'Marathon 2026',
@@ -2079,8 +2187,9 @@ function setupPWA() {
     theme_color: '#e8387a',
     orientation: 'portrait-primary',
     icons: [
-      {src:'/apple-touch-icon.png', sizes:'180x180', type:'image/png'},
-      {src:'/icon.svg', sizes:'any', type:'image/svg+xml'}
+      {src:`data:image/svg+xml,${iconSvg}`, sizes:'any', type:'image/svg+xml'},
+      {src:`data:image/svg+xml,${iconSvg}`, sizes:'192x192', type:'image/svg+xml'},
+      {src:`data:image/svg+xml,${iconSvg}`, sizes:'512x512', type:'image/svg+xml'}
     ]
   };
   const blob = new Blob([JSON.stringify(manifest)], {type:'application/manifest+json'});
@@ -2127,54 +2236,336 @@ function dismissInstall() {
 }
 
 // ═══════════════════════════════════════════════════════════
-// CLOUD SYNC  — no auth, single row, auto-sync on every save
+// INIT
 // ═══════════════════════════════════════════════════════════
-let syncTimer = null;
+// ═══════════════════════════════════════════════════════════
+// STRAVA INTEGRATION
+// ═══════════════════════════════════════════════════════════
 
-function setSyncStatus(cls, html) {
-  const el = document.getElementById('sync-status');
-  if (el) el.innerHTML = `<div class="sync-pill ${cls}">${html}</div>`;
+// Jack Daniels VDOT — compute from any run effort
+function calcVDOT(distanceM, timeSec) {
+  const t = timeSec / 60;
+  const v = distanceM / t; // m/min
+  const vo2 = -4.60 + 0.182258 * v + 0.000104 * v * v;
+  const pct = 0.8 + 0.1894393 * Math.exp(-0.012778 * t) + 0.2989558 * Math.exp(-0.1932695 * t);
+  return vo2 / pct;
 }
 
-async function initSync() {
-  setSyncStatus('saving', '<span class="sync-spin">↻</span> <span>Connecting…</span>');
-  try {
-    const res = await fetch('/api/progress');
-    if (!res.ok) { setSyncStatus('', ''); return; }
-    const { data } = await res.json();
-    if (data && Object.keys(data).length > 0) {
-      LS_KEYS.forEach(k => { if (data[k] !== undefined) localStorage.setItem(k, data[k]); });
-      load();
-      rehydrate();
+// Given VDOT and VO2max fraction, return sec/mile
+function vdotToSecPerMile(vdot, fraction) {
+  const targetVO2 = vdot * fraction;
+  const a = 0.000104, b = 0.182258, c = -4.60 - targetVO2;
+  const vMperMin = (-b + Math.sqrt(b * b - 4 * a * c)) / (2 * a);
+  return (1609.34 / vMperMin) * 60;
+}
+
+function derivePacesFromVDOT(vdot) {
+  const fmt = (spm) => secToStr(Math.round(spm));
+  const fmtKm = (spm) => secToStr(Math.round(spm / MILES_TO_KM));
+  const easy0 = vdotToSecPerMile(vdot, 0.65), easy1 = vdotToSecPerMile(vdot, 0.59);
+  const tpo0  = vdotToSecPerMile(vdot, 0.92), tpo1  = vdotToSecPerMile(vdot, 0.88);
+  const int0  = vdotToSecPerMile(vdot, 1.00), int1  = vdotToSecPerMile(vdot, 0.95);
+  const mp    = vdotToSecPerMile(vdot, 0.82);
+  const rec   = vdotToSecPerMile(vdot, 0.57);
+  return {
+    mi: { mp: fmt(mp), easy: `${fmt(easy0)} – ${fmt(easy1)}`, tempo: `${fmt(tpo0)} – ${fmt(tpo1)}`, int: `${fmt(int0)} – ${fmt(int1)}`, rec: `${fmt(rec)}+` },
+    km: { mp: fmtKm(mp), easy: `${fmtKm(easy0)} – ${fmtKm(easy1)}`, tempo: `${fmtKm(tpo0)} – ${fmtKm(tpo1)}`, int: `${fmtKm(int0)} – ${fmtKm(int1)}`, rec: `${fmtKm(rec)}+` },
+  };
+}
+
+function applyCustomPaces(paces) {
+  PACES = PACES.map(p => ({
+    ...p,
+    mi: paces.mi[p.key] ?? p.mi,
+    km: paces.km[p.key] ?? p.km,
+  }));
+}
+
+function resetPaces() {
+  PACES = DEFAULT_PACES.map(p => ({...p}));
+  localStorage.removeItem('mc_strava_paces');
+  localStorage.removeItem('mc_coros_paces');
+  renderPaceGuide();
+  renderCorosWidget();
+  renderStravaWidget();
+}
+
+// Match a Strava run to a training plan workout by date
+function matchRunToWorkout(run) {
+  const [ry, rm, rd] = run.date.split('-').map(Number);
+  const runMs = new Date(ry, rm - 1, rd).getTime();
+  for (let i = 0; i < WEEK_STARTS.length; i++) {
+    const wkStart = parseLocal(WEEK_STARTS[i]);
+    const wkEnd   = new Date(wkStart); wkEnd.setDate(wkEnd.getDate() + 6);
+    if (runMs >= wkStart.getTime() && runMs <= wkEnd.getTime()) {
+      const weekNum = i + 1;
+      const dayIdx  = Math.round((runMs - wkStart.getTime()) / 86400000);
+      const dayName = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'][dayIdx];
+      const wk = DATA[i];
+      const sched = wk.schedule.find(s => s.day === dayName);
+      if (!sched || sched.dist === 0) return null;
+      const actualMiles = run.distance_m / 1609.34;
+      if (actualMiles < sched.dist * 0.45) return null; // too short to be the scheduled run
+      return { weekNum, dayName };
     }
-    setSyncStatus('synced', '☁ <span>Synced</span>');
-  } catch {
-    setSyncStatus('', ''); // offline / not deployed — fail silently
+  }
+  return null;
+}
+
+// Find the best calibration candidate: highest-speed run >= 5km
+function findCalibRun(runs) {
+  return runs
+    .filter(r => r.distance_m >= 5000)
+    .sort((a, b) => b.average_speed_ms - a.average_speed_ms)[0] ?? null;
+}
+
+function processStravaRuns(runs) {
+  const newMatched = {};
+  runs.forEach(run => {
+    const match = matchRunToWorkout(run);
+    if (match) {
+      const key = `${match.weekNum}-${match.dayName}`;
+      // Keep the longer run if multiple match the same slot
+      if (!newMatched[key] || run.distance_m > newMatched[key].dist_m) {
+        newMatched[key] = { dist_m: run.distance_m, time_s: run.moving_time_s, name: run.name, date: run.date };
+      }
+    }
+  });
+  stravaMatched = newMatched;
+  save();
+
+  // Check pace calibration opportunity
+  const calibRun = findCalibRun(runs);
+  const hasSavedPaces = !!localStorage.getItem('mc_strava_paces');
+  const dismissed = !!localStorage.getItem('mc_strava_paces_dismissed');
+  if (calibRun && !hasSavedPaces && !dismissed) {
+    const vdot = calcVDOT(calibRun.distance_m, calibRun.moving_time_s);
+    const paces = derivePacesFromVDOT(vdot);
+    const currentMpSec = 8 * 60; // default 8:00/mi
+    const suggestedMpSec = vdotToSecPerMile(vdot, 0.82);
+    if (Math.abs(suggestedMpSec - currentMpSec) >= 10) {
+      const distKm = (calibRun.distance_m / 1000).toFixed(1);
+      const dateStr = new Date(calibRun.date + 'T00:00:00').toLocaleDateString('en-US', { month:'short', day:'numeric' });
+      stravaCalibPending = {
+        runName: `${distKm}km run on ${dateStr}`,
+        currentMp: secToStr(currentMpSec) + '/mi',
+        suggestedMp: secToStr(Math.round(suggestedMpSec)) + '/mi',
+        vdot: Math.round(vdot * 10) / 10,
+        paces,
+      };
+    }
   }
 }
 
-function syncToCloud() {
-  clearTimeout(syncTimer);
-  setSyncStatus('saving', '<span class="sync-spin">↻</span> <span>Saving…</span>');
-  syncTimer = setTimeout(async () => {
-    const data = {};
-    LS_KEYS.forEach(k => { const v = localStorage.getItem(k); if (v) data[k] = v; });
-    try {
-      const res = await fetch('/api/progress', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data }),
-      });
-      setSyncStatus(res.ok ? 'synced' : 'offline', res.ok ? '☁ <span>Synced</span>' : '⚠ <span>Sync failed</span>');
-    } catch {
-      setSyncStatus('offline', '⚠ <span>Offline</span>');
-    }
-  }, 1500);
+function applyStravaCalibration() {
+  if (!stravaCalibPending) return;
+  applyCustomPaces(stravaCalibPending.paces);
+  localStorage.setItem('mc_strava_paces', JSON.stringify(stravaCalibPending.paces));
+  stravaCalibPending = null;
+  renderPaceGuide();
+  renderStravaWidget();
+  renderCalendar();
 }
 
-// ═══════════════════════════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════════════════════════
+function dismissStravaCalibration() {
+  stravaCalibPending = null;
+  // Mark as "user decided not to" by saving current defaults as confirmed
+  localStorage.setItem('mc_strava_paces_dismissed', '1');
+  renderStravaWidget();
+}
+
+// ─── COROS ─────────────────────────────────────────────────
+
+function getCorosVDOT() {
+  if (!COROS_DATA) return null;
+  return calcVDOT(42195, COROS_DATA.fitness.marathonPredictionSec);
+}
+
+// Apply Coros-derived pace zones unless Strava calibration is already active
+function applyCorosPaces() {
+  if (!COROS_DATA) return;
+  if (localStorage.getItem('mc_strava_paces')) return;
+  const vdot = getCorosVDOT();
+  if (!vdot || vdot < 30 || vdot > 85) return;
+  const paces = derivePacesFromVDOT(vdot);
+  applyCustomPaces(paces);
+  localStorage.setItem('mc_coros_paces', JSON.stringify(paces));
+}
+
+// Return the display pace string (already unit-aware) for a given workout type
+function getPaceStrForType(type) {
+  const typeToKey = { Easy:'easy', Recovery:'rec', Tempo:'tempo', Intervals:'int', 'Long Run':'easy', 'MP Workout':'mp', Shakeout:'easy' };
+  const key = typeToKey[type];
+  if (!key) return null;
+  const p = PACES.find(x => x.key === key);
+  return p ? (isMetric ? p.km : p.mi) : null;
+}
+
+// Return a downgrade suggestion for a future uncompleted hard workout based on Coros recovery/load.
+// Caller is responsible for filtering out rest/race/done/missed days.
+function getCorosAdjustment(workout, weekIdx) {
+  if (!COROS_DATA) return null;
+  const wDate = getWorkoutDate(weekIdx, workout.day);
+  const now = new Date(); now.setHours(0,0,0,0);
+  if (wDate < now) return null;
+
+  const r   = COROS_DATA.recovery.pct;
+  const lc  = COROS_DATA.load.comment;
+  const type = workout.type;
+  const isHard = type === 'Intervals' || type === 'Tempo';
+
+  if (r < 40)                             return { type: 'Rest',    reason: `${r}% recovery`,          severity: 'crit' };
+  if (r < 60 && isHard)                   return { type: 'Easy',    reason: `${r}% recovery`,          severity: 'warn' };
+  if (r < 75 && type === 'Intervals')     return { type: 'Tempo',   reason: `${r}% recovery`,          severity: 'warn' };
+  if (lc === 'Overreaching' && isHard)    return { type: 'Easy',    reason: 'overreaching load',        severity: 'warn' };
+  if (lc === 'Overreaching' && type === 'Long Run') return { type: 'Easy', reason: 'overreaching load', severity: 'warn' };
+  return null;
+}
+
+function renderCorosWidget() {
+  const el = document.getElementById('coros-widget');
+  if (!el || !COROS_DATA) return;
+  const d = COROS_DATA;
+  const r = d.recovery.pct;
+  const rColor = r >= 80 ? '#00C8B4' : r >= 60 ? '#eab308' : '#ef4444';
+  const rBarBg = r >= 80 ? 'linear-gradient(90deg,#00C8B4,#20d470)' : r >= 60 ? '#eab308' : '#ef4444';
+  const loadColors = { Optimized:'#20d470', Maintaining:'#5a90f5', Overreaching:'#f97316', Detraining:'#a855f7' };
+  const loadColor = loadColors[d.load.comment] || 'var(--text2)';
+  const usingCorosPaces = !!localStorage.getItem('mc_coros_paces') && !localStorage.getItem('mc_strava_paces');
+
+  el.innerHTML = `
+    <div class="coros-card">
+      <div class="coros-hdr">
+        <h2><span class="coros-brand">◎</span> Coros Fitness</h2>
+        <span class="coros-synced">Synced ${d.syncedDate}</span>
+      </div>
+      <div class="coros-grid">
+        <div class="coros-stat"><div class="v" style="color:#00C8B4">${d.fitness.vo2max}</div><div class="l">VO₂max</div></div>
+        <div class="coros-stat"><div class="v">${d.fitness.thresholdPace}</div><div class="l">Threshold</div></div>
+      </div>
+      <div class="coros-prediction">
+        <div class="cp-label">Marathon Prediction</div>
+        <div class="cp-value">${d.fitness.marathonPrediction}</div>
+      </div>
+      <div class="coros-recovery-label">
+        <span class="cp-pct" style="color:${rColor}">${r}% recovered</span>
+        <span class="cp-status">${d.recovery.level}</span>
+      </div>
+      <div class="coros-bar-wrap"><div class="coros-bar" style="width:${r}%;background:${rBarBg}"></div></div>
+      <div class="coros-load">
+        <span class="cl-comment" style="color:${loadColor}">${d.load.comment}</span>
+        <span class="cl-ratio">Load ratio ${d.load.ratio.toFixed(2)} · STL ${d.load.shortTerm}</span>
+      </div>
+      ${usingCorosPaces ? '<div class="coros-pace-note">◎ Pace zones calibrated from Coros</div>' : ''}
+    </div>`;
+}
+
+function renderStravaWidget() {
+  const el = document.getElementById('strava-widget');
+  if (!el) return;
+
+  const isCalibrated = !!localStorage.getItem('mc_strava_paces');
+
+  if (!stravaAthlete) {
+    el.innerHTML = `
+      <div class="strava-card">
+        <div class="strava-hdr">
+          <h2><svg width="14" height="14" viewBox="0 0 24 24" fill="#FC4C02" style="flex-shrink:0"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg> Strava Sync</h2>
+        </div>
+        <div class="strava-desc">Connect Strava to see your actual run data alongside planned workouts and calibrate training zones from real efforts.</div>
+        <button class="strava-connect-btn" onclick="window.location='/api/strava/auth'">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="#fff"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg>
+          Connect with Strava
+        </button>
+      </div>`;
+    return;
+  }
+
+  const syncCount = Object.keys(stravaMatched).length;
+  const calibBanner = stravaCalibPending && !localStorage.getItem('mc_strava_paces_dismissed') ? `
+    <div class="strava-cal-banner">
+      <div class="strava-cal-title">📊 Pace Update Available</div>
+      <div class="strava-cal-desc">Your ${stravaCalibPending.runName} suggests updated zones (VDOT ${stravaCalibPending.vdot}). Current marathon pace: ${stravaCalibPending.currentMp}. Suggested: ${stravaCalibPending.suggestedMp}.</div>
+      <div class="strava-cal-btns">
+        <button class="strava-cal-apply" onclick="applyStravaCalibration()">Apply Calibration</button>
+        <button class="strava-cal-dismiss" onclick="dismissStravaCalibration()">Dismiss</button>
+      </div>
+    </div>` : '';
+
+  const resetBtn = isCalibrated
+    ? `<button class="strava-sync-btn" onclick="resetPaces()" title="Revert to default paces">Reset paces</button>`
+    : '';
+
+  el.innerHTML = `
+    <div class="strava-card">
+      <div class="strava-hdr">
+        <h2><svg width="14" height="14" viewBox="0 0 24 24" fill="#FC4C02" style="flex-shrink:0"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg> Strava Sync</h2>
+      </div>
+      <div class="strava-athlete">
+        <div class="strava-dot"></div>
+        <div>
+          <div class="strava-athlete-name">${stravaAthlete}</div>
+          <div class="strava-athlete-sub">${stravaRunCount} run${stravaRunCount !== 1 ? 's' : ''} fetched · ${syncCount} matched to plan</div>
+        </div>
+      </div>
+      <div class="strava-actions">
+        <button class="strava-sync-btn" onclick="syncStrava()">↻ Sync now</button>
+        ${resetBtn}
+        <button class="strava-disc-btn" onclick="disconnectStrava()">Disconnect</button>
+      </div>
+      ${calibBanner}
+    </div>`;
+}
+
+async function syncStrava() {
+  try {
+    const resp = await fetch('/api/strava/activities');
+    const data = await resp.json();
+    if (!data.connected) {
+      stravaAthlete = null;
+      renderStravaWidget();
+      return;
+    }
+    stravaAthlete  = data.athlete;
+    stravaRunCount = data.runs.length;
+    processStravaRuns(data.runs);
+    renderStravaWidget();
+    renderCalendar();
+  } catch (_) {}
+}
+
+async function disconnectStrava() {
+  try { await fetch('/api/strava/activities', { method: 'DELETE' }); } catch (_) {}
+  stravaAthlete = null;
+  stravaMatched = {};
+  stravaCalibPending = null;
+  stravaRunCount = 0;
+  save();
+  renderStravaWidget();
+  renderCalendar();
+}
+
+async function initStrava() {
+  // Handle OAuth callback result params
+  const params = new URLSearchParams(window.location.search);
+  const status = params.get('strava');
+  if (status) window.history.replaceState({}, '', window.location.pathname);
+
+  renderStravaWidget(); // show disconnected state immediately
+
+  try {
+    const resp = await fetch('/api/strava/activities');
+    if (!resp.ok) return;
+    const data = await resp.json();
+    if (!data.connected) return;
+    stravaAthlete  = data.athlete;
+    stravaRunCount = data.runs.length;
+    processStravaRuns(data.runs);
+    renderStravaWidget();
+    renderCalendar();
+  } catch (_) {}
+}
+
 function init() {
   load();
 
@@ -2196,16 +2587,19 @@ function init() {
   if (cur && !expanded.has(cur)) expanded.add(cur);
 
   setupPWA();
-  initSync();
+  applyCorosPaces();
   renderCountdown();
   renderPaceGuide();
   renderBufferWidget();
+  renderCorosWidget();
+  renderStravaWidget();
   renderSidebarTips();
   renderStrengthSection();
   renderCalendar();
   renderPTTracker();
   updateProgress();
   updateMobileStrip();
+  initStrava(); // async, updates widget + calendar when done
   setInterval(() => { renderCountdown(); updateMobileStrip(); }, 60000);
 }
 
