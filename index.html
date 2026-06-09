@@ -554,6 +554,31 @@ body.itb-on::before{
 }
 
 
+/* ── TODAY CARD ──────────────────────────────────────────── */
+.today-card{background:linear-gradient(135deg,#131328 0%,#1a1230 100%);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:14px;position:relative;overflow:hidden}
+.today-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),#ff7043)}
+.today-card.tc-done{border-color:rgba(32,212,112,.3)}
+.today-card.tc-done::before{background:linear-gradient(90deg,var(--green),#14b8a6)}
+.today-card.tc-missed{border-color:rgba(245,158,11,.25)}
+.today-card.tc-missed::before{background:linear-gradient(90deg,#f59e0b,#f97316)}
+.today-card.tc-rest::before{display:none}
+.tc-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px}
+.tc-date{font-size:11px;font-weight:700;color:var(--text);text-transform:uppercase;letter-spacing:.5px}
+.tc-week{font-size:10px;color:var(--text3)}
+.tc-type-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.tc-dist-val{font-size:26px;font-weight:900;letter-spacing:-1px;line-height:1}
+.tc-dist-unit{font-size:11px;color:var(--text2);margin-left:1px}
+.tc-pace{font-size:12px;color:var(--text2);margin-bottom:7px;font-family:'SF Mono','Fira Code',monospace}
+.tc-notes{font-size:11px;color:var(--text3);line-height:1.55;margin-bottom:12px}
+.tc-actions{display:flex;gap:8px;margin-bottom:0}
+.tc-complete{flex:1;background:rgba(32,212,112,.1);border:1.5px solid rgba(32,212,112,.3);color:var(--green);border-radius:8px;padding:8px;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s}
+.tc-complete:hover,.tc-complete.on{background:rgba(32,212,112,.22);border-color:var(--green)}
+.tc-skip{background:var(--surface);border:1.5px solid var(--border);color:var(--text3);border-radius:8px;padding:8px 14px;font-size:11px;cursor:pointer;transition:all .15s}
+.tc-skip:hover,.tc-skip.on{border-color:rgba(245,158,11,.4);color:#f59e0b;background:rgba(245,158,11,.07)}
+.tc-coros-row{display:flex;align-items:center;gap:6px;margin-top:10px;padding:6px 10px;background:rgba(0,200,180,.06);border-radius:7px;border:1px solid rgba(0,200,180,.14)}
+.tc-coros-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.tc-coros-txt{font-size:10px;color:var(--text2)}
+
 /* ── COROS ──────────────────────────────────────────── */
 .coros-card{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:14px}
 .coros-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
@@ -659,6 +684,9 @@ body.itb-on::before{
       <div class="pbar-wrap"><div class="pbar" id="pbar" style="width:0%"></div></div>
       <div class="pbar-info"><span id="pbar-l">0 of 0 workouts</span><span>🏁 Oct 11, 2026</span></div>
     </div>
+
+    <!-- TODAY'S WORKOUT — injected by JS -->
+    <div id="today-card"></div>
 
     <!-- STRENGTH & CONDITIONING -->
     <div class="sc-section" id="sc-section">
@@ -1258,7 +1286,7 @@ async function loadFromServer() {
     load();
     const cp = localStorage.getItem('mc_coros_paces');
     if (cp) { try { applyCustomPaces(JSON.parse(cp)); } catch(_) {} }
-    renderPaceGuide(); renderCorosWidget();
+    renderTodayCard(); renderPaceGuide(); renderCorosWidget();
     renderCalendar(); updateProgress(); updateMobileStrip();
     renderBufferWidget(); renderPTTracker(); renderStrengthSection();
     if (itbMode) { document.body.classList.add('itb-on'); document.getElementById('itb-wrap')?.classList.add('on'); }
@@ -1282,6 +1310,7 @@ function save() {
     localStorage.setItem('mc_rpt',      JSON.stringify(repeatedWks));
   } catch(e) {}
   scheduleSyncToServer();
+  renderTodayCard();
 }
 
 function load() {
@@ -2170,6 +2199,56 @@ function getCorosAdjustment(workout, weekIdx) {
   return null;
 }
 
+function renderTodayCard() {
+  const el = document.getElementById('today-card');
+  if (!el) return;
+  const wkNum = getCurrentWeek();
+  if (!wkNum) { el.innerHTML = ''; return; }
+  const wk = DATA[wkNum - 1];
+  const dayName = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][new Date().getDay()];
+  const d = wk.schedule.find(s => s.day === dayName);
+  if (!d) { el.innerHTML = ''; return; }
+  const key    = `${wkNum}-${d.day}`;
+  const isDone = !!completed[key];
+  const isMiss = !!missed[key];
+  const isRest = d.type === 'Rest';
+  const isRace = d.type === 'RACE DAY';
+  const dateStr = new Date().toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'});
+  const cls = `today-card${isDone?' tc-done':isMiss?' tc-missed':isRest?' tc-rest':''}`;
+  const distHtml = d.dist > 0
+    ? `<span class="tc-dist-val">${displayDist(d.dist)}</span><span class="tc-dist-unit">${distUnit()}</span>`
+    : `<span class="tc-dist-val" style="color:var(--text3)">—</span>`;
+  const paceHtml = d.pace !== 'N/A' && d.pace !== 'Mixed'
+    ? `<div class="tc-pace">${displayPace(d.pace)} /${isMetric?'km':'mi'}</div>` : '';
+  const notesHtml = `<div class="tc-notes">${convertNotes(d.notes)}</div>`;
+  const actionsHtml = isRest || isRace ? '' : `
+    <div class="tc-actions">
+      <button class="tc-complete${isDone?' on':''}" onclick="toggleWorkout(${wkNum},'${d.day}',event)">
+        ${isDone ? '✓ Done' : 'Mark Complete'}
+      </button>
+      <button class="tc-skip${isMiss?' on':''}" onclick="markMissed(${wkNum},'${d.day}',event)">
+        ${isMiss ? '✕ Skipped' : 'Skip'}
+      </button>
+    </div>`;
+  let corosHtml = '';
+  if (COROS_DATA && !isRest && !isRace) {
+    const r = COROS_DATA.recovery.pct;
+    const rColor = r >= 80 ? '#00C8B4' : r >= 60 ? '#eab308' : '#ef4444';
+    corosHtml = `<div class="tc-coros-row">
+      <div class="tc-coros-dot" style="background:${rColor}"></div>
+      <div class="tc-coros-txt">◎ ${r}% recovered · ${COROS_DATA.recovery.level}</div>
+    </div>`;
+  }
+  el.innerHTML = `<div class="${cls}">
+    <div class="tc-header">
+      <div class="tc-date">${dateStr}</div>
+      <div class="tc-week">Week ${wkNum} · ${wk.phase}</div>
+    </div>
+    <div class="tc-type-row"><span class="badge ${badgeClass(d.type)}">${d.type}</span>${distHtml}</div>
+    ${paceHtml}${notesHtml}${actionsHtml}${corosHtml}
+  </div>`;
+}
+
 function renderCorosWidget() {
   const el = document.getElementById('coros-widget');
   if (!el || !COROS_DATA) return;
@@ -2237,6 +2316,7 @@ function init() {
 
   setupPWA();
   renderCountdown();
+  renderTodayCard();
   renderPaceGuide();
   renderBufferWidget();
   renderCorosWidget();
