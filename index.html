@@ -297,7 +297,7 @@ body.itb-on .foam-card{border-color:rgba(245,158,11,.25)}
 
 /* RESPONSIVE */
 @media(max-width:600px){
-  .srow{grid-template-columns:68px 1fr 54px 44px;grid-template-rows:auto auto auto;align-items:center;row-gap:0}
+  .srow{grid-template-columns:68px 1fr 62px 50px;grid-template-rows:auto auto auto;align-items:center;row-gap:0}
   .sday{grid-area:1/1}
   .sdist{grid-area:1/3}
   .wk-btns{grid-area:1/4}
@@ -2197,7 +2197,7 @@ function updateMobileStrip() {
   const paceEl = document.getElementById('ms-pace');
   if (daysEl) daysEl.textContent = days > 0 ? days : '🏁';
   if (bufEl)  bufEl.textContent  = weekBuffer;
-  if (paceEl) paceEl.textContent = isMetric ? '4:58' : '8:00';
+  if (paceEl) { const mp = PACES.find(p => p.key === 'mp'); paceEl.textContent = mp ? (isMetric ? mp.km : mp.mi) : (isMetric ? '4:58' : '8:00'); }
 }
 
 // ═══════════════════════════════════════════════════════════
