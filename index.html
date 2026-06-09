@@ -550,18 +550,21 @@ body.itb-on .foam-card{border-color:rgba(245,158,11,.25)}
 }
 /* Compact header subtitle on small screens */
 @media(max-width:480px){
+  .hdr{gap:8px;padding:0 12px}
   .h-txt .hs{display:none}
+  .h-txt .ht{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .h-icon{width:26px;height:26px;font-size:13px;border-radius:6px}
+  .h-brand{gap:7px}
   .h-countdown{display:none}
   .data-btns{display:none}
   .itb-lbl{display:none}
-  .itb-wrap{padding:5px 8px}
+  .itb-wrap{padding:4px 6px}
+  .itb-sw{width:28px;height:16px}
+  .itb-knob{width:12px;height:12px}
+  .itb-wrap.on .itb-knob{transform:translateX(12px)}
+  .utbtn{padding:3px 8px;font-size:10px}
   body.itb-on::before{display:none}
   body.itb-on .hdr{border-bottom-color:rgba(245,158,11,.7);border-bottom-width:2px}
-  .h-txt .ht{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-}
-@media(max-width:360px){
-  .h-txt .ht{font-size:12px}
-  .h-icon{width:26px;height:26px;font-size:13px}
 }
 /* Mobile-specific layout: put buffer + pace summary strip above calendar */
 .mobile-strip{
