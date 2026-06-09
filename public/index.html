@@ -649,6 +649,8 @@ body.itb-on .foam-card{border-color:rgba(245,158,11,.25)}
 .coros-load .cl-comment{font-size:11px;font-weight:700}
 .coros-load .cl-ratio{font-size:10px;color:var(--text2)}
 .coros-pace-note{font-size:9px;color:#00C8B4;margin-top:6px;text-align:center}
+.coros-apply-btn{width:100%;background:rgba(0,200,180,.1);border:1px solid rgba(0,200,180,.3);color:#00C8B4;border-radius:7px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s}
+.coros-apply-btn:hover{background:rgba(0,200,180,.2);border-color:#00C8B4}
 .coros-tag{display:inline-flex;align-items:center;gap:3px;background:rgba(0,200,180,.13);color:#00C8B4;border-radius:4px;padding:1px 5px;font-size:9px;font-weight:700;margin-left:5px;vertical-align:middle;line-height:1.4}
 .coros-tag.adj-warn{background:rgba(249,115,22,.13);color:#f97316}
 .coros-tag.adj-crit{background:rgba(239,68,68,.13);color:#ef4444}
@@ -1385,9 +1387,11 @@ function load() {
     const buf = localStorage.getItem('mc_buffer');  if (buf) weekBuffer  = JSON.parse(buf);
     const rpt = localStorage.getItem('mc_rpt');     if (rpt) repeatedWks = JSON.parse(rpt);
     const sm  = localStorage.getItem('mc_strava_matched'); if (sm) stravaMatched = JSON.parse(sm);
-    // Restore calibrated paces
+    // Restore calibrated paces (Strava takes priority over Coros)
     const sp = localStorage.getItem('mc_strava_paces');
+    const cp = localStorage.getItem('mc_coros_paces');
     if (sp) { try { applyCustomPaces(JSON.parse(sp)); } catch(_) {} }
+    else if (cp) { try { applyCustomPaces(JSON.parse(cp)); } catch(_) {} }
   } catch(e) {}
 }
 
@@ -2412,15 +2416,22 @@ function getCorosVDOT() {
   return calcVDOT(42195, COROS_DATA.fitness.marathonPredictionSec);
 }
 
-// Apply Coros-derived pace zones unless Strava calibration is already active
+// Apply Coros-derived pace zones (explicit user action)
 function applyCorosPaces() {
   if (!COROS_DATA) return;
-  if (localStorage.getItem('mc_strava_paces')) return;
   const vdot = getCorosVDOT();
   if (!vdot || vdot < 30 || vdot > 85) return;
   const paces = derivePacesFromVDOT(vdot);
   applyCustomPaces(paces);
   localStorage.setItem('mc_coros_paces', JSON.stringify(paces));
+  localStorage.removeItem('mc_strava_paces');
+  renderPaceGuide(); renderCorosWidget(); renderStravaWidget(); updateMobileStrip(); renderCalendar();
+}
+
+function revertCorosPaces() {
+  PACES = DEFAULT_PACES.map(p => ({...p}));
+  localStorage.removeItem('mc_coros_paces');
+  renderPaceGuide(); renderCorosWidget(); updateMobileStrip(); renderCalendar();
 }
 
 // Return the display pace string (already unit-aware) for a given workout type
@@ -2487,7 +2498,15 @@ function renderCorosWidget() {
         <span class="cl-comment" style="color:${loadColor}">${d.load.comment}</span>
         <span class="cl-ratio">Load ratio ${d.load.ratio.toFixed(2)} · STL ${d.load.shortTerm}</span>
       </div>
-      ${usingCorosPaces ? '<div class="coros-pace-note">◎ Pace zones calibrated from Coros</div>' : ''}
+      <div style="margin-top:8px">
+        ${usingCorosPaces
+          ? `<div class="coros-pace-note" style="display:flex;align-items:center;justify-content:space-between">
+               <span>◎ Pace zones from Coros (${isMetric?'4:44':'7:37'}/km MP)</span>
+               <button onclick="revertCorosPaces()" style="background:none;border:none;color:var(--text3);font-size:10px;cursor:pointer;padding:2px 4px">Revert</button>
+             </div>`
+          : `<button onclick="applyCorosPaces()" class="coros-apply-btn">Apply Coros pacing · ${isMetric?'4:44/km':'7:37/mi'} MP</button>`
+        }
+      </div>
     </div>`;
 }
 
@@ -2618,7 +2637,6 @@ function init() {
   if (cur && !expanded.has(cur)) expanded.add(cur);
 
   setupPWA();
-  applyCorosPaces();
   renderCountdown();
   renderPaceGuide();
   renderBufferWidget();
