@@ -213,10 +213,6 @@ body.itb-on::before{
 .pi-mp{background:rgba(20,184,166,.1)}.pi-easy{background:rgba(32,212,112,.1)}
 .pi-tempo{background:rgba(249,115,22,.1)}.pi-int{background:rgba(239,68,68,.1)}.pi-rec{background:rgba(168,85,247,.1)}
 
-/* CHICAGO TIPS SIDEBAR */
-.stips{padding:7px}
-.stip{padding:9px 10px;border-radius:7px;margin-bottom:3px;border:1px solid transparent;transition:all .12s;cursor:pointer}
-.stip:hover{background:rgba(232,56,122,.07);border-color:rgba(232,56,122,.18)}
 .stip-wk{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--accent);margin-bottom:2px}
 .stip-txt{font-size:10px;color:var(--text2);line-height:1.5}
 
@@ -247,27 +243,6 @@ body.itb-on::before{
 .pt-reset-btn{width:100%;background:none;border:1px solid rgba(245,158,11,.2);color:rgba(245,158,11,.6);border-radius:7px;font-size:10px;font-weight:700;cursor:pointer;padding:6px;margin-top:6px;transition:all .15s;text-align:center}
 .pt-reset-btn:hover{background:rgba(245,158,11,.08);color:#f59e0b;border-color:rgba(245,158,11,.4)}
 
-/* ── FOAM ROLL CARD ──────────────────────────────────────── */
-.foam-card{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color .2s}
-body.itb-on .foam-card{border-color:rgba(245,158,11,.25)}
-.foam-toggle-btn{width:100%;background:none;border:none;display:flex;align-items:center;justify-content:space-between;padding:12px 13px 10px;cursor:pointer;transition:background .12s}
-.foam-toggle-btn:hover{background:rgba(255,255,255,.02)}
-.foam-toggle-btn .fhd{display:flex;align-items:center;gap:7px}
-.foam-toggle-btn h2{font-size:12px;font-weight:800;color:var(--text);text-align:left}
-.foam-toggle-btn p{font-size:10px;color:var(--text2);margin-top:1px;text-align:left}
-.foam-chev{color:var(--text2);font-size:10px;transition:transform .22s;flex-shrink:0}
-.foam-card.open .foam-chev{transform:rotate(180deg)}
-.foam-body{display:none;border-top:1px solid var(--border);padding:13px}
-.foam-card.open .foam-body{display:block}
-.foam-do{background:rgba(32,212,112,.07);border:1px solid rgba(32,212,112,.2);border-radius:8px;padding:10px 12px;margin-bottom:8px}
-.foam-dont{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2);border-radius:8px;padding:10px 12px;margin-bottom:8px}
-.foam-section-title{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
-.foam-do .foam-section-title{color:var(--green)}
-.foam-dont .foam-section-title{color:var(--red)}
-.foam-item{display:flex;align-items:flex-start;gap:7px;font-size:10px;color:var(--text2);line-height:1.5;margin-bottom:5px}
-.foam-item:last-child{margin-bottom:0}
-.foam-item-icon{flex-shrink:0;margin-top:1px}
-.foam-tip{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:7px;padding:8px 10px;font-size:10px;color:rgba(245,158,11,.85);line-height:1.5}
 
 /* ── PAIN MODAL ──────────────────────────────────────────── */
 .pain-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(10px);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s}
@@ -312,16 +287,6 @@ body.itb-on .foam-card{border-color:rgba(245,158,11,.25)}
 .wk{animation:fadeUp .2s ease both}
 ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:3px}
 
-/* ── PIVOT MODAL ─────────────────────────────────────────── */
-.pivot-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(10px);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s}
-.pivot-overlay.visible{opacity:1;pointer-events:all}
-.pivot-modal{background:#0f0f1e;border:1px solid rgba(245,158,11,.4);border-radius:16px;max-width:400px;width:100%;padding:26px;position:relative;overflow:hidden}
-.pivot-modal::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#f59e0b,#f97316,#f59e0b)}
-.pivot-icon{font-size:30px;margin-bottom:10px}
-.pivot-title{font-size:16px;font-weight:900;color:#f59e0b;letter-spacing:-.3px;margin-bottom:14px}
-.pivot-advice{font-size:12px;color:var(--text2);line-height:1.7;padding:12px 14px;background:rgba(245,158,11,.07);border-radius:9px;border-left:3px solid rgba(245,158,11,.5);margin-bottom:18px}
-.pivot-close-btn{width:100%;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);color:#f59e0b;border-radius:9px;font-size:11px;font-weight:800;cursor:pointer;padding:10px;transition:all .15s}
-.pivot-close-btn:hover{background:rgba(245,158,11,.22);border-color:rgba(245,158,11,.6)}
 
 /* ── BUFFER WIDGET ───────────────────────────────────────── */
 .buffer-card{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;overflow:hidden}
@@ -533,17 +498,6 @@ body.itb-on .foam-card{border-color:rgba(245,158,11,.25)}
 .install-btn:hover{background:rgba(90,144,245,.3)}
 .install-dismiss{background:none;border:none;color:var(--text3);cursor:pointer;font-size:16px;padding:0 2px;flex-shrink:0;line-height:1}
 
-/* ── EXPORT / IMPORT BUTTONS ─────────────────────────────── */
-.data-btns{display:flex;gap:4px;flex-shrink:0}
-.data-btn{
-  width:30px;height:30px;border-radius:7px;
-  background:var(--surface);border:1px solid var(--border);
-  color:var(--text2);font-size:14px;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  transition:all .15s;
-}
-.data-btn:hover{color:var(--text);border-color:var(--border2)}
-.data-btn:active{transform:scale(.93)}
 
 /* ── MOBILE IMPROVEMENTS ─────────────────────────────────── */
 /* Larger touch targets on touch devices */
@@ -569,7 +523,6 @@ body.itb-on .foam-card{border-color:rgba(245,158,11,.25)}
   .h-icon{width:26px;height:26px;border-radius:6px}
   .h-brand{gap:7px}
   .h-countdown{display:none}
-  .data-btns{display:none}
   .itb-lbl{display:none}
   .itb-wrap{padding:4px 6px}
   .itb-sw{width:28px;height:16px}
@@ -654,14 +607,6 @@ body.itb-on .foam-card{border-color:rgba(245,158,11,.25)}
 <!-- ══════════════════════════════════════════════════════
      SMART PIVOT MODAL
 ══════════════════════════════════════════════════════ -->
-<div class="pivot-overlay" id="pivot-overlay" role="dialog" aria-modal="true">
-  <div class="pivot-modal">
-    <div class="pivot-icon" id="pivot-icon">📋</div>
-    <div class="pivot-title" id="pivot-title">Workout Logged as Missed</div>
-    <div class="pivot-advice" id="pivot-advice"></div>
-    <button class="pivot-close-btn" onclick="hidePivotModal()">Got it — moving on</button>
-  </div>
-</div>
 
 <!-- ══════════════════════════════════════════════════════
      INSTALL BANNER (shown on mobile when installable)
@@ -688,11 +633,6 @@ body.itb-on .foam-card{border-color:rgba(245,158,11,.25)}
   <div class="itb-wrap" id="itb-wrap" onclick="setITBMode(!itbMode)" title="Toggle ITB Recovery Mode">
     <div class="itb-sw" id="itb-sw"><div class="itb-knob"></div></div>
     <span class="itb-lbl">🦴 ITB Mode</span>
-  </div>
-  <!-- Export / Import -->
-  <div class="data-btns">
-    <button class="data-btn" onclick="exportData()" title="Export progress to file">📤</button>
-    <button class="data-btn" onclick="importData()" title="Import progress from file">📥</button>
   </div>
   <!-- Unit Toggle -->
   <div class="unit-tog">
@@ -776,38 +716,6 @@ body.itb-on .foam-card{border-color:rgba(245,158,11,.25)}
     <!-- PT Tracker — injected by JS when ITB mode ON -->
     <div id="pt-tracker-slot"></div>
     <!-- Foam Roll Reference -->
-    <div class="foam-card" id="foam-card">
-      <button class="foam-toggle-btn" onclick="toggleFoamRoll()">
-        <div class="fhd">
-          <div>
-            <h2>🧴 How to Foam Roll ITB</h2>
-            <p>Critical protocol — click to expand</p>
-          </div>
-        </div>
-        <span class="foam-chev">▼</span>
-      </button>
-      <div class="foam-body">
-        <div class="foam-dont">
-          <div class="foam-section-title">❌ Do NOT Roll These Areas</div>
-          <div class="foam-item"><span class="foam-item-icon">🦴</span><span><strong style="color:#f87171">Never roll directly over the lateral knee bone.</strong> This compresses the bursa between the band and bone, causing inflammation — exactly what you're trying to fix.</span></div>
-          <div class="foam-item"><span class="foam-item-icon">🚫</span><span>Do not aggressively roll the IT band strap along the outer thigh. It's a tendon, not a muscle — it cannot release via compression. The pain you feel is nerve irritation, not a therapeutic release.</span></div>
-        </div>
-        <div class="foam-do">
-          <div class="foam-section-title">✅ DO Roll These Upstream Sources</div>
-          <div class="foam-item"><span class="foam-item-icon">🎯</span><span><strong style="color:#4ade80">TFL (Tensor Fasciae Latae)</strong> — your hip pocket muscle. Find the front-top of your hip crest (ASIS), move 2 inches forward and down. Lie face-down/angled, roll slowly. Hold tender spots 20–30 sec. This is the primary driver of IT band tension.</span></div>
-          <div class="foam-item"><span class="foam-item-icon">🍑</span><span><strong style="color:#4ade80">Gluteus Maximus &amp; Medius</strong> — sit on the roller, cross one ankle over the opposite knee (figure-4 / pigeon). Roll the entire posterior hip. Weak glutes force the TFL to overwork, which is the root of most ITBS.</span></div>
-          <div class="foam-item"><span class="foam-item-icon">💎</span><span><strong style="color:#4ade80">Piriformis (deep glute)</strong> — same pigeon position, focus on the area near your sit bone. 60–90 seconds each side.</span></div>
-        </div>
-        <div class="foam-tip">
-          <strong>Pro Protocol:</strong> Roll TFL → Glutes → Piriformis (3–5 min total). Finish with 10 slow hip circles each side. Do this after every run and before bed during recovery weeks.
-        </div>
-      </div>
-    </div>
-    <!-- Chicago Tips -->
-    <div class="scard">
-      <div class="sc-hdr"><h2>🏙️ Chicago Tips</h2><p>Race-day intelligence</p></div>
-      <div class="stips" id="stips"></div>
-    </div>
   </div>
 </div>
 
@@ -1306,7 +1214,6 @@ let allExpanded = false;
 let itbMode     = false;
 let ptData      = {};   // { "YYYY-MM-DD": { clamshells:false, legRaises:false, monster:false, bridges:false } }
 let wkMeta      = {};   // { "1-Tuesday": { pain: null, cadence: false } }
-let foamOpen    = false;
 let scOpen      = false;
 let scActiveDay = 'A';
 let scCompleted = {};
@@ -1320,7 +1227,7 @@ let repeatedWks = {};     // { 1: true } — weeks flagged to repeat
 // PERSISTENCE
 // ═══════════════════════════════════════════════════════════
 const SYNC_KEYS = [
-  'mc_completed','mc_metric','mc_itb','mc_pt','mc_wkmeta','mc_foam',
+  'mc_completed','mc_metric','mc_itb','mc_pt','mc_wkmeta',
   'mc_sc_open','mc_sc_day','mc_sc_done','mc_missed','mc_buffer','mc_rpt',
   'mc_coros_paces'
 ];
@@ -1367,7 +1274,6 @@ function save() {
     localStorage.setItem('mc_itb',       JSON.stringify(itbMode));
     localStorage.setItem('mc_pt',        JSON.stringify(ptData));
     localStorage.setItem('mc_wkmeta',    JSON.stringify(wkMeta));
-    localStorage.setItem('mc_foam',      JSON.stringify(foamOpen));
     localStorage.setItem('mc_sc_open',  JSON.stringify(scOpen));
     localStorage.setItem('mc_sc_day',   JSON.stringify(scActiveDay));
     localStorage.setItem('mc_sc_done',  JSON.stringify(scCompleted));
@@ -1386,7 +1292,6 @@ function load() {
     const i = localStorage.getItem('mc_itb');       if (i) itbMode = JSON.parse(i);
     const p = localStorage.getItem('mc_pt');        if (p) ptData = JSON.parse(p);
     const w = localStorage.getItem('mc_wkmeta');    if (w) wkMeta = JSON.parse(w);
-    const f  = localStorage.getItem('mc_foam');     if (f)  foamOpen    = JSON.parse(f);
     const so = localStorage.getItem('mc_sc_open'); if (so) scOpen      = JSON.parse(so);
     const sd  = localStorage.getItem('mc_sc_day');  if (sd)  scActiveDay = JSON.parse(sd);
     const sc  = localStorage.getItem('mc_sc_done'); if (sc)  scCompleted = JSON.parse(sc);
@@ -1526,13 +1431,6 @@ function renderPaceGuide() {
 // ═══════════════════════════════════════════════════════════
 // SIDEBAR TIPS
 // ═══════════════════════════════════════════════════════════
-function renderSidebarTips() {
-  document.getElementById('stips').innerHTML = Object.entries(TIPS).map(([wk,t]) => `
-    <div class="stip" onclick="openWeek(${wk})">
-      <div class="stip-wk">${t.icon} Week ${wk} — ${DATA[wk-1].phase}</div>
-      <div class="stip-txt">${t.text.split('\n')[0]}</div>
-    </div>`).join('');
-}
 
 // ═══════════════════════════════════════════════════════════
 // PT TRACKER
@@ -1580,12 +1478,6 @@ function renderPTTracker() {
 // ═══════════════════════════════════════════════════════════
 // FOAM ROLL
 // ═══════════════════════════════════════════════════════════
-function toggleFoamRoll() {
-  foamOpen = !foamOpen;
-  const card = document.getElementById('foam-card');
-  card.classList.toggle('open', foamOpen);
-  save();
-}
 
 // ═══════════════════════════════════════════════════════════
 // STRENGTH SECTION
@@ -1949,8 +1841,6 @@ function setITBMode(on) {
   itbMode = on;
   document.body.classList.toggle('itb-on', on);
   document.getElementById('itb-wrap').classList.toggle('on', on);
-  // Auto-open foam roll when activating ITB mode for the first time
-  if (on && !foamOpen) { foamOpen = true; document.getElementById('foam-card').classList.add('open'); }
   save(); renderPTTracker(); renderCalendar();
 }
 
@@ -2010,49 +1900,6 @@ function hidePainModal() {
 // ═══════════════════════════════════════════════════════════
 // SMART PIVOT ADVICE
 // ═══════════════════════════════════════════════════════════
-function getPivotAdvice(type, day) {
-  const t = type.toLowerCase();
-  if (['easy','recovery','shakeout'].includes(t)) {
-    return {
-      icon: '😌', title: 'Easy Day — Let It Go',
-      advice: 'No sweat! Easy miles are structural filler — they support your aerobic base but won\'t make or break your fitness. Do NOT try to make these up. Move cleanly to tomorrow\'s scheduled workout and don\'t look back.'
-    };
-  }
-  if (t === 'intervals') {
-    return {
-      icon: '⚡', title: 'Missed Speed Day',
-      advice: 'Missed speed day. If your legs feel 100% fresh tomorrow, you can swap Wednesday\'s easy run for this exact interval session. Otherwise, let it go entirely — one missed speed session will not derail your fitness. Consistency over perfection.'
-    };
-  }
-  if (t === 'tempo' || t === 'mp workout') {
-    return {
-      icon: '🏃', title: 'Missed Tempo Block',
-      advice: 'Missed your tempo block. You can push this to Friday, BUT if you do, you must move Saturday\'s Long Run to Sunday to protect your 48-hour joint and connective tissue recovery window. If Friday doesn\'t work either, skip it — do not stack a tempo workout directly before your long run.'
-    };
-  }
-  if (t === 'long run') {
-    return {
-      icon: '🗓️', title: 'Long Run — Critical Pivot Needed',
-      advice: 'The Long Run is the most important workout of the week and cannot be dropped. Pivot it to Sunday, skip Sunday\'s recovery run entirely, and ensure Monday is a strict rest day. Your legs need at least 48 hours before any intensity after a long run.'
-    };
-  }
-  return {
-    icon: '📋', title: 'Workout Logged as Missed',
-    advice: 'Logged and noted. Do not attempt to double up workouts to compensate — stacking sessions increases injury risk significantly. Stay consistent, move forward, and focus on the next scheduled workout.'
-  };
-}
-
-function showPivotModal(advice) {
-  document.getElementById('pivot-icon').textContent    = advice.icon;
-  document.getElementById('pivot-title').textContent   = advice.title;
-  document.getElementById('pivot-advice').textContent  = advice.advice;
-  document.getElementById('pivot-overlay').classList.add('visible');
-  document.body.style.overflow = 'hidden';
-}
-function hidePivotModal() {
-  document.getElementById('pivot-overlay').classList.remove('visible');
-  document.body.style.overflow = '';
-}
 
 function markMissed(wkNum, day, e) {
   e.stopPropagation();
@@ -2068,7 +1915,6 @@ function markMissed(wkNum, day, e) {
   save(); updateProgress(); renderCalendar(); renderBufferWidget();
   const wk = DATA[wkNum-1];
   const d  = wk.schedule.find(s => s.day === day);
-  if (d) showPivotModal(getPivotAdvice(d.type, d.day));
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -2111,14 +1957,7 @@ function repeatWeek(wkNum, e) {
     repeatedWks[wkNum] = false;
     weekBuffer = Math.min(MAX_BUFFER, weekBuffer + 1);
   } else {
-    if (weekBuffer <= 0) {
-      showPivotModal({
-        icon: '⚠️',
-        title: 'Buffer Exhausted',
-        advice: 'You have used all 3 available buffer weeks. No additional training weeks can be repeated before race day. Focus on completing scheduled workouts and staying healthy through to Chicago.'
-      });
-      return;
-    }
+    if (weekBuffer <= 0) return;
     repeatedWks[wkNum] = true;
     weekBuffer--;
   }
@@ -2130,54 +1969,14 @@ function repeatWeek(wkNum, e) {
 // ═══════════════════════════════════════════════════════════
 // EXPORT / IMPORT
 // ═══════════════════════════════════════════════════════════
-const LS_KEYS = ['mc_completed','mc_metric','mc_expanded','mc_itb','mc_pt',
-  'mc_wkmeta','mc_foam','mc_sc_open','mc_sc_day','mc_sc_done',
-  'mc_missed','mc_buffer','mc_rpt'];
-
-function exportData() {
-  const data = {};
-  LS_KEYS.forEach(k => { const v = localStorage.getItem(k); if (v) data[k] = v; });
-  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href = url;
-  a.download = `marathon-progress-${todayKey()}.json`;
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
-function importData() {
-  const input = document.createElement('input');
-  input.type   = 'file';
-  input.accept = '.json';
-  input.onchange = e => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = evt => {
-      try {
-        const data = JSON.parse(evt.target.result);
-        LS_KEYS.forEach(k => { if (data[k] !== undefined) localStorage.setItem(k, data[k]); });
-        load();
-        rehydrate();
-        alert('Progress imported. Welcome back! 🏃');
-      } catch { alert('Could not read file — make sure it\'s a valid marathon-progress.json export.'); }
-    };
-    reader.readAsText(file);
-  };
-  input.click();
-}
 
 function rehydrate() {
   document.body.classList.toggle('itb-on', itbMode);
   document.getElementById('itb-wrap').classList.toggle('on', itbMode);
   document.getElementById('btn-mi').classList.toggle('on', !isMetric);
   document.getElementById('btn-km').classList.toggle('on', isMetric);
-  if (foamOpen) document.getElementById('foam-card').classList.add('open');
-  else document.getElementById('foam-card').classList.remove('open');
   renderPaceGuide();
   renderBufferWidget();
-  renderSidebarTips();
   renderStrengthSection();
   renderCalendar();
   renderPTTracker();
@@ -2431,9 +2230,6 @@ function init() {
     document.body.classList.add('itb-on');
     document.getElementById('itb-wrap').classList.add('on');
   }
-  if (foamOpen) {
-    document.getElementById('foam-card').classList.add('open');
-  }
 
   // Auto-expand current week
   const cur = getCurrentWeek();
@@ -2444,7 +2240,6 @@ function init() {
   renderPaceGuide();
   renderBufferWidget();
   renderCorosWidget();
-  renderSidebarTips();
   renderStrengthSection();
   renderCalendar();
   renderPTTracker();
