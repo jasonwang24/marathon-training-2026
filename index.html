@@ -1352,6 +1352,48 @@ let stravaRunCount  = 0;
 // ═══════════════════════════════════════════════════════════
 // PERSISTENCE
 // ═══════════════════════════════════════════════════════════
+const SYNC_KEYS = [
+  'mc_completed','mc_metric','mc_itb','mc_pt','mc_wkmeta','mc_foam',
+  'mc_sc_open','mc_sc_day','mc_sc_done','mc_missed','mc_buffer','mc_rpt',
+  'mc_strava_matched','mc_strava_paces','mc_coros_paces'
+];
+
+let _syncTimer = null;
+function scheduleSyncToServer() {
+  clearTimeout(_syncTimer);
+  _syncTimer = setTimeout(async () => {
+    try {
+      const data = {};
+      SYNC_KEYS.forEach(k => { const v = localStorage.getItem(k); if (v !== null) data[k] = v; });
+      await fetch('/api/progress', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ data }),
+      });
+    } catch (_) {}
+  }, 2000);
+}
+
+async function loadFromServer() {
+  try {
+    const resp = await fetch('/api/progress');
+    if (!resp.ok) return;
+    const { data } = await resp.json();
+    if (!data) return;
+    SYNC_KEYS.forEach(k => { if (data[k] !== undefined) localStorage.setItem(k, data[k]); });
+    load();
+    const sp = localStorage.getItem('mc_strava_paces');
+    const cp = localStorage.getItem('mc_coros_paces');
+    if (sp) { try { applyCustomPaces(JSON.parse(sp)); } catch(_) {} }
+    else if (cp) { try { applyCustomPaces(JSON.parse(cp)); } catch(_) {} }
+    renderPaceGuide(); renderCorosWidget(); renderStravaWidget();
+    renderCalendar(); updateProgress(); updateMobileStrip();
+    renderBufferWidget(); renderPTTracker(); renderStrengthSection();
+    if (itbMode) { document.body.classList.add('itb-on'); document.getElementById('itb-wrap')?.classList.add('on'); }
+    else { document.body.classList.remove('itb-on'); document.getElementById('itb-wrap')?.classList.remove('on'); }
+  } catch (_) {}
+}
+
 function save() {
   try {
     localStorage.setItem('mc_completed', JSON.stringify(completed));
@@ -1369,6 +1411,7 @@ function save() {
     localStorage.setItem('mc_rpt',      JSON.stringify(repeatedWks));
     localStorage.setItem('mc_strava_matched', JSON.stringify(stravaMatched));
   } catch(e) {}
+  scheduleSyncToServer();
 }
 
 function load() {
@@ -2618,6 +2661,7 @@ async function initStrava() {
 
 function init() {
   load();
+  loadFromServer(); // async: re-renders if server has newer data
 
   // Apply loaded state to UI
   if (isMetric) {
