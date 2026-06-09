@@ -1444,9 +1444,17 @@ function displayDist(d)     { return isMetric ? (d*MILES_TO_KM).toFixed(1) : Str
 function distUnit()         { return isMetric ? 'km' : 'mi'; }
 function convertNotes(text) {
   if (!isMetric) return text;
-  return text.replace(/(\d+(?:\.\d+)?)\s*mi(?:les?)?(?!\w)/gi, (_, n) =>
+  // Distances: "X miles" → "X km"
+  text = text.replace(/(\d+(?:\.\d+)?)\s*mi(?:les?)?(?!\w)/gi, (_, n) =>
     `${(parseFloat(n) * MILES_TO_KM).toFixed(1)} km`
   );
+  // Paces in context: "8:00" before /mile, MP, or closing paren → "4:58"
+  text = text.replace(/\b(\d{1,2}):(\d{2})\b(?=\s*(?:\/mi|MP\b|\)))/gi, (_, m, s) =>
+    secToStr(Math.round((parseInt(m) * 60 + parseInt(s)) / MILES_TO_KM))
+  );
+  // Fix remaining /mile or /mi unit references → /km
+  text = text.replace(/(\d+:\d{2})\/mi(?:le)?\b/gi, '$1/km');
+  return text;
 }
 
 // ═══════════════════════════════════════════════════════════
