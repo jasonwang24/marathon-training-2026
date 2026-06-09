@@ -706,7 +706,7 @@ body.itb-on .foam-card{border-color:rgba(245,158,11,.25)}
     <div class="h-icon">🏃</div>
     <div class="h-txt">
       <div class="ht">Chicago Marathon 2026</div>
-      <div class="hs">19-Week Training Dashboard &nbsp;·&nbsp; Target: 3:30:00</div>
+      <div class="hs">19-Week Training Dashboard &nbsp;·&nbsp; Target: 3:20:00</div>
     </div>
   </div>
   <div class="h-countdown" id="countdown">— days to race</div>
@@ -846,27 +846,27 @@ body.itb-on .foam-card{border-color:rgba(245,158,11,.25)}
 const DATA = [
   {week:1,dates:"June 1 – June 7, 2026",phase:"Base & Efficiency",tot:26,schedule:[
     {day:"Monday",type:"Rest",dist:0,pace:"N/A",notes:"Complete rest day. Focus on mobility."},
-    {day:"Tuesday",type:"Intervals",dist:5,pace:"6:45 – 7:00",notes:"1.5 mi warmup, 4×800m @ Interval pace with 2 min walking rest, 1.5 mi cooldown."},
+    {day:"Tuesday",type:"Intervals",dist:5,pace:"6:29 – 6:46",notes:"1.5 mi warmup, 4×800m @ Interval pace with 2 min walking rest, 1.5 mi cooldown. Stay disciplined — going faster than target burns recovery without extra benefit."},
     {day:"Wednesday",type:"Easy",dist:4,pace:"8:45 – 9:45",notes:"Comfortable, conversational pace."},
-    {day:"Thursday",type:"Tempo",dist:5,pace:"7:15 – 7:30",notes:"1.5 mi warmup, 2 mi sustained @ Tempo pace, 1.5 mi cooldown."},
+    {day:"Thursday",type:"Tempo",dist:5,pace:"6:57 – 7:12",notes:"1.5 mi warmup, 2 mi sustained @ Tempo pace, 1.5 mi cooldown."},
     {day:"Friday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day. Hydrate."},
     {day:"Saturday",type:"Long Run",dist:10,pace:"8:45 – 9:45",notes:"Steady aerobic long run. Building base durability."},
     {day:"Sunday",type:"Recovery",dist:2,pace:"9:45+",notes:"Very slow shakeout run to flush legs."}
   ]},
   {week:2,dates:"June 8 – June 14, 2026",phase:"Base & Efficiency",tot:28,schedule:[
     {day:"Monday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
-    {day:"Tuesday",type:"Intervals",dist:5,pace:"6:45 – 7:00",notes:"1.5 mi warmup, 4×800m @ Interval pace (2 min rest), 1.5 mi cooldown."},
+    {day:"Tuesday",type:"Intervals",dist:5,pace:"6:29 – 6:46",notes:"1.5 mi warmup, 4×800m @ Interval pace (2 min rest), 1.5 mi cooldown. Aim for 4:02–4:12/km — faster is not better here."},
     {day:"Wednesday",type:"Easy",dist:4,pace:"8:45 – 9:45",notes:"Keep it easy."},
-    {day:"Thursday",type:"Tempo",dist:5,pace:"7:15 – 7:30",notes:"1.5 mi warmup, 2 mi sustained @ Tempo, 1.5 mi cooldown."},
+    {day:"Thursday",type:"Tempo",dist:5,pace:"6:57 – 7:12",notes:"1.5 mi warmup, 2 mi sustained @ Tempo, 1.5 mi cooldown."},
     {day:"Friday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
     {day:"Saturday",type:"Long Run",dist:11,pace:"8:45 – 9:45",notes:"Aerobic long run."},
     {day:"Sunday",type:"Recovery",dist:3,pace:"9:45+",notes:"Slow shakeout."}
   ]},
   {week:3,dates:"June 15 – June 21, 2026",phase:"Base & Efficiency",tot:30,schedule:[
     {day:"Monday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
-    {day:"Tuesday",type:"Intervals",dist:5,pace:"6:45 – 7:00",notes:"1.5 mi warmup, 5×800m @ Interval pace (2 min rest), 1.5 mi cooldown."},
+    {day:"Tuesday",type:"Intervals",dist:5,pace:"6:29 – 6:46",notes:"1.5 mi warmup, 5×800m @ Interval pace (2 min rest), 1.5 mi cooldown."},
     {day:"Wednesday",type:"Easy",dist:5,pace:"8:45 – 9:45",notes:"Easy mileage block."},
-    {day:"Thursday",type:"Tempo",dist:5,pace:"7:15 – 7:30",notes:"1.5 mi warmup, 2 mi sustained @ Tempo, 1.5 mi cooldown."},
+    {day:"Thursday",type:"Tempo",dist:5,pace:"6:57 – 7:12",notes:"1.5 mi warmup, 2 mi sustained @ Tempo, 1.5 mi cooldown."},
     {day:"Friday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
     {day:"Saturday",type:"Long Run",dist:12,pace:"8:45 – 9:45",notes:"Focus on consistent pacing throughout."},
     {day:"Sunday",type:"Recovery",dist:3,pace:"9:45+",notes:"Slow recovery shakeout."}
@@ -882,29 +882,29 @@ const DATA = [
   ]},
   {week:5,dates:"June 29 – July 5, 2026",phase:"Strength & Stamina",tot:32,schedule:[
     {day:"Monday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
-    {day:"Tuesday",type:"Intervals",dist:6,pace:"6:45 – 7:00",notes:"1.5 mi warmup, 6×800m @ Interval pace, 1.5 mi cooldown."},
+    {day:"Tuesday",type:"Intervals",dist:6,pace:"6:29 – 6:46",notes:"1.5 mi warmup, 6×800m @ Interval pace, 1.5 mi cooldown."},
     {day:"Wednesday",type:"Easy",dist:5,pace:"8:45 – 9:45",notes:"Aerobic base building."},
-    {day:"Thursday",type:"Tempo",dist:5,pace:"7:15 – 7:30",notes:"1.5 mi warmup, 2 mi Tempo, 1.5 mi cooldown."},
+    {day:"Thursday",type:"Tempo",dist:5,pace:"6:57 – 7:12",notes:"1.5 mi warmup, 2 mi Tempo, 1.5 mi cooldown."},
     {day:"Friday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
     {day:"Saturday",type:"Long Run",dist:13,pace:"8:45 – 9:45",notes:"Stepping into higher distance blocks."},
     {day:"Sunday",type:"Recovery",dist:3,pace:"9:45+",notes:"Slow shakeout."}
   ]},
   {week:6,dates:"July 6 – July 12, 2026",phase:"Strength & Stamina",tot:35,schedule:[
     {day:"Monday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
-    {day:"Tuesday",type:"Intervals",dist:6,pace:"6:45 – 7:00",notes:"1.5 mi warmup, 6×800m @ Interval pace, 1.5 mi cooldown."},
+    {day:"Tuesday",type:"Intervals",dist:6,pace:"6:29 – 6:46",notes:"1.5 mi warmup, 6×800m @ Interval pace, 1.5 mi cooldown."},
     {day:"Wednesday",type:"Easy",dist:6,pace:"8:45 – 9:45",notes:"Easy run."},
-    {day:"Thursday",type:"Tempo",dist:6,pace:"7:15 – 7:30",notes:"1.5 mi warmup, 3 mi Tempo, 1.5 mi cooldown."},
+    {day:"Thursday",type:"Tempo",dist:6,pace:"6:57 – 7:12",notes:"1.5 mi warmup, 3 mi Tempo, 1.5 mi cooldown."},
     {day:"Friday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
     {day:"Saturday",type:"Long Run",dist:14,pace:"8:45 – 9:45",notes:"Consistent, controlled continuous effort."},
     {day:"Sunday",type:"Recovery",dist:3,pace:"9:45+",notes:"Slow shakeout."}
   ]},
   {week:7,dates:"July 13 – July 19, 2026",phase:"Strength & Stamina",tot:38,schedule:[
     {day:"Monday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
-    {day:"Tuesday",type:"Intervals",dist:6,pace:"6:45 – 7:00",notes:"1.5 mi warmup, 3×1 Mile @ Interval pace (3 min jogging rest), 1.5 mi cooldown."},
+    {day:"Tuesday",type:"Intervals",dist:6,pace:"6:29 – 6:46",notes:"1.5 mi warmup, 3×1 Mile @ Interval pace (3 min jogging rest), 1.5 mi cooldown."},
     {day:"Wednesday",type:"Easy",dist:6,pace:"8:45 – 9:45",notes:"Easy conversational pace."},
-    {day:"Thursday",type:"MP Workout",dist:7,pace:"8:00",notes:"1 mi warmup, 5 mi continuous at Marathon Pace (8:00), 1 mi cooldown."},
+    {day:"Thursday",type:"MP Workout",dist:7,pace:"7:37",notes:"1 mi warmup, 5 mi continuous at Marathon Pace (7:37), 1 mi cooldown."},
     {day:"Friday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
-    {day:"Saturday",type:"Long Run",dist:15,pace:"Mixed",notes:"Run first 12 miles Easy, accelerate to exact Marathon Pace (8:00) for the last 3 miles."},
+    {day:"Saturday",type:"Long Run",dist:15,pace:"Mixed",notes:"Run first 12 miles Easy, accelerate to exact Marathon Pace (7:37) for the last 3 miles."},
     {day:"Sunday",type:"Recovery",dist:4,pace:"9:45+",notes:"Flush out the accumulated leg fatigue."}
   ]},
   {week:8,dates:"July 20 – July 26, 2026",phase:"Strength & Stamina (Cutback)",tot:30,schedule:[
@@ -918,29 +918,29 @@ const DATA = [
   ]},
   {week:9,dates:"July 27 – August 2, 2026",phase:"Strength & Stamina",tot:40,schedule:[
     {day:"Monday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
-    {day:"Tuesday",type:"Intervals",dist:7,pace:"6:45 – 7:00",notes:"1.5 mi warmup, 3×1 Mile @ Interval pace (3 min jogging rest), 1.5 mi cooldown."},
+    {day:"Tuesday",type:"Intervals",dist:7,pace:"6:29 – 6:46",notes:"1.5 mi warmup, 3×1 Mile @ Interval pace (3 min jogging rest), 1.5 mi cooldown."},
     {day:"Wednesday",type:"Easy",dist:6,pace:"8:45 – 9:45",notes:"Aerobic conditioning."},
-    {day:"Thursday",type:"Tempo",dist:7,pace:"7:15 – 7:30",notes:"1.5 mi warmup, 4 mi sustained Tempo, 1.5 mi cooldown."},
+    {day:"Thursday",type:"Tempo",dist:7,pace:"6:57 – 7:12",notes:"1.5 mi warmup, 4 mi sustained Tempo, 1.5 mi cooldown."},
     {day:"Friday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
     {day:"Saturday",type:"Long Run",dist:16,pace:"8:45 – 9:45",notes:"Long steady aerobic time on your feet."},
     {day:"Sunday",type:"Recovery",dist:4,pace:"9:45+",notes:"Slow active recovery shakeout."}
   ]},
   {week:10,dates:"August 3 – August 9, 2026",phase:"Peak Volume & Specificity",tot:42,schedule:[
     {day:"Monday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
-    {day:"Tuesday",type:"Intervals",dist:7,pace:"6:45 – 7:00",notes:"2 mi warmup, 4×1200m @ Interval pace (3 min rest), 2 mi cooldown."},
+    {day:"Tuesday",type:"Intervals",dist:7,pace:"6:29 – 6:46",notes:"2 mi warmup, 4×1200m @ Interval pace (3 min rest), 2 mi cooldown."},
     {day:"Wednesday",type:"Easy",dist:7,pace:"8:45 – 9:45",notes:"Midweek base volume block."},
-    {day:"Thursday",type:"Tempo",dist:7,pace:"7:15 – 7:30",notes:"1.5 mi warmup, 4 mi sustained Tempo, 1.5 mi cooldown."},
+    {day:"Thursday",type:"Tempo",dist:7,pace:"6:57 – 7:12",notes:"1.5 mi warmup, 4 mi sustained Tempo, 1.5 mi cooldown."},
     {day:"Friday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
     {day:"Saturday",type:"Long Run",dist:17,pace:"8:45 – 9:45",notes:"Focus on steady fuel and hydration intake strategies."},
     {day:"Sunday",type:"Recovery",dist:4,pace:"9:45+",notes:"Slow recovery jog."}
   ]},
   {week:11,dates:"August 10 – August 16, 2026",phase:"Peak Volume & Specificity",tot:45,schedule:[
     {day:"Monday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
-    {day:"Tuesday",type:"Intervals",dist:7,pace:"6:45 – 7:00",notes:"2 mi warmup, 4×1200m @ Interval pace, 2 mi cooldown."},
+    {day:"Tuesday",type:"Intervals",dist:7,pace:"6:29 – 6:46",notes:"2 mi warmup, 4×1200m @ Interval pace, 2 mi cooldown."},
     {day:"Wednesday",type:"Easy",dist:7,pace:"8:45 – 9:45",notes:"Aerobic focus."},
-    {day:"Thursday",type:"MP Workout",dist:8,pace:"8:00",notes:"1 mi warmup, 6 mi continuous at Marathon Pace (8:00), 1 mi cooldown."},
+    {day:"Thursday",type:"MP Workout",dist:8,pace:"7:37",notes:"1 mi warmup, 6 mi continuous at Marathon Pace (7:37), 1 mi cooldown."},
     {day:"Friday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
-    {day:"Saturday",type:"Long Run",dist:18,pace:"Mixed",notes:"Run first 12 miles Easy, transition immediately to 6 miles at Marathon Pace (8:00)."},
+    {day:"Saturday",type:"Long Run",dist:18,pace:"Mixed",notes:"Run first 12 miles Easy, transition immediately to 6 miles at Marathon Pace (7:37)."},
     {day:"Sunday",type:"Recovery",dist:5,pace:"9:45+",notes:"Flush legs thoroughly."}
   ]},
   {week:12,dates:"August 17 – August 23, 2026",phase:"Peak Volume & Specificity (Cutback)",tot:35,schedule:[
@@ -954,47 +954,47 @@ const DATA = [
   ]},
   {week:13,dates:"August 24 – August 30, 2026",phase:"Peak Volume & Specificity",tot:48,schedule:[
     {day:"Monday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
-    {day:"Tuesday",type:"Intervals",dist:8,pace:"6:45 – 7:00",notes:"2 mi warmup, 4×1600m (1 Mile) @ Interval pace (3 min rest), 2 mi cooldown."},
+    {day:"Tuesday",type:"Intervals",dist:8,pace:"6:29 – 6:46",notes:"2 mi warmup, 4×1600m (1 Mile) @ Interval pace (3 min rest), 2 mi cooldown."},
     {day:"Wednesday",type:"Easy",dist:7,pace:"8:45 – 9:45",notes:"Midweek baseline maintenance."},
-    {day:"Thursday",type:"Tempo",dist:8,pace:"7:15 – 7:30",notes:"1.5 mi warmup, 5 mi sustained Tempo, 1.5 mi cooldown."},
+    {day:"Thursday",type:"Tempo",dist:8,pace:"6:57 – 7:12",notes:"1.5 mi warmup, 5 mi sustained Tempo, 1.5 mi cooldown."},
     {day:"Friday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
     {day:"Saturday",type:"Long Run",dist:20,pace:"8:45 – 9:45",notes:"First Peak 20-Miler. Strictly easy and conversational. Time on feet is the goal."},
     {day:"Sunday",type:"Recovery",dist:5,pace:"9:45+",notes:"Very slow active recovery shakeout."}
   ]},
   {week:14,dates:"August 31 – September 6, 2026",phase:"Peak Volume & Specificity",tot:46,schedule:[
     {day:"Monday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
-    {day:"Tuesday",type:"Intervals",dist:8,pace:"6:45 – 7:00",notes:"2 mi warmup, 4×1600m @ Interval pace, 2 mi cooldown."},
+    {day:"Tuesday",type:"Intervals",dist:8,pace:"6:29 – 6:46",notes:"2 mi warmup, 4×1600m @ Interval pace, 2 mi cooldown."},
     {day:"Wednesday",type:"Easy",dist:8,pace:"8:45 – 9:45",notes:"Solid easy base run."},
-    {day:"Thursday",type:"MP Workout",dist:9,pace:"8:00",notes:"1 mi warmup, 7 mi continuous at Marathon Pace (8:00), 1 mi cooldown."},
+    {day:"Thursday",type:"MP Workout",dist:9,pace:"7:37",notes:"1 mi warmup, 7 mi continuous at Marathon Pace (7:37), 1 mi cooldown."},
     {day:"Friday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
-    {day:"Saturday",type:"Long Run",dist:16,pace:"Mixed",notes:"Fast-Finish Long Run. Run 12 miles Easy, smash the final 4 miles exactly at 8:00 MP."},
+    {day:"Saturday",type:"Long Run",dist:16,pace:"Mixed",notes:"Fast-Finish Long Run. Run 12 miles Easy, smash the final 4 miles exactly at 7:37 MP."},
     {day:"Sunday",type:"Recovery",dist:5,pace:"9:45+",notes:"Slow active recovery shakeout."}
   ]},
   {week:15,dates:"September 7 – September 13, 2026",phase:"Peak Volume & Specificity",tot:50,schedule:[
     {day:"Monday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
-    {day:"Tuesday",type:"Intervals",dist:8,pace:"6:45 – 7:00",notes:"2 mi warmup, 4×1600m @ Interval pace, 2 mi cooldown."},
+    {day:"Tuesday",type:"Intervals",dist:8,pace:"6:29 – 6:46",notes:"2 mi warmup, 4×1600m @ Interval pace, 2 mi cooldown."},
     {day:"Wednesday",type:"Easy",dist:8,pace:"8:45 – 9:45",notes:"Highest midweek base run volume."},
-    {day:"Thursday",type:"Tempo",dist:9,pace:"7:15 – 7:30",notes:"1.5 mi warmup, 6 mi sustained Tempo, 1.5 mi cooldown."},
+    {day:"Thursday",type:"Tempo",dist:9,pace:"6:57 – 7:12",notes:"1.5 mi warmup, 6 mi sustained Tempo, 1.5 mi cooldown."},
     {day:"Friday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
-    {day:"Saturday",type:"Long Run",dist:20,pace:"Mixed",notes:"Final Peak 20-Miler. Run 15 miles Easy, finish the final 5 miles dynamically at 8:00 MP."},
+    {day:"Saturday",type:"Long Run",dist:20,pace:"Mixed",notes:"Final Peak 20-Miler. Run 15 miles Easy, finish the final 5 miles dynamically at 7:37 MP."},
     {day:"Sunday",type:"Recovery",dist:5,pace:"9:45+",notes:"Highest mileage block cleared! Great job."}
   ]},
   {week:16,dates:"September 14 – September 20, 2026",phase:"The Taper",tot:38,schedule:[
     {day:"Monday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day. Taper begins."},
-    {day:"Tuesday",type:"Intervals",dist:7,pace:"6:45 – 7:00",notes:"2 mi warmup, 3×1200m @ Interval pace, 2 mi cooldown."},
+    {day:"Tuesday",type:"Intervals",dist:7,pace:"6:29 – 6:46",notes:"2 mi warmup, 3×1200m @ Interval pace, 2 mi cooldown."},
     {day:"Wednesday",type:"Easy",dist:6,pace:"8:45 – 9:45",notes:"Slightly abbreviated mileage."},
-    {day:"Thursday",type:"MP Workout",dist:7,pace:"8:00",notes:"1 mi warmup, 5 mi at Marathon Pace, 1 mi cooldown."},
+    {day:"Thursday",type:"MP Workout",dist:7,pace:"7:37",notes:"1 mi warmup, 5 mi at Marathon Pace, 1 mi cooldown."},
     {day:"Friday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
     {day:"Saturday",type:"Long Run",dist:14,pace:"8:45 – 9:45",notes:"Shorter long run. Feeling fresh and springy is the goal."},
     {day:"Sunday",type:"Recovery",dist:4,pace:"9:45+",notes:"Slow recovery jog."}
   ]},
   {week:17,dates:"September 21 – September 27, 2026",phase:"The Taper",tot:30,schedule:[
     {day:"Monday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
-    {day:"Tuesday",type:"Tempo",dist:6,pace:"7:15 – 7:30",notes:"1.5 mi warmup, 3 mi Tempo, 1.5 mi cooldown."},
+    {day:"Tuesday",type:"Tempo",dist:6,pace:"6:57 – 7:12",notes:"1.5 mi warmup, 3 mi Tempo, 1.5 mi cooldown."},
     {day:"Wednesday",type:"Easy",dist:5,pace:"8:45 – 9:45",notes:"Easy low-impact miles."},
     {day:"Thursday",type:"Easy",dist:5,pace:"8:45 – 9:45",notes:"Focus on recovery, nutrition, and sleep."},
     {day:"Friday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day."},
-    {day:"Saturday",type:"Long Run",dist:10,pace:"Mixed",notes:"6 miles Easy, 4 miles locked smoothly into 8:00 MP."},
+    {day:"Saturday",type:"Long Run",dist:10,pace:"Mixed",notes:"6 miles Easy, 4 miles locked smoothly into 7:37 MP."},
     {day:"Sunday",type:"Recovery",dist:4,pace:"9:45+",notes:"Slow active recovery shakeout."}
   ]},
   {week:18,dates:"September 28 – October 4, 2026",phase:"The Taper",tot:20,schedule:[
@@ -1013,7 +1013,7 @@ const DATA = [
     {day:"Thursday",type:"Easy",dist:3,pace:"8:45 – 9:45",notes:"Final short run before Chicago. Lock in the baseline state."},
     {day:"Friday",type:"Rest",dist:0,pace:"N/A",notes:"Rest day. Travel to Chicago / Expo packet pickup."},
     {day:"Saturday",type:"Shakeout",dist:2,pace:"9:45+",notes:"Short shakeout jog in Chicago to get rid of nervous energy."},
-    {day:"Sunday",type:"RACE DAY",dist:26.2,pace:"8:00",notes:"Chicago Marathon! Lock into 8:00/mile rhythm early. Watch out for GPS dropouts downtown. Dominate Roosevelt Road at mile 26. Collect your 3:30 medal!"}
+    {day:"Sunday",type:"RACE DAY",dist:26.2,pace:"7:37",notes:"Chicago Marathon! Lock into 7:37/mile rhythm early. Watch out for GPS dropouts downtown. Dominate Roosevelt Road at mile 26. Collect your 3:20 medal!"}
   ]}
 ];
 
@@ -1021,7 +1021,7 @@ const DATA = [
 // CHICAGO TIPS
 // ═══════════════════════════════════════════════════════════
 const TIPS = {
-  7:  {icon:"🎯",title:"First MP Workout",text:"8:00/mile is your race pace. Building this rhythm now is key — your body needs to learn what it feels like when you're locked in. Notice how sustainable it feels vs. your Tempo effort."},
+  7:  {icon:"🎯",title:"First MP Workout",text:"7:37/mile is your race pace. Building this rhythm now is key — your body needs to learn what it feels like when you're locked in. Notice how sustainable it feels vs. your Tempo effort."},
   10: {icon:"📍",title:"Chicago Course Insight",text:"Chicago is pancake flat. No downhill relief means constant repetitive muscular stress. Practice running your long runs at perfectly even effort — no hills to break the monotony.\n\nStart practicing in-run nutrition: gels every 45–60 min with the aid stations every mile."},
   13: {icon:"🏔️",title:"First 20-Miler",text:"This is the psychological summit. Once you run 20, you know you can run 26.2. Keep it strictly conversational — ego-checking this run is the smartest decision you'll make."},
   15: {icon:"🏆",title:"Peak Week Complete",text:"Your highest mileage week is behind you. The fitness gains are banked. Trust the taper — your legs will rebuild and you'll toe the line stronger than you've ever felt."},
@@ -1034,10 +1034,10 @@ const TIPS = {
 // PACE GUIDE
 // ═══════════════════════════════════════════════════════════
 let PACES = [
-  {key:"mp",   label:"Marathon Pace", dot:"#14b8a6",cls:"pi-mp",   mi:"8:00",       km:"4:58"},
+  {key:"mp",   label:"Marathon Pace", dot:"#14b8a6",cls:"pi-mp",   mi:"7:37",       km:"4:44"},
   {key:"easy", label:"Easy",          dot:"#20d470",cls:"pi-easy", mi:"8:45 – 9:45",km:"5:26 – 6:03"},
-  {key:"tempo",label:"Tempo",         dot:"#f97316",cls:"pi-tempo",mi:"7:15 – 7:30",km:"4:30 – 4:39"},
-  {key:"int",  label:"Intervals",     dot:"#ef4444",cls:"pi-int",  mi:"6:45 – 7:00",km:"4:12 – 4:21"},
+  {key:"tempo",label:"Tempo",         dot:"#f97316",cls:"pi-tempo",mi:"6:57 – 7:12",km:"4:19 – 4:28"},
+  {key:"int",  label:"Intervals",     dot:"#ef4444",cls:"pi-int",  mi:"6:29 – 6:46",km:"4:02 – 4:12"},
   {key:"rec",  label:"Recovery",      dot:"#a855f7",cls:"pi-rec",  mi:"9:45+",      km:"6:03+"}
 ];
 const DEFAULT_PACES = PACES.map(p => ({...p}));
