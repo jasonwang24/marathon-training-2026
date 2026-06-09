@@ -30,8 +30,8 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   position:sticky;top:0;z-index:200;
   background:rgba(7,7,15,.9);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
   border-bottom:1px solid var(--border);
-  display:flex;align-items:center;gap:12px;
-  padding:0 18px;padding-top:env(safe-area-inset-top,0px);
+  display:flex;align-items:flex-end;gap:12px;
+  padding:env(safe-area-inset-top,0px) 18px 11px;
   height:calc(54px + env(safe-area-inset-top,0px));
   transition:border-bottom-color .3s;
 }
@@ -552,7 +552,7 @@ body.itb-on .foam-card{border-color:rgba(245,158,11,.25)}
 }
 /* Compact header subtitle on small screens */
 @media(max-width:480px){
-  .hdr{gap:8px;padding:0 12px}
+  .hdr{gap:8px;padding:env(safe-area-inset-top,0px) 12px 14px}
   .h-txt .hs{display:none}
   .h-txt .ht{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .h-icon{width:26px;height:26px;font-size:13px;border-radius:6px}
