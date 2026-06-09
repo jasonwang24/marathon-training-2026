@@ -2325,7 +2325,7 @@ function init() {
   renderPTTracker();
   updateProgress();
   updateMobileStrip();
-  setInterval(() => { renderCountdown(); updateMobileStrip(); }, 60000);
+  setInterval(() => { renderCountdown(); updateMobileStrip(); renderTodayCard(); }, 60000);
 }
 
 init();
