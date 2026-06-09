@@ -30,7 +30,9 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   position:sticky;top:0;z-index:200;
   background:rgba(7,7,15,.9);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
   border-bottom:1px solid var(--border);
-  display:flex;align-items:center;gap:12px;padding:0 18px;height:54px;
+  display:flex;align-items:center;gap:12px;
+  padding:0 18px;padding-top:env(safe-area-inset-top,0px);
+  height:calc(54px + env(safe-area-inset-top,0px));
   transition:border-bottom-color .3s;
 }
 body.itb-on .hdr{border-bottom-color:rgba(245,158,11,.45)}
@@ -191,7 +193,7 @@ body.itb-on::before{
 .itb-alert-tag{font-size:9px;font-weight:800;color:#ef4444;display:flex;align-items:center;gap:3px}
 
 /* ── SIDEBAR ─────────────────────────────────────────────── */
-.sidebar{position:sticky;top:62px;display:flex;flex-direction:column;gap:12px;max-height:calc(100vh - 62px);overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border2) transparent}
+.sidebar{position:sticky;top:calc(54px + env(safe-area-inset-top,0px));display:flex;flex-direction:column;gap:12px;max-height:calc(100vh - 54px - env(safe-area-inset-top,0px));overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border2) transparent}
 .sidebar::-webkit-scrollbar{width:4px}.sidebar::-webkit-scrollbar-track{background:transparent}.sidebar::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
 .scard{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;overflow:hidden}
 .sc-hdr{padding:13px 13px 8px;border-bottom:1px solid var(--border)}
