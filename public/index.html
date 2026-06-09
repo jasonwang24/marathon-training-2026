@@ -600,33 +600,6 @@ body.itb-on .foam-card{border-color:rgba(245,158,11,.25)}
   @media(max-width:860px){.layout{padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right))}}
 }
 
-/* ── STRAVA ──────────────────────────────────────────── */
-.strava-card{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:14px}
-.strava-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.strava-hdr h2{font-size:13px;font-weight:800;display:flex;align-items:center;gap:6px}
-.strava-hdr p{font-size:10px;color:var(--text2)}
-.strava-connect-btn{display:flex;align-items:center;justify-content:center;gap:7px;background:#FC4C02;color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;width:100%;transition:opacity .15s}
-.strava-connect-btn:hover{opacity:.85}
-.strava-desc{font-size:11px;color:var(--text2);margin-bottom:10px;line-height:1.5}
-.strava-athlete{display:flex;align-items:center;gap:7px;margin-bottom:10px;padding:8px 10px;background:rgba(252,76,2,.07);border-radius:8px;border:1px solid rgba(252,76,2,.18)}
-.strava-dot{width:8px;height:8px;background:#FC4C02;border-radius:50%;flex-shrink:0}
-.strava-athlete-name{font-size:12px;font-weight:700;flex:1}
-.strava-athlete-sub{font-size:10px;color:var(--text2)}
-.strava-actions{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
-.strava-sync-btn{background:var(--surface);border:1px solid var(--border2);color:var(--text);border-radius:6px;padding:5px 10px;font-size:11px;cursor:pointer;font-weight:600;transition:all .15s}
-.strava-sync-btn:hover{border-color:#FC4C02;color:#FC4C02}
-.strava-disc-btn{background:none;border:none;color:var(--text3);font-size:10px;cursor:pointer;padding:4px 6px;transition:color .15s;margin-left:auto;border-radius:4px}
-.strava-disc-btn:hover{color:#ef4444}
-.strava-status{font-size:10px;color:var(--text3);margin-top:6px}
-.strava-cal-banner{background:rgba(252,76,2,.07);border:1px solid rgba(252,76,2,.2);border-radius:8px;padding:10px 12px;margin-top:10px}
-.strava-cal-title{font-size:11px;font-weight:700;color:#FC4C02;margin-bottom:3px}
-.strava-cal-desc{font-size:10px;color:var(--text2);line-height:1.5;margin-bottom:8px}
-.strava-cal-btns{display:flex;align-items:center;gap:6px}
-.strava-cal-apply{background:#FC4C02;color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer;transition:opacity .15s}
-.strava-cal-apply:hover{opacity:.85}
-.strava-cal-dismiss{background:none;border:none;color:var(--text3);font-size:10px;cursor:pointer;padding:4px 6px;border-radius:4px}
-.strava-cal-dismiss:hover{color:var(--text2)}
-.strava-tag{display:inline-flex;align-items:center;gap:3px;background:rgba(252,76,2,.13);color:#FC4C02;border-radius:4px;padding:1px 5px;font-size:9px;font-weight:700;margin-left:5px;vertical-align:middle;line-height:1.4}
 
 /* ── COROS ──────────────────────────────────────────── */
 .coros-card{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:14px}
@@ -798,8 +771,6 @@ body.itb-on .foam-card{border-color:rgba(245,158,11,.25)}
     </div>
     <!-- Coros Fitness — injected by JS -->
     <div id="coros-widget"></div>
-    <!-- Strava Sync — injected by JS -->
-    <div id="strava-widget"></div>
     <!-- Buffer widget — injected by JS -->
     <div id="buffer-widget"></div>
     <!-- PT Tracker — injected by JS when ITB mode ON -->
@@ -1344,11 +1315,6 @@ let missed      = {};     // { "1-Tuesday": true } — logged but not run
 let weekBuffer  = 3;      // available "repeat a week" credits
 let repeatedWks = {};     // { 1: true } — weeks flagged to repeat
 
-// Strava state
-let stravaMatched   = {}; // { "1-Tuesday": { dist_m, time_s, name, date } }
-let stravaCalibPending = null; // { runName, runDate, currentMp, suggestedMp, paces } or null
-let stravaAthlete   = null;   // athlete display name
-let stravaRunCount  = 0;
 
 // ═══════════════════════════════════════════════════════════
 // PERSISTENCE
@@ -1356,7 +1322,7 @@ let stravaRunCount  = 0;
 const SYNC_KEYS = [
   'mc_completed','mc_metric','mc_itb','mc_pt','mc_wkmeta','mc_foam',
   'mc_sc_open','mc_sc_day','mc_sc_done','mc_missed','mc_buffer','mc_rpt',
-  'mc_strava_matched','mc_strava_paces','mc_coros_paces'
+  'mc_coros_paces'
 ];
 
 let _syncTimer = null;
@@ -1383,11 +1349,9 @@ async function loadFromServer() {
     if (!data) return;
     SYNC_KEYS.forEach(k => { if (data[k] !== undefined) localStorage.setItem(k, data[k]); });
     load();
-    const sp = localStorage.getItem('mc_strava_paces');
     const cp = localStorage.getItem('mc_coros_paces');
-    if (sp) { try { applyCustomPaces(JSON.parse(sp)); } catch(_) {} }
-    else if (cp) { try { applyCustomPaces(JSON.parse(cp)); } catch(_) {} }
-    renderPaceGuide(); renderCorosWidget(); renderStravaWidget();
+    if (cp) { try { applyCustomPaces(JSON.parse(cp)); } catch(_) {} }
+    renderPaceGuide(); renderCorosWidget();
     renderCalendar(); updateProgress(); updateMobileStrip();
     renderBufferWidget(); renderPTTracker(); renderStrengthSection();
     if (itbMode) { document.body.classList.add('itb-on'); document.getElementById('itb-wrap')?.classList.add('on'); }
@@ -1410,7 +1374,6 @@ function save() {
     localStorage.setItem('mc_missed',   JSON.stringify(missed));
     localStorage.setItem('mc_buffer',   JSON.stringify(weekBuffer));
     localStorage.setItem('mc_rpt',      JSON.stringify(repeatedWks));
-    localStorage.setItem('mc_strava_matched', JSON.stringify(stravaMatched));
   } catch(e) {}
   scheduleSyncToServer();
 }
@@ -1430,12 +1393,9 @@ function load() {
     const mi  = localStorage.getItem('mc_missed');  if (mi)  missed      = JSON.parse(mi);
     const buf = localStorage.getItem('mc_buffer');  if (buf) weekBuffer  = JSON.parse(buf);
     const rpt = localStorage.getItem('mc_rpt');     if (rpt) repeatedWks = JSON.parse(rpt);
-    const sm  = localStorage.getItem('mc_strava_matched'); if (sm) stravaMatched = JSON.parse(sm);
-    // Restore calibrated paces (Strava takes priority over Coros)
-    const sp = localStorage.getItem('mc_strava_paces');
+    // Restore Coros-applied paces
     const cp = localStorage.getItem('mc_coros_paces');
-    if (sp) { try { applyCustomPaces(JSON.parse(sp)); } catch(_) {} }
-    else if (cp) { try { applyCustomPaces(JSON.parse(cp)); } catch(_) {} }
+    if (cp) { try { applyCustomPaces(JSON.parse(cp)); } catch(_) {} }
   } catch(e) {}
 }
 
@@ -1876,16 +1836,6 @@ function renderWeekBody(wk, wkNum) {
       : `<div class="sdist">${displayDist(d.dist)}<span class="su"> ${distUnit()}</span></div>`;
 
     const missedTagHtml = isMissed ? `<span class="missed-tag">missed</span>` : '';
-    const stravaRun = stravaMatched[key];
-    let stravaTagHtml = '';
-    if (stravaRun && !isRest) {
-      const secPerMile = stravaRun.time_s / (stravaRun.dist_m / 1609.34);
-      const paceStr = isMetric
-        ? secToStr(Math.round(secPerMile / MILES_TO_KM)) + '/km'
-        : secToStr(Math.round(secPerMile)) + '/mi';
-      stravaTagHtml = `<span class="strava-tag">⚡ ${displayDist(stravaRun.dist_m / 1609.34)} ${distUnit()} · ${paceStr}</span>`;
-    }
-
     const corosAdj = (!isDone && !isMissed && !isRest && !isRace) ? getCorosAdjustment(d, wkNum-1) : null;
     const adjType  = corosAdj ? corosAdj.type : d.type;
     const adjPace  = corosAdj ? (getPaceStrForType(corosAdj.type) || 'N/A') : null;
@@ -1937,7 +1887,7 @@ function renderWeekBody(wk, wkNum) {
     return `
       <div class="${rowCls}">
         <div class="sday${today?' is-today':''}">${d.day}${today?' ●':''}</div>
-        <div><span class="badge ${badgeClass(adjType)}">${adjType}</span>${itbBadgeHtml}${missedTagHtml}${stravaTagHtml}${corosTagHtml}</div>
+        <div><span class="badge ${badgeClass(adjType)}">${adjType}</span>${itbBadgeHtml}${missedTagHtml}${corosTagHtml}</div>
         ${distHtml}
         <div class="space">${adjPace !== null ? adjPace : displayPace(d.pace)}</div>
         <div class="snotes">${convertNotes(d.notes)}</div>
@@ -2182,7 +2132,7 @@ function repeatWeek(wkNum, e) {
 // ═══════════════════════════════════════════════════════════
 const LS_KEYS = ['mc_completed','mc_metric','mc_expanded','mc_itb','mc_pt',
   'mc_wkmeta','mc_foam','mc_sc_open','mc_sc_day','mc_sc_done',
-  'mc_missed','mc_buffer','mc_rpt','mc_strava_matched','mc_strava_paces','mc_strava_paces_dismissed'];
+  'mc_missed','mc_buffer','mc_rpt'];
 
 function exportData() {
   const data = {};
@@ -2317,8 +2267,7 @@ function dismissInstall() {
 // ═══════════════════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════════════════
-// ═══════════════════════════════════════════════════════════
-// STRAVA INTEGRATION
+// PACE CALIBRATION (Jack Daniels VDOT)
 // ═══════════════════════════════════════════════════════════
 
 // Jack Daniels VDOT — compute from any run effort
@@ -2362,96 +2311,11 @@ function applyCustomPaces(paces) {
 
 function resetPaces() {
   PACES = DEFAULT_PACES.map(p => ({...p}));
-  localStorage.removeItem('mc_strava_paces');
   localStorage.removeItem('mc_coros_paces');
   renderPaceGuide();
   renderCorosWidget();
-  renderStravaWidget();
 }
 
-// Match a Strava run to a training plan workout by date
-function matchRunToWorkout(run) {
-  const [ry, rm, rd] = run.date.split('-').map(Number);
-  const runMs = new Date(ry, rm - 1, rd).getTime();
-  for (let i = 0; i < WEEK_STARTS.length; i++) {
-    const wkStart = parseLocal(WEEK_STARTS[i]);
-    const wkEnd   = new Date(wkStart); wkEnd.setDate(wkEnd.getDate() + 6);
-    if (runMs >= wkStart.getTime() && runMs <= wkEnd.getTime()) {
-      const weekNum = i + 1;
-      const dayIdx  = Math.round((runMs - wkStart.getTime()) / 86400000);
-      const dayName = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'][dayIdx];
-      const wk = DATA[i];
-      const sched = wk.schedule.find(s => s.day === dayName);
-      if (!sched || sched.dist === 0) return null;
-      const actualMiles = run.distance_m / 1609.34;
-      if (actualMiles < sched.dist * 0.45) return null; // too short to be the scheduled run
-      return { weekNum, dayName };
-    }
-  }
-  return null;
-}
-
-// Find the best calibration candidate: highest-speed run >= 5km
-function findCalibRun(runs) {
-  return runs
-    .filter(r => r.distance_m >= 5000)
-    .sort((a, b) => b.average_speed_ms - a.average_speed_ms)[0] ?? null;
-}
-
-function processStravaRuns(runs) {
-  const newMatched = {};
-  runs.forEach(run => {
-    const match = matchRunToWorkout(run);
-    if (match) {
-      const key = `${match.weekNum}-${match.dayName}`;
-      // Keep the longer run if multiple match the same slot
-      if (!newMatched[key] || run.distance_m > newMatched[key].dist_m) {
-        newMatched[key] = { dist_m: run.distance_m, time_s: run.moving_time_s, name: run.name, date: run.date };
-      }
-    }
-  });
-  stravaMatched = newMatched;
-  save();
-
-  // Check pace calibration opportunity
-  const calibRun = findCalibRun(runs);
-  const hasSavedPaces = !!localStorage.getItem('mc_strava_paces');
-  const dismissed = !!localStorage.getItem('mc_strava_paces_dismissed');
-  if (calibRun && !hasSavedPaces && !dismissed) {
-    const vdot = calcVDOT(calibRun.distance_m, calibRun.moving_time_s);
-    const paces = derivePacesFromVDOT(vdot);
-    const currentMpSec = 8 * 60; // default 8:00/mi
-    const suggestedMpSec = vdotToSecPerMile(vdot, 0.82);
-    if (Math.abs(suggestedMpSec - currentMpSec) >= 10) {
-      const distKm = (calibRun.distance_m / 1000).toFixed(1);
-      const dateStr = new Date(calibRun.date + 'T00:00:00').toLocaleDateString('en-US', { month:'short', day:'numeric' });
-      stravaCalibPending = {
-        runName: `${distKm}km run on ${dateStr}`,
-        currentMp: secToStr(currentMpSec) + '/mi',
-        suggestedMp: secToStr(Math.round(suggestedMpSec)) + '/mi',
-        vdot: Math.round(vdot * 10) / 10,
-        paces,
-      };
-    }
-  }
-}
-
-function applyStravaCalibration() {
-  if (!stravaCalibPending) return;
-  applyCustomPaces(stravaCalibPending.paces);
-  localStorage.setItem('mc_strava_paces', JSON.stringify(stravaCalibPending.paces));
-  stravaCalibPending = null;
-  renderPaceGuide();
-  renderStravaWidget();
-  renderCalendar();
-}
-
-function dismissStravaCalibration() {
-  stravaCalibPending = null;
-  // Mark as "user decided not to" by saving current defaults as confirmed
-  localStorage.setItem('mc_strava_paces_dismissed', '1');
-  renderStravaWidget();
-}
 
 // ─── COROS ─────────────────────────────────────────────────
 
@@ -2468,8 +2332,7 @@ function applyCorosPaces() {
   const paces = derivePacesFromVDOT(vdot);
   applyCustomPaces(paces);
   localStorage.setItem('mc_coros_paces', JSON.stringify(paces));
-  localStorage.removeItem('mc_strava_paces');
-  renderPaceGuide(); renderCorosWidget(); renderStravaWidget(); updateMobileStrip(); renderCalendar();
+  renderPaceGuide(); renderCorosWidget(); updateMobileStrip(); renderCalendar();
 }
 
 function revertCorosPaces() {
@@ -2517,7 +2380,7 @@ function renderCorosWidget() {
   const rBarBg = r >= 80 ? 'linear-gradient(90deg,#00C8B4,#20d470)' : r >= 60 ? '#eab308' : '#ef4444';
   const loadColors = { Optimized:'#20d470', Maintaining:'#5a90f5', Overreaching:'#f97316', Detraining:'#a855f7' };
   const loadColor = loadColors[d.load.comment] || 'var(--text2)';
-  const usingCorosPaces = !!localStorage.getItem('mc_coros_paces') && !localStorage.getItem('mc_strava_paces');
+  const usingCorosPaces = !!localStorage.getItem('mc_coros_paces');
 
   el.innerHTML = `
     <div class="coros-card">
@@ -2554,111 +2417,6 @@ function renderCorosWidget() {
     </div>`;
 }
 
-function renderStravaWidget() {
-  const el = document.getElementById('strava-widget');
-  if (!el) return;
-
-  const isCalibrated = !!localStorage.getItem('mc_strava_paces');
-
-  if (!stravaAthlete) {
-    el.innerHTML = `
-      <div class="strava-card">
-        <div class="strava-hdr">
-          <h2><svg width="14" height="14" viewBox="0 0 24 24" fill="#FC4C02" style="flex-shrink:0"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg> Strava Sync</h2>
-        </div>
-        <div class="strava-desc">Connect Strava to see your actual run data alongside planned workouts and calibrate training zones from real efforts.</div>
-        <button class="strava-connect-btn" onclick="window.location='/api/strava/auth'">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="#fff"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg>
-          Connect with Strava
-        </button>
-      </div>`;
-    return;
-  }
-
-  const syncCount = Object.keys(stravaMatched).length;
-  const calibBanner = stravaCalibPending && !localStorage.getItem('mc_strava_paces_dismissed') ? `
-    <div class="strava-cal-banner">
-      <div class="strava-cal-title">📊 Pace Update Available</div>
-      <div class="strava-cal-desc">Your ${stravaCalibPending.runName} suggests updated zones (VDOT ${stravaCalibPending.vdot}). Current marathon pace: ${stravaCalibPending.currentMp}. Suggested: ${stravaCalibPending.suggestedMp}.</div>
-      <div class="strava-cal-btns">
-        <button class="strava-cal-apply" onclick="applyStravaCalibration()">Apply Calibration</button>
-        <button class="strava-cal-dismiss" onclick="dismissStravaCalibration()">Dismiss</button>
-      </div>
-    </div>` : '';
-
-  const resetBtn = isCalibrated
-    ? `<button class="strava-sync-btn" onclick="resetPaces()" title="Revert to default paces">Reset paces</button>`
-    : '';
-
-  el.innerHTML = `
-    <div class="strava-card">
-      <div class="strava-hdr">
-        <h2><svg width="14" height="14" viewBox="0 0 24 24" fill="#FC4C02" style="flex-shrink:0"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg> Strava Sync</h2>
-      </div>
-      <div class="strava-athlete">
-        <div class="strava-dot"></div>
-        <div>
-          <div class="strava-athlete-name">${stravaAthlete}</div>
-          <div class="strava-athlete-sub">${stravaRunCount} run${stravaRunCount !== 1 ? 's' : ''} fetched · ${syncCount} matched to plan</div>
-        </div>
-      </div>
-      <div class="strava-actions">
-        <button class="strava-sync-btn" onclick="syncStrava()">↻ Sync now</button>
-        ${resetBtn}
-        <button class="strava-disc-btn" onclick="disconnectStrava()">Disconnect</button>
-      </div>
-      ${calibBanner}
-    </div>`;
-}
-
-async function syncStrava() {
-  try {
-    const resp = await fetch('/api/strava/activities');
-    const data = await resp.json();
-    if (!data.connected) {
-      stravaAthlete = null;
-      renderStravaWidget();
-      return;
-    }
-    stravaAthlete  = data.athlete;
-    stravaRunCount = data.runs.length;
-    processStravaRuns(data.runs);
-    renderStravaWidget();
-    renderCalendar();
-  } catch (_) {}
-}
-
-async function disconnectStrava() {
-  try { await fetch('/api/strava/activities', { method: 'DELETE' }); } catch (_) {}
-  stravaAthlete = null;
-  stravaMatched = {};
-  stravaCalibPending = null;
-  stravaRunCount = 0;
-  save();
-  renderStravaWidget();
-  renderCalendar();
-}
-
-async function initStrava() {
-  // Handle OAuth callback result params
-  const params = new URLSearchParams(window.location.search);
-  const status = params.get('strava');
-  if (status) window.history.replaceState({}, '', window.location.pathname);
-
-  renderStravaWidget(); // show disconnected state immediately
-
-  try {
-    const resp = await fetch('/api/strava/activities');
-    if (!resp.ok) return;
-    const data = await resp.json();
-    if (!data.connected) return;
-    stravaAthlete  = data.athlete;
-    stravaRunCount = data.runs.length;
-    processStravaRuns(data.runs);
-    renderStravaWidget();
-    renderCalendar();
-  } catch (_) {}
-}
 
 function init() {
   load();
@@ -2686,14 +2444,12 @@ function init() {
   renderPaceGuide();
   renderBufferWidget();
   renderCorosWidget();
-  renderStravaWidget();
   renderSidebarTips();
   renderStrengthSection();
   renderCalendar();
   renderPTTracker();
   updateProgress();
   updateMobileStrip();
-  initStrava(); // async, updates widget + calendar when done
   setInterval(() => { renderCountdown(); updateMobileStrip(); }, 60000);
 }
 
