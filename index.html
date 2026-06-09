@@ -551,9 +551,14 @@ body.itb-on .foam-card{border-color:rgba(245,158,11,.25)}
 /* Compact header subtitle on small screens */
 @media(max-width:480px){
   .h-txt .hs{display:none}
-  .h-countdown{font-size:10px;padding:3px 8px}
+  .h-countdown{display:none}
+  .data-btns{display:none}
   .itb-lbl{display:none}
   .itb-wrap{padding:5px 8px}
+}
+@media(max-width:360px){
+  .h-txt .ht{font-size:12px}
+  .h-icon{width:26px;height:26px;font-size:13px}
 }
 /* Mobile-specific layout: put buffer + pace summary strip above calendar */
 .mobile-strip{
